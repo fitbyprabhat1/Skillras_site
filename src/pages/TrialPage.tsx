@@ -37,7 +37,7 @@ const trialModules: TrialModule[] = [
         title: "Welcome to the Masterclass",
         description: "By the end of this video, you'll know exactly why this Premiere Pro Masterclass is your ticket to creating jaw-dropping videos that stand out.",
         duration: "3 minutes",
-        videoId: "PvTcmse6DDY",
+        videoId: "8i34DE0Efec",
         isLocked: false,
         isCompleted: false,
         downloadableResource: {
