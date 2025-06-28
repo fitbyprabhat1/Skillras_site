@@ -80,43 +80,6 @@ const DownloadPage: React.FC = () => {
                 </div>
               </div>
               
-              <div className="bg-dark-light rounded-xl p-8 border border-primary/10">
-                <h2 className="text-2xl font-bold text-white mb-6">
-                  Available Products
-                </h2>
-                
-                <div className="space-y-4">
-                  <div className="bg-dark rounded-lg p-4 border border-gray-600">
-                    <h3 className="text-white font-medium mb-1">Premiere Pro Mastery Course</h3>
-                    <p className="text-gray-400 text-sm mb-2">Complete Adobe Premiere Pro course with 35+ hours</p>
-                    <span className="text-primary text-xs font-mono">Code: PREMIERE2025</span>
-                  </div>
-                  
-                  <div className="bg-dark rounded-lg p-4 border border-gray-600">
-                    <h3 className="text-white font-medium mb-1">Video Editing Fundamentals</h3>
-                    <p className="text-gray-400 text-sm mb-2">Learn the basics with hands-on projects</p>
-                    <span className="text-primary text-xs font-mono">Code: EDITING101</span>
-                  </div>
-                  
-                  <div className="bg-dark rounded-lg p-4 border border-gray-600">
-                    <h3 className="text-white font-medium mb-1">Advanced Video Editing</h3>
-                    <p className="text-gray-400 text-sm mb-2">Master advanced techniques and effects</p>
-                    <span className="text-primary text-xs font-mono">Code: ADVANCED2025</span>
-                  </div>
-                  
-                  <div className="bg-dark rounded-lg p-4 border border-gray-600">
-                    <h3 className="text-white font-medium mb-1">Color Grading Masterclass</h3>
-                    <p className="text-gray-400 text-sm mb-2">Professional color grading workflows</p>
-                    <span className="text-primary text-xs font-mono">Code: COLORGRADE</span>
-                  </div>
-                  
-                  <div className="bg-dark rounded-lg p-4 border border-gray-600">
-                    <h3 className="text-white font-medium mb-1">Motion Graphics Essentials</h3>
-                    <p className="text-gray-400 text-sm mb-2">Create stunning motion graphics</p>
-                    <span className="text-primary text-xs font-mono">Code: MOTION2025</span>
-                  </div>
-                </div>
-              </div>
               
               <div className="bg-dark-light rounded-xl p-8 border border-primary/10">
                 <h2 className="text-2xl font-bold text-white mb-6">
