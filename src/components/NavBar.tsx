@@ -70,14 +70,25 @@ const NavBar: React.FC = () => {
                 >
                   Pricing
                 </button>
+                <Link to="/download" className="text-white hover:text-primary-light transition-colors">
+                  Downloads
+                </Link>
                 <Link to="/trial">
                   <Button size="sm">Try Free Chapters</Button>
                 </Link>
               </>
             ) : (
-              <Link to="/">
-                <Button size="sm">Back to Home</Button>
-              </Link>
+              <>
+                <Link to="/" className="text-white hover:text-primary-light transition-colors">
+                  Home
+                </Link>
+                <Link to="/download" className="text-white hover:text-primary-light transition-colors">
+                  Downloads
+                </Link>
+                <Link to="/trial">
+                  <Button size="sm">Try Free Chapters</Button>
+                </Link>
+              </>
             )}
           </div>
 
@@ -120,14 +131,37 @@ const NavBar: React.FC = () => {
                   >
                     Pricing
                   </button>
+                  <Link 
+                    to="/download" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-white hover:text-primary-light transition-colors py-2"
+                  >
+                    Downloads
+                  </Link>
                   <Link to="/trial">
                     <Button className="w-full">Try Free Chapters</Button>
                   </Link>
                 </>
               ) : (
-                <Link to="/">
-                  <Button className="w-full">Back to Home</Button>
-                </Link>
+                <>
+                  <Link 
+                    to="/" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-white hover:text-primary-light transition-colors py-2"
+                  >
+                    Home
+                  </Link>
+                  <Link 
+                    to="/download" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-white hover:text-primary-light transition-colors py-2"
+                  >
+                    Downloads
+                  </Link>
+                  <Link to="/trial">
+                    <Button className="w-full">Try Free Chapters</Button>
+                  </Link>
+                </>
               )}
             </div>
           </div>
