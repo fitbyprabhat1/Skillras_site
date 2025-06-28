@@ -1,6 +1,7 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
 import ProductDownloadForm from '../components/ProductDownloadForm';
+import { Download, Shield, Clock, CheckCircle } from 'lucide-react';
 
 const DownloadPage: React.FC = () => {
   return (
@@ -8,46 +9,159 @@ const DownloadPage: React.FC = () => {
       <NavBar />
       
       <div className="container mx-auto px-4 py-8 pt-24">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
               Product <span className="text-primary">Downloads</span>
             </h1>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Access your purchased products by entering your details and product code below.
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+              Access your purchased products instantly. Enter your details and product code to get your download link.
             </p>
+            
+            {/* Feature highlights */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
+              <div className="flex items-center justify-center space-x-3 text-gray-300">
+                <Shield className="text-primary" size={20} />
+                <span>Secure Downloads</span>
+              </div>
+              <div className="flex items-center justify-center space-x-3 text-gray-300">
+                <Clock className="text-primary" size={20} />
+                <span>Instant Access</span>
+              </div>
+              <div className="flex items-center justify-center space-x-3 text-gray-300">
+                <CheckCircle className="text-primary" size={20} />
+                <span>Lifetime Access</span>
+              </div>
+            </div>
           </div>
           
-          <ProductDownloadForm />
-          
-          <div className="mt-12 bg-dark-light rounded-xl p-8">
-            <h2 className="text-2xl font-bold text-white mb-6 text-center">
-              Need Help?
-            </h2>
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <div>
+              <ProductDownloadForm />
+            </div>
             
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="text-center">
-                <h3 className="text-lg font-medium text-white mb-3">
-                  Can't Find Your Code?
-                </h3>
-                <p className="text-gray-300 mb-4">
-                  Check your email for the product code sent after purchase. It should be in the subject line or body of your confirmation email.
-                </p>
+            <div className="space-y-8">
+              <div className="bg-dark-light rounded-xl p-8 border border-primary/10">
+                <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+                  <Download className="mr-3 text-primary" size={28} />
+                  How It Works
+                </h2>
+                
+                <div className="space-y-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                      1
+                    </div>
+                    <div>
+                      <h3 className="text-white font-medium mb-1">Enter Your Details</h3>
+                      <p className="text-gray-300 text-sm">Fill in your name, email, and 10-digit phone number</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                      2
+                    </div>
+                    <div>
+                      <h3 className="text-white font-medium mb-1">Enter Product Code</h3>
+                      <p className="text-gray-300 text-sm">Input the unique code you received after purchase</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                      3
+                    </div>
+                    <div>
+                      <h3 className="text-white font-medium mb-1">Download Instantly</h3>
+                      <p className="text-gray-300 text-sm">Get immediate access to your product download</p>
+                    </div>
+                  </div>
+                </div>
               </div>
               
-              <div className="text-center">
-                <h3 className="text-lg font-medium text-white mb-3">
-                  Need Support?
-                </h3>
-                <p className="text-gray-300 mb-4">
-                  Contact our support team if you're having trouble accessing your download.
-                </p>
-                <a 
-                  href="mailto:admin@skillras.com" 
-                  className="text-primary hover:text-primary-light transition-colors"
-                >
-                  admin@skillras.com
-                </a>
+              <div className="bg-dark-light rounded-xl p-8 border border-primary/10">
+                <h2 className="text-2xl font-bold text-white mb-6">
+                  Available Products
+                </h2>
+                
+                <div className="space-y-4">
+                  <div className="bg-dark rounded-lg p-4 border border-gray-600">
+                    <h3 className="text-white font-medium mb-1">Premiere Pro Mastery Course</h3>
+                    <p className="text-gray-400 text-sm mb-2">Complete Adobe Premiere Pro course with 35+ hours</p>
+                    <span className="text-primary text-xs font-mono">Code: PREMIERE2025</span>
+                  </div>
+                  
+                  <div className="bg-dark rounded-lg p-4 border border-gray-600">
+                    <h3 className="text-white font-medium mb-1">Video Editing Fundamentals</h3>
+                    <p className="text-gray-400 text-sm mb-2">Learn the basics with hands-on projects</p>
+                    <span className="text-primary text-xs font-mono">Code: EDITING101</span>
+                  </div>
+                  
+                  <div className="bg-dark rounded-lg p-4 border border-gray-600">
+                    <h3 className="text-white font-medium mb-1">Advanced Video Editing</h3>
+                    <p className="text-gray-400 text-sm mb-2">Master advanced techniques and effects</p>
+                    <span className="text-primary text-xs font-mono">Code: ADVANCED2025</span>
+                  </div>
+                  
+                  <div className="bg-dark rounded-lg p-4 border border-gray-600">
+                    <h3 className="text-white font-medium mb-1">Color Grading Masterclass</h3>
+                    <p className="text-gray-400 text-sm mb-2">Professional color grading workflows</p>
+                    <span className="text-primary text-xs font-mono">Code: COLORGRADE</span>
+                  </div>
+                  
+                  <div className="bg-dark rounded-lg p-4 border border-gray-600">
+                    <h3 className="text-white font-medium mb-1">Motion Graphics Essentials</h3>
+                    <p className="text-gray-400 text-sm mb-2">Create stunning motion graphics</p>
+                    <span className="text-primary text-xs font-mono">Code: MOTION2025</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-dark-light rounded-xl p-8 border border-primary/10">
+                <h2 className="text-2xl font-bold text-white mb-6">
+                  Need Help?
+                </h2>
+                
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium text-white mb-3">
+                      Can't Find Your Code?
+                    </h3>
+                    <p className="text-gray-300 mb-4">
+                      Check your email for the product code sent after purchase. Look for emails from SkillRas with your order confirmation.
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-lg font-medium text-white mb-3">
+                      Download Issues?
+                    </h3>
+                    <p className="text-gray-300 mb-4">
+                      If you're having trouble downloading, try using a different browser or disable ad blockers.
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <h3 className="text-lg font-medium text-white mb-3">
+                      Contact Support
+                    </h3>
+                    <p className="text-gray-300 mb-4">
+                      Our support team is here to help with any download issues.
+                    </p>
+                    <div className="flex flex-col space-y-2">
+                      <a 
+                        href="mailto:admin@skillras.com" 
+                        className="text-primary hover:text-primary-light transition-colors flex items-center"
+                      >
+                        <span>📧 admin@skillras.com</span>
+                      </a>
+                      <span className="text-gray-400 text-sm">
+                        Response time: Within 24 hours
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
