@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Button from './Button';
 
 const FloatingCTA: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +27,9 @@ const FloatingCTA: React.FC = () => {
     }
   };
 
+  const isMainPage = location.pathname === '/';
+  const isPremierePage = location.pathname === '/premiere-pro';
+
   return (
     <div 
       className={`fixed bottom-6 right-6 z-40 transition-all duration-500 transform ${
@@ -32,12 +37,20 @@ const FloatingCTA: React.FC = () => {
       }`}
     >
       <Button 
-        onClick={() => scrollToSection('pricing')}
+        onClick={() => {
+          if (isMainPage) {
+            scrollToSection('courses');
+          } else if (isPremierePage) {
+            scrollToSection('pricing');
+          } else {
+            scrollToSection('courses');
+          }
+        }}
         size="md"
         glowing={true}
         className="shadow-lg"
       >
-        Enroll Now
+        {isMainPage ? 'View Courses' : isPremierePage ? 'Enroll Now' : 'Get Started'}
       </Button>
     </div>
   );
