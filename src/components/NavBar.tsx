@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import Button from './Button';
-import { Menu, X, User } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { courseTitle } from '../data/courseData';
 
 const NavBar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const { user, profile } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -72,9 +70,11 @@ const NavBar: React.FC = () => {
                 >
                   Pricing
                 </button>
+                
                 <Link to="/download" className="text-white hover:text-primary-light transition-colors">
                   Downloads
-                </Link>
+                 </Link>
+                
                 <Link to="/trial">
                   <Button size="sm">Try Free Chapters</Button>
                 </Link>
@@ -91,23 +91,6 @@ const NavBar: React.FC = () => {
                   <Button size="sm">Try Free Chapters</Button>
                 </Link>
               </>
-            )}
-            
-            {/* Auth Buttons */}
-            {user ? (
-              <Link to="/dashboard" className="flex items-center text-white hover:text-primary-light transition-colors">
-                <User size={20} className="mr-2" />
-                {profile?.full_name || 'Dashboard'}
-              </Link>
-            ) : (
-              <div className="flex items-center space-x-4">
-                <Link to="/signin" className="text-white hover:text-primary-light transition-colors">
-                  Sign In
-                </Link>
-                <Link to="/signup">
-                  <Button size="sm">Sign Up</Button>
-                </Link>
-              </div>
             )}
           </div>
 
@@ -179,31 +162,6 @@ const NavBar: React.FC = () => {
                   </Link>
                   <Link to="/trial">
                     <Button className="w-full">Try Free Chapters</Button>
-                  </Link>
-                </>
-              )}
-              
-              {/* Mobile Auth Buttons */}
-              {user ? (
-                <Link 
-                  to="/dashboard" 
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center text-white hover:text-primary-light transition-colors py-2"
-                >
-                  <User size={20} className="mr-2" />
-                  {profile?.full_name || 'Dashboard'}
-                </Link>
-              ) : (
-                <>
-                  <Link 
-                    to="/signin" 
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-white hover:text-primary-light transition-colors py-2"
-                  >
-                    Sign In
-                  </Link>
-                  <Link to="/signup">
-                    <Button className="w-full">Sign Up</Button>
                   </Link>
                 </>
               )}
