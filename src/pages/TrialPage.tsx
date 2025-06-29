@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import Button from '../components/Button';
 import YouTubeEmbed from '../components/YouTubeEmbed';
-import { Lock, Play, CheckCircle, FileText, Download, User } from 'lucide-react';
+import { Lock, Play, CheckCircle, FileText, Download, User, AlertCircle } from 'lucide-react';
 
 interface TrialChapter {
   id: string;
@@ -13,7 +13,7 @@ interface TrialChapter {
   duration: string;
   video_id: string | null;
   is_locked: boolean;
-  order_position: number;
+  order: number;
 }
 
 const TrialPage: React.FC = () => {
@@ -22,6 +22,7 @@ const TrialPage: React.FC = () => {
   const [selectedChapter, setSelectedChapter] = useState<TrialChapter | null>(null);
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTrialChapters();
@@ -29,12 +30,15 @@ const TrialPage: React.FC = () => {
 
   const fetchTrialChapters = async () => {
     try {
-      const { data, error } = await supabase
+      setError(null);
+      const { data, error: fetchError } = await supabase
         .from('trial_chapters')
         .select('*')
-        .order('order_position', { ascending: true });
+        .order('order', { ascending: true });
 
-      if (error) throw error;
+      if (fetchError) {
+        throw fetchError;
+      }
 
       setTrialChapters(data || []);
       
@@ -45,6 +49,7 @@ const TrialPage: React.FC = () => {
       }
     } catch (error) {
       console.error('Error fetching trial chapters:', error);
+      setError('Failed to load trial chapters');
     } finally {
       setLoading(false);
     }
@@ -69,7 +74,25 @@ const TrialPage: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-dark flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white">Loading trial chapters...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-dark flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8">
+          <AlertCircle className="text-red-500 mx-auto mb-4" size={48} />
+          <h2 className="text-2xl font-bold text-white mb-4">Error Loading Content</h2>
+          <p className="text-gray-300 mb-6">{error}</p>
+          <Button onClick={() => fetchTrialChapters()}>
+            Try Again
+          </Button>
+        </div>
       </div>
     );
   }
@@ -157,41 +180,43 @@ const TrialPage: React.FC = () => {
             </div>
             
             {/* Free Chapters */}
-            <div className="bg-dark-light rounded-lg overflow-hidden">
-              <div className="p-4 bg-green-500/10 border-b border-green-500/20">
-                <h3 className="text-green-500 font-medium flex items-center">
-                  <CheckCircle size={16} className="mr-2" />
-                  Free Access
-                </h3>
-              </div>
-              <div>
-                {unlockedChapters.map((chapter) => (
-                  <div
-                    key={chapter.id}
-                    onClick={() => handleChapterSelect(chapter)}
-                    className={`p-4 transition-all cursor-pointer border-b border-dark-lighter last:border-b-0 ${
-                      selectedChapter?.id === chapter.id
-                        ? 'bg-primary bg-opacity-10 border-l-4 border-l-primary'
-                        : 'hover:bg-dark-lighter'
-                    }`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="mt-1 flex-shrink-0">
-                        <Play size={18} className="text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-white font-medium text-sm leading-tight">
-                          {chapter.title}
-                        </h4>
-                        <p className="text-xs text-gray-400 mt-1">
-                          {chapter.duration}
-                        </p>
+            {unlockedChapters.length > 0 && (
+              <div className="bg-dark-light rounded-lg overflow-hidden">
+                <div className="p-4 bg-green-500/10 border-b border-green-500/20">
+                  <h3 className="text-green-500 font-medium flex items-center">
+                    <CheckCircle size={16} className="mr-2" />
+                    Free Access
+                  </h3>
+                </div>
+                <div>
+                  {unlockedChapters.map((chapter) => (
+                    <div
+                      key={chapter.id}
+                      onClick={() => handleChapterSelect(chapter)}
+                      className={`p-4 transition-all cursor-pointer border-b border-dark-lighter last:border-b-0 ${
+                        selectedChapter?.id === chapter.id
+                          ? 'bg-primary bg-opacity-10 border-l-4 border-l-primary'
+                          : 'hover:bg-dark-lighter'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="mt-1 flex-shrink-0">
+                          <Play size={18} className="text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-white font-medium text-sm leading-tight">
+                            {chapter.title}
+                          </h4>
+                          <p className="text-xs text-gray-400 mt-1">
+                            {chapter.duration}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Locked Chapters Preview */}
             {lockedChapters.length > 0 && (

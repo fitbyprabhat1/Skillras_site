@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
-import { User, Settings, BookOpen, Award, TrendingUp, Users } from 'lucide-react';
+import { User, Settings, BookOpen, Award, TrendingUp, Users, AlertCircle } from 'lucide-react';
 import AffiliateDashboard from './AffiliateDashboard';
 import CoursesDashboard from './CoursesDashboard';
 import Button from '../Button';
@@ -14,7 +14,7 @@ interface DashboardStats {
 }
 
 const UserDashboard: React.FC = () => {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, signOut, loading: authLoading } = useAuth();
   const [activeTab, setActiveTab] = useState('courses'); // Default to courses tab
   const [stats, setStats] = useState<DashboardStats>({
     totalCourses: 0,
@@ -23,22 +23,36 @@ const UserDashboard: React.FC = () => {
     totalEarnings: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (profile) {
+    if (!authLoading && user && profile) {
       fetchDashboardStats();
+    } else if (!authLoading && !user) {
+      setError('User not authenticated');
+      setLoading(false);
+    } else if (!authLoading && user && !profile) {
+      setError('User profile not found');
+      setLoading(false);
     }
-  }, [profile]);
+  }, [user, profile, authLoading]);
 
   const fetchDashboardStats = async () => {
     try {
-      // Fetch user courses
-      const { data: courses } = await supabase
+      setError(null);
+      
+      // Fetch user courses with error handling
+      const { data: courses, error: coursesError } = await supabase
         .from('user_course_access')
         .select('*')
         .eq('user_id', profile?.user_id);
 
-      // Fetch referral stats from profile
+      if (coursesError) {
+        console.error('Error fetching courses:', coursesError);
+        // Don't throw error, just log it and continue with default values
+      }
+
+      // Use profile data for referral stats
       const totalReferrals = profile?.total_referrals || 0;
       const totalEarnings = profile?.total_earnings || 0;
 
@@ -50,19 +64,67 @@ const UserDashboard: React.FC = () => {
       });
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
+      setError('Failed to load dashboard data');
     } finally {
       setLoading(false);
     }
   };
 
   const handleSignOut = async () => {
-    await signOut();
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
-  if (loading) {
+  // Show loading spinner while auth is loading or dashboard is loading
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-dark flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-white">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-dark flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8">
+          <AlertCircle className="text-red-500 mx-auto mb-4" size={48} />
+          <h2 className="text-2xl font-bold text-white mb-4">Dashboard Error</h2>
+          <p className="text-gray-300 mb-6">{error}</p>
+          <div className="space-y-4">
+            <Button onClick={() => window.location.reload()} className="w-full">
+              Reload Page
+            </Button>
+            <Button onClick={handleSignOut} variant="outline" className="w-full">
+              Sign Out
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show message if no user or profile
+  if (!user || !profile) {
+    return (
+      <div className="min-h-screen bg-dark flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto p-8">
+          <User className="text-gray-500 mx-auto mb-4" size={48} />
+          <h2 className="text-2xl font-bold text-white mb-4">Profile Not Found</h2>
+          <p className="text-gray-300 mb-6">
+            We couldn't load your profile information. Please try signing in again.
+          </p>
+          <Button onClick={handleSignOut} className="w-full">
+            Sign Out & Try Again
+          </Button>
+        </div>
       </div>
     );
   }
@@ -74,7 +136,7 @@ const UserDashboard: React.FC = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold">Welcome back, {profile?.full_name}!</h1>
+              <h1 className="text-2xl font-bold">Welcome back, {profile.full_name}!</h1>
               <p className="text-gray-400">Ready to continue your video editing journey?</p>
             </div>
             <div className="flex items-center space-x-4">
@@ -96,8 +158,8 @@ const UserDashboard: React.FC = () => {
                   <User className="text-white" size={24} />
                 </div>
                 <div>
-                  <h3 className="font-bold">{profile?.full_name}</h3>
-                  <p className="text-gray-400 text-sm">{profile?.email}</p>
+                  <h3 className="font-bold">{profile.full_name}</h3>
+                  <p className="text-gray-400 text-sm">{profile.email}</p>
                 </div>
               </div>
 
@@ -239,7 +301,7 @@ const UserDashboard: React.FC = () => {
                     <label className="block text-white mb-2">Full Name</label>
                     <input
                       type="text"
-                      value={profile?.full_name || ''}
+                      value={profile.full_name || ''}
                       className="w-full px-4 py-3 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none"
                       readOnly
                     />
@@ -248,7 +310,7 @@ const UserDashboard: React.FC = () => {
                     <label className="block text-white mb-2">Email Address</label>
                     <input
                       type="email"
-                      value={profile?.email || ''}
+                      value={profile.email || ''}
                       className="w-full px-4 py-3 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none"
                       readOnly
                     />
@@ -257,7 +319,7 @@ const UserDashboard: React.FC = () => {
                     <label className="block text-white mb-2">Referral Code</label>
                     <input
                       type="text"
-                      value={profile?.referral_code || ''}
+                      value={profile.referral_code || ''}
                       className="w-full px-4 py-3 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none font-mono"
                       readOnly
                     />
