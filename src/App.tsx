@@ -6,6 +6,7 @@ import TrialPage from './pages/TrialPage';
 import CoursePage from './pages/CoursePage';
 import DownloadPage from './pages/DownloadPage';
 import AllCoursesPage from './pages/AllCoursesPage';
+import PackagesPage from './pages/PackagesPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/course/:courseId" element={<CoursePage />} />
         <Route path="/download" element={<DownloadPage />} />
         <Route path="/courses" element={<AllCoursesPage />} />
+        <Route path="/packages" element={<PackagesPage />} />
       </Routes>
     </Router>
   );

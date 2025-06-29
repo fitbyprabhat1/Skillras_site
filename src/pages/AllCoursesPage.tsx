@@ -468,10 +468,12 @@ const AllCoursesPage: React.FC = () => {
             Join thousands of students who have transformed their careers with SkillRas courses.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" glowing>
-              <Award className="mr-2" size={20} />
-              Get All-Access Pass
-            </Button>
+            <Link to="/packages">
+              <Button size="lg" glowing>
+                <Award className="mr-2" size={20} />
+                View Packages
+              </Button>
+            </Link>
             <Button variant="outline" size="lg">
               <Zap className="mr-2" size={20} />
               Start Free Trial

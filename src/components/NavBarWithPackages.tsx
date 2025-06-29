@@ -124,6 +124,19 @@ const NavBarWithPackages: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest('.packages-dropdown')) {
+        setPackagesDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -155,7 +168,7 @@ const NavBarWithPackages: React.FC = () => {
             </Link>
             
             {/* Packages Dropdown */}
-            <div className="relative">
+            <div className="relative packages-dropdown">
               <button
                 onClick={() => setPackagesDropdownOpen(!packagesDropdownOpen)}
                 className="text-white hover:text-primary-light transition-colors flex items-center"
@@ -173,7 +186,12 @@ const NavBarWithPackages: React.FC = () => {
                   
                   <div className="max-h-96 overflow-y-auto">
                     {packages.map((pkg) => (
-                      <div key={pkg.id} className="p-4 border-b border-gray-700 last:border-b-0 hover:bg-dark-lighter transition-colors">
+                      <Link
+                        key={pkg.id}
+                        to="/packages"
+                        className="block p-4 border-b border-gray-700 last:border-b-0 hover:bg-dark-lighter transition-colors"
+                        onClick={() => setPackagesDropdownOpen(false)}
+                      >
                         <div className="flex items-start justify-between mb-2">
                           <div>
                             <div className="flex items-center mb-1">
@@ -215,22 +233,16 @@ const NavBarWithPackages: React.FC = () => {
                             )}
                           </ul>
                         </div>
-                        
-                        <Button 
-                          size="sm" 
-                          className="w-full text-xs"
-                          variant={pkg.isPopular ? 'primary' : 'outline'}
-                        >
-                          {pkg.price === 0 ? 'Get Quote' : 'Choose Package'}
-                        </Button>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                   
                   <div className="p-4 bg-dark border-t border-gray-600">
-                    <Button className="w-full text-sm" variant="outline">
-                      Compare All Packages
-                    </Button>
+                    <Link to="/packages" onClick={() => setPackagesDropdownOpen(false)}>
+                      <Button className="w-full text-sm" variant="outline">
+                        Compare All Packages
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -282,7 +294,12 @@ const NavBarWithPackages: React.FC = () => {
                 </div>
                 <div className="space-y-3 ml-6">
                   {packages.map((pkg) => (
-                    <div key={pkg.id} className="bg-dark rounded-lg p-3">
+                    <Link
+                      key={pkg.id}
+                      to="/packages"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block bg-dark rounded-lg p-3"
+                    >
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-white text-sm font-medium">{pkg.name}</span>
                         {pkg.isPopular && (
@@ -292,7 +309,7 @@ const NavBarWithPackages: React.FC = () => {
                       <div className="text-primary text-sm font-bold">
                         {pkg.price === 0 ? 'Custom' : `₹${pkg.price.toLocaleString()}`}
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -313,14 +330,6 @@ const NavBarWithPackages: React.FC = () => {
           </div>
         )}
       </div>
-      
-      {/* Overlay for dropdown */}
-      {packagesDropdownOpen && (
-        <div 
-          className="fixed inset-0 z-40" 
-          onClick={() => setPackagesDropdownOpen(false)}
-        />
-      )}
     </nav>
   );
 };
