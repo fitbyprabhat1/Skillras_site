@@ -20,7 +20,6 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-dark text-white">
-      <WelcomePopup onSubmit={handleFormSubmit} />
       <NavBar />
       <HeroSection />
       <BenefitsSection />
