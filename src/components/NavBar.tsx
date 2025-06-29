@@ -70,9 +70,11 @@ const NavBar: React.FC = () => {
                 >
                   Pricing
                 </button>
-                <Link to="/download" className="text-white hover:text-primary-light transition-colors">
+                
+                <button to="/download" className="text-white hover:text-primary-light transition-colors">
                   Downloads
-                </Link>
+                 </button>
+                
                 <Link to="/trial">
                   <Button size="sm">Try Free Chapters</Button>
                 </Link>
