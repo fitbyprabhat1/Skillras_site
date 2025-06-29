@@ -8,12 +8,12 @@ import TestimonialsSection from '../sections/TestimonialsSection';
 import FooterSection from '../sections/FooterSection';
 import FloatingCTA from '../components/FloatingCTA';
 import ScrollToTop from '../components/ScrollToTop';
+import WelcomePopup from '../components/WelcomePopup';
 
-const LandingPage: React.FC = () => {
-  const handleFormSubmit = (data: { name: string; email: string; phone: string }) => {
-    console.log('Lead data submitted successfully:', data);
-    // You can add additional logic here like tracking, analytics, etc.
-  };
+const handleFormSubmit = (data: { name: string; email: string; phone: string }) => {
+  console.log('Lead data submitted successfully:', data);
+  // You can add additional logic here like tracking, analytics, etc.
+};
 
 const MainLandingPage: React.FC = () => {
   return (
