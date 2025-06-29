@@ -117,6 +117,7 @@ const ProductDownloadForm: React.FC = () => {
 
   const saveUserData = async (userData: Omit<FormData, 'productCode'>) => {
     try {
+      // Try to insert user data, but handle conflicts gracefully
       const { data, error } = await supabase
         .from('users')
         .insert([{
@@ -129,9 +130,12 @@ const ProductDownloadForm: React.FC = () => {
       
       if (error) {
         console.error('User data save error:', error);
-        // Handle unique constraint violation for email
+        // If it's a unique constraint violation, we'll just continue
+        // since we want to allow multiple downloads with same email/phone
         if (error.code === '23505') {
-          throw new Error('This email is already registered. Please use a different email.');
+          // User already exists, but that's okay for downloads
+          console.log('User already exists, continuing with download...');
+          return { success: true };
         }
         throw new Error('Failed to save user data. Please try again.');
       }
@@ -161,12 +165,17 @@ const ProductDownloadForm: React.FC = () => {
         throw new Error('Invalid product code. Please check your code and try again.');
       }
       
-      // Save user data
-      await saveUserData({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone
-      });
+      // Try to save user data (but don't fail if user already exists)
+      try {
+        await saveUserData({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone
+        });
+      } catch (saveError: any) {
+        // Log the error but don't prevent download
+        console.log('User data save failed, but continuing with download:', saveError.message);
+      }
       
       setProduct(productData);
       setSuccess(true);
