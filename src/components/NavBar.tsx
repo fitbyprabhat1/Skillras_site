@@ -71,7 +71,7 @@ const NavBar: React.FC = () => {
                   Pricing
                 </button>
                 
-                <Link to=="/download" className="text-white hover:text-primary-light transition-colors">
+                <Link to="/download" className="text-white hover:text-primary-light transition-colors">
                   Downloads
                  </Link>
                 
