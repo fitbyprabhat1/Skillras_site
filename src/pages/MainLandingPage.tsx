@@ -9,9 +9,16 @@ import FooterSection from '../sections/FooterSection';
 import FloatingCTA from '../components/FloatingCTA';
 import ScrollToTop from '../components/ScrollToTop';
 
+const LandingPage: React.FC = () => {
+  const handleFormSubmit = (data: { name: string; email: string; phone: string }) => {
+    console.log('Lead data submitted successfully:', data);
+    // You can add additional logic here like tracking, analytics, etc.
+  };
+
 const MainLandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-dark text-white">
+      <WelcomePopup onSubmit={handleFormSubmit} />
       <NavBar />
       <MainHeroSection />
       <CoursesSection />
