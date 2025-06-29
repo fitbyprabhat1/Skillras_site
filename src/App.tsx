@@ -6,8 +6,6 @@ import TrialPage from './pages/TrialPage';
 import CoursePage from './pages/CoursePage';
 import DownloadPage from './pages/DownloadPage';
 import AllCoursesPage from './pages/AllCoursesPage';
-import BlogListPage from './pages/BlogListPage';
-import BlogPostPage from './pages/BlogPostPage';
 
 function App() {
   return (
@@ -19,8 +17,6 @@ function App() {
         <Route path="/course/:courseId" element={<CoursePage />} />
         <Route path="/download" element={<DownloadPage />} />
         <Route path="/courses" element={<AllCoursesPage />} />
-        <Route path="/blog" element={<BlogListPage />} />
-        <Route path="/blog/:slug" element={<BlogPostPage />} />
       </Routes>
     </Router>
   );
