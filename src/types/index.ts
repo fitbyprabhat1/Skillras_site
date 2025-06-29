@@ -38,6 +38,7 @@ export interface PricingPlan {
   description: string;
   features: string[];
   cta: string;
+  purchaseLink: string;
 }
 
 export interface FAQ {
@@ -56,7 +57,42 @@ export interface CourseStats {
 export interface ResultsImage {
   id: number;
   title: string;
-  before: string;
-  after: string;
+  image: string;
   description: string;
+}
+
+// Blog-related types
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  featured_image?: string;
+  meta_title?: string;
+  meta_description?: string;
+  tags: string[];
+  published: boolean;
+  author_id: string;
+  created_at: string;
+  updated_at: string;
+  published_at?: string;
+  categories?: BlogCategory[];
+  author?: {
+    name: string;
+    email: string;
+  };
+}
+
+export interface BlogCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  created_at: string;
+}
+
+export interface BlogPostCategory {
+  post_id: string;
+  category_id: string;
 }

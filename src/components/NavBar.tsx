@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from './Button';
-import { Menu, X, BookOpen, Download } from 'lucide-react';
+import { Menu, X, BookOpen, Download, FileText } from 'lucide-react';
 
 const NavBar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -67,6 +67,10 @@ const NavBar: React.FC = () => {
                 >
                   Reviews
                 </button>
+                <Link to="/blog" className="text-white hover:text-primary-light transition-colors flex items-center">
+                  <FileText size={16} className="mr-1" />
+                  Blog
+                </Link>
                 <Link to="/download" className="text-white hover:text-primary-light transition-colors flex items-center">
                   <Download size={16} className="mr-1" />
                   Downloads
@@ -104,6 +108,10 @@ const NavBar: React.FC = () => {
                 >
                   Pricing
                 </button>
+                <Link to="/blog" className="text-white hover:text-primary-light transition-colors flex items-center">
+                  <FileText size={16} className="mr-1" />
+                  Blog
+                </Link>
                 <Link to="/download" className="text-white hover:text-primary-light transition-colors flex items-center">
                   <Download size={16} className="mr-1" />
                   Downloads
@@ -116,6 +124,13 @@ const NavBar: React.FC = () => {
               <>
                 <Link to="/" className="text-white hover:text-primary-light transition-colors">
                   Home
+                </Link>
+                <Link to="/courses" className="text-white hover:text-primary-light transition-colors">
+                  Courses
+                </Link>
+                <Link to="/blog" className="text-white hover:text-primary-light transition-colors flex items-center">
+                  <FileText size={16} className="mr-1" />
+                  Blog
                 </Link>
                 <Link to="/download" className="text-white hover:text-primary-light transition-colors flex items-center">
                   <Download size={16} className="mr-1" />
@@ -162,6 +177,14 @@ const NavBar: React.FC = () => {
                     Reviews
                   </button>
                   <Link 
+                    to="/blog" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-white hover:text-primary-light transition-colors py-2 flex items-center"
+                  >
+                    <FileText size={16} className="mr-2" />
+                    Blog
+                  </Link>
+                  <Link 
                     to="/download" 
                     onClick={() => setMobileMenuOpen(false)}
                     className="text-white hover:text-primary-light transition-colors py-2 flex items-center"
@@ -207,6 +230,14 @@ const NavBar: React.FC = () => {
                     Pricing
                   </button>
                   <Link 
+                    to="/blog" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-white hover:text-primary-light transition-colors py-2 flex items-center"
+                  >
+                    <FileText size={16} className="mr-2" />
+                    Blog
+                  </Link>
+                  <Link 
                     to="/download" 
                     onClick={() => setMobileMenuOpen(false)}
                     className="text-white hover:text-primary-light transition-colors py-2 flex items-center"
@@ -226,6 +257,21 @@ const NavBar: React.FC = () => {
                     className="text-white hover:text-primary-light transition-colors py-2"
                   >
                     Home
+                  </Link>
+                  <Link 
+                    to="/courses" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-white hover:text-primary-light transition-colors py-2"
+                  >
+                    Courses
+                  </Link>
+                  <Link 
+                    to="/blog" 
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-white hover:text-primary-light transition-colors py-2 flex items-center"
+                  >
+                    <FileText size={16} className="mr-2" />
+                    Blog
                   </Link>
                   <Link 
                     to="/download" 
