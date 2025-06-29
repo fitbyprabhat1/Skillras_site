@@ -5,14 +5,12 @@ import Button from '../components/Button';
 import { 
   Video, 
   TrendingUp, 
-  Palette, 
-  Code, 
-  Camera, 
-  Megaphone,
+  Palette,
   Star,
   Clock,
   Users,
-  ArrowRight
+  ArrowRight,
+  BookOpen
 } from 'lucide-react';
 
 interface Course {
@@ -32,7 +30,8 @@ interface Course {
   link: string;
 }
 
-const courses: Course[] = [
+// Show only 3 featured courses on main page
+const featuredCourses: Course[] = [
   {
     id: 'premiere-pro',
     title: 'Premiere Pro Mastery',
@@ -95,69 +94,6 @@ const courses: Course[] = [
     ],
     comingSoon: true,
     link: '#'
-  },
-  {
-    id: 'web-development',
-    title: 'Full Stack Web Development',
-    description: 'Build modern, responsive websites and web applications using React, Node.js, and the latest web technologies.',
-    icon: <Code size={32} className="text-primary" />,
-    price: 8999,
-    originalPrice: 15999,
-    duration: '60 hours',
-    students: 987,
-    rating: 4.8,
-    level: 'Beginner to Expert',
-    features: [
-      'React & JavaScript',
-      'Node.js & Databases',
-      'Responsive Design',
-      'API Development',
-      'Deployment & Hosting'
-    ],
-    comingSoon: true,
-    link: '#'
-  },
-  {
-    id: 'photography',
-    title: 'Professional Photography',
-    description: 'Master photography fundamentals, composition, lighting, and post-processing to create stunning images that sell.',
-    icon: <Camera size={32} className="text-primary" />,
-    price: 4499,
-    originalPrice: 8999,
-    duration: '30 hours',
-    students: 756,
-    rating: 4.6,
-    level: 'Beginner to Advanced',
-    features: [
-      'Camera Settings & Techniques',
-      'Composition & Lighting',
-      'Photo Editing',
-      'Business & Pricing',
-      'Portfolio Development'
-    ],
-    comingSoon: true,
-    link: '#'
-  },
-  {
-    id: 'content-creation',
-    title: 'Content Creation Mastery',
-    description: 'Learn to create engaging content across all platforms, build your personal brand, and monetize your audience.',
-    icon: <Megaphone size={32} className="text-primary" />,
-    price: 3999,
-    originalPrice: 7999,
-    duration: '25 hours',
-    students: 1234,
-    rating: 4.7,
-    level: 'Beginner to Advanced',
-    features: [
-      'Content Strategy',
-      'Video & Photo Creation',
-      'Social Media Growth',
-      'Brand Building',
-      'Monetization Strategies'
-    ],
-    comingSoon: true,
-    link: '#'
   }
 ];
 
@@ -169,19 +105,25 @@ const CoursesSection: React.FC = () => {
       <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Choose Your <span className="text-primary">Learning Path</span>
+            Featured <span className="text-primary">Courses</span>
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Master in-demand skills with our comprehensive courses designed by industry experts. 
-            Start your journey to success today.
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+            Start your journey with our most popular courses designed by industry experts. 
+            Master in-demand skills and transform your career.
           </p>
+          <Link to="/courses">
+            <Button variant="outline" size="lg">
+              <BookOpen className="mr-2" size={20} />
+              View All Courses
+            </Button>
+          </Link>
         </div>
         
         <div 
           ref={ref}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
         >
-          {courses.map((course, index) => (
+          {featuredCourses.map((course, index) => (
             <div
               key={course.id}
               className={`bg-dark rounded-xl overflow-hidden transition-all duration-700 transform hover:scale-105 hover:shadow-2xl group ${
@@ -287,15 +229,19 @@ const CoursesSection: React.FC = () => {
           ))}
         </div>
         
-        <div className="text-center mt-16">
+        <div className="text-center">
           <div className="bg-dark rounded-xl p-8 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold mb-4">Can't Decide Which Course to Take?</h3>
+            <h3 className="text-2xl font-bold mb-4">Want to See All Our Courses?</h3>
             <p className="text-gray-300 mb-6">
-              Book a free consultation with our learning advisors to find the perfect course for your goals.
+              Explore our complete catalog of expert-led courses across multiple disciplines. 
+              Find the perfect learning path for your goals.
             </p>
-            <Button variant="outline" size="lg">
-              Schedule Free Consultation
-            </Button>
+            <Link to="/courses">
+              <Button size="lg" glowing>
+                <BookOpen className="mr-2" size={20} />
+                Explore All Courses
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

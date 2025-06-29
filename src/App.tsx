@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage';
 import TrialPage from './pages/TrialPage';
 import CoursePage from './pages/CoursePage';
 import DownloadPage from './pages/DownloadPage';
+import AllCoursesPage from './pages/AllCoursesPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/trial" element={<TrialPage />} />
         <Route path="/course/:courseId" element={<CoursePage />} />
         <Route path="/download" element={<DownloadPage />} />
+        <Route path="/courses" element={<AllCoursesPage />} />
       </Routes>
     </Router>
   );
