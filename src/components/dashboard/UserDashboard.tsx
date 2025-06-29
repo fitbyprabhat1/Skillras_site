@@ -3,6 +3,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../lib/supabase';
 import { User, Settings, BookOpen, Award, TrendingUp, Users } from 'lucide-react';
 import AffiliateDashboard from './AffiliateDashboard';
+import CoursesDashboard from './CoursesDashboard';
 import Button from '../Button';
 
 interface DashboardStats {
@@ -14,7 +15,7 @@ interface DashboardStats {
 
 const UserDashboard: React.FC = () => {
   const { user, profile, signOut } = useAuth();
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('courses'); // Default to courses tab
   const [stats, setStats] = useState<DashboardStats>({
     totalCourses: 0,
     completedCourses: 0,
@@ -33,7 +34,7 @@ const UserDashboard: React.FC = () => {
     try {
       // Fetch user courses
       const { data: courses } = await supabase
-        .from('user_courses')
+        .from('user_course_access')
         .select('*')
         .eq('user_id', profile?.user_id);
 
@@ -74,7 +75,7 @@ const UserDashboard: React.FC = () => {
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold">Welcome back, {profile?.full_name}!</h1>
-              <p className="text-gray-400">Manage your courses and track your progress</p>
+              <p className="text-gray-400">Ready to continue your video editing journey?</p>
             </div>
             <div className="flex items-center space-x-4">
               <Button variant="outline" size="sm" onClick={handleSignOut}>
@@ -102,18 +103,6 @@ const UserDashboard: React.FC = () => {
 
               <nav className="space-y-2">
                 <button
-                  onClick={() => setActiveTab('overview')}
-                  className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${
-                    activeTab === 'overview' 
-                      ? 'bg-primary text-white' 
-                      : 'text-gray-300 hover:bg-dark-lighter'
-                  }`}
-                >
-                  <TrendingUp size={20} className="mr-3" />
-                  Overview
-                </button>
-                
-                <button
                   onClick={() => setActiveTab('courses')}
                   className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${
                     activeTab === 'courses' 
@@ -126,6 +115,18 @@ const UserDashboard: React.FC = () => {
                 </button>
                 
                 <button
+                  onClick={() => setActiveTab('overview')}
+                  className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${
+                    activeTab === 'overview' 
+                      ? 'bg-primary text-white' 
+                      : 'text-gray-300 hover:bg-dark-lighter'
+                  }`}
+                >
+                  <TrendingUp size={20} className="mr-3" />
+                  Overview
+                </button>
+                
+                <button
                   onClick={() => setActiveTab('affiliate')}
                   className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${
                     activeTab === 'affiliate' 
@@ -134,7 +135,7 @@ const UserDashboard: React.FC = () => {
                   }`}
                 >
                   <Users size={20} className="mr-3" />
-                  Affiliate Program
+                  Referral Program
                 </button>
                 
                 <button
@@ -154,6 +155,8 @@ const UserDashboard: React.FC = () => {
 
           {/* Main Content */}
           <div className="lg:col-span-3">
+            {activeTab === 'courses' && <CoursesDashboard />}
+
             {activeTab === 'overview' && (
               <div className="space-y-6">
                 {/* Stats Cards */}
@@ -161,7 +164,7 @@ const UserDashboard: React.FC = () => {
                   <div className="bg-dark-light rounded-lg p-6">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-gray-400 text-sm">Total Courses</p>
+                        <p className="text-gray-400 text-sm">Course Access</p>
                         <p className="text-2xl font-bold">{stats.totalCourses}</p>
                       </div>
                       <BookOpen className="text-primary" size={32} />
@@ -209,7 +212,7 @@ const UserDashboard: React.FC = () => {
                       className="justify-start"
                     >
                       <BookOpen size={20} className="mr-2" />
-                      Browse Courses
+                      Continue Learning
                     </Button>
                     <Button 
                       onClick={() => setActiveTab('affiliate')}
@@ -220,17 +223,6 @@ const UserDashboard: React.FC = () => {
                       Share & Earn
                     </Button>
                   </div>
-                </div>
-              </div>
-            )}
-
-            {activeTab === 'courses' && (
-              <div className="bg-dark-light rounded-lg p-6">
-                <h3 className="text-xl font-bold mb-4">My Courses</h3>
-                <div className="text-center py-12">
-                  <BookOpen className="mx-auto text-gray-500 mb-4" size={48} />
-                  <p className="text-gray-400 mb-4">You haven't enrolled in any courses yet.</p>
-                  <Button>Browse Available Courses</Button>
                 </div>
               </div>
             )}
