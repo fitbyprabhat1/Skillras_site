@@ -72,6 +72,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [sessionId] = useState(() => `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
 
   const [kycData, setKycData] = useState<KYCData>({
     full_name: '',
@@ -144,17 +145,11 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     setError(null);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error('Please log in to continue');
-      }
-
-      // Save KYC data
+      // Save KYC data without requiring authentication
       const { error: kycError } = await supabase
         .from('user_kyc')
-        .upsert({
-          user_id: user.id,
+        .insert({
+          session_id: sessionId,
           ...kycData
         });
 
@@ -178,16 +173,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     setError(null);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error('Please log in to continue');
-      }
-
-      // Call the apply_coupon_code function
+      // Call the apply_coupon_code function without requiring authentication
       const { data, error } = await supabase.rpc('apply_coupon_code', {
         p_code: couponCode.toUpperCase(),
-        p_user_id: user.id,
+        p_user_email: kycData.email,
         p_original_price: originalPrice
       });
 
@@ -213,17 +202,12 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     setError(null);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        throw new Error('Please log in to continue');
-      }
-
-      // Create enrollment record
+      // Create enrollment record without requiring authentication
       const { data: enrollment, error: enrollmentError } = await supabase
         .from('course_enrollments')
         .insert({
-          user_id: user.id,
+          session_id: sessionId,
+          customer_email: kycData.email,
           course_id: courseId,
           course_name: courseName,
           package_type: packageType,
@@ -307,6 +291,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             </div>
           )}
         </div>
+        <div className="text-sm text-gray-400">
+          <p>📧 A confirmation email will be sent to: {kycData.email}</p>
+          <p className="mt-2">💡 Keep this page open until payment is completed</p>
+        </div>
       </div>
     );
   }
@@ -340,10 +328,15 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       {step === 1 && (
         <div>
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-white mb-4">Complete Your KYC</h2>
+            <h2 className="text-3xl font-bold text-white mb-4">Complete Your Details</h2>
             <p className="text-gray-300">
               Please provide your details as per Indian compliance requirements
             </p>
+            <div className="mt-4 bg-blue-500/10 border border-blue-500 rounded-lg p-4">
+              <p className="text-blue-400 text-sm">
+                ✨ No account required! Complete your purchase as a guest
+              </p>
+            </div>
           </div>
 
           <form onSubmit={handleKYCSubmit} className="space-y-6">
@@ -607,7 +600,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 {loading ? (
                   <div className="flex items-center justify-center">
                     <Loader className="animate-spin mr-2" size={20} />
-                    Saving KYC Information...
+                    Saving Information...
                   </div>
                 ) : (
                   <>
@@ -637,6 +630,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               <div className="flex justify-between items-center">
                 <span className="text-gray-300">Course:</span>
                 <span className="text-white font-medium">{courseName}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-300">Customer:</span>
+                <span className="text-white">{kycData.email}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-300">Original Price:</span>
@@ -746,6 +743,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             <div className="text-center text-sm text-gray-400">
               <p>🔒 Secure payment powered by Razorpay</p>
               <p>Your payment information is encrypted and secure</p>
+              <p>💡 No account required - complete as guest</p>
             </div>
           </div>
         </div>
