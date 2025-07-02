@@ -7,6 +7,7 @@ import CoursePage from './pages/CoursePage';
 import DownloadPage from './pages/DownloadPage';
 import AllCoursesPage from './pages/AllCoursesPage';
 import PackagesPage from './pages/PackagesPage';
+import PaymentPage from './pages/PaymentPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/download" element={<DownloadPage />} />
         <Route path="/courses" element={<AllCoursesPage />} />
         <Route path="/packages" element={<PackagesPage />} />
+        <Route path="/payment/:courseId" element={<PaymentPage />} />
       </Routes>
     </Router>
   );
