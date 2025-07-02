@@ -28,6 +28,7 @@ interface Course {
   isPopular?: boolean;
   comingSoon?: boolean;
   link: string;
+  paymentLink: string;
 }
 
 // Show only 3 featured courses on main page
@@ -51,7 +52,8 @@ const featuredCourses: Course[] = [
       'Career Guidance'
     ],
     isPopular: true,
-    link: '/payment/550e8400-e29b-41d4-a716-446655440001'
+    link: '/premiere-pro',
+    paymentLink: '/payment/premiere-pro'
   },
   {
     id: 'digital-marketing',
@@ -72,7 +74,8 @@ const featuredCourses: Course[] = [
       'Analytics & Reporting'
     ],
     comingSoon: true,
-    link: '#'
+    link: '#',
+    paymentLink: '/payment/digital-marketing'
   },
   {
     id: 'graphic-design',
@@ -93,7 +96,8 @@ const featuredCourses: Course[] = [
       'Portfolio Building'
     ],
     comingSoon: true,
-    link: '#'
+    link: '#',
+    paymentLink: '/payment/graphic-design'
   }
 ];
 
@@ -214,7 +218,7 @@ const CoursesSection: React.FC = () => {
                     Coming Soon
                   </Button>
                 ) : (
-                  <Link to={course.link} className="block">
+                  <Link to={course.paymentLink} className="block">
                     <Button 
                       className="w-full group-hover:bg-primary-light transition-colors" 
                       glowing={course.isPopular}

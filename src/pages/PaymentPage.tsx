@@ -1,180 +1,148 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import React from 'react';
+import { useParams, Navigate } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import PaymentForm from '../components/PaymentForm';
-import { ArrowLeft, Loader } from 'lucide-react';
+import { ArrowLeft, Shield, CreditCard, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-interface Course {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  difficulty_level: string;
-  duration_weeks: number;
-  total_lessons: number;
-}
+// Course data - in a real app, this would come from your database
+const courseData = {
+  'premiere-pro': {
+    name: 'Premiere Pro Mastery',
+    price: 4999,
+    originalPrice: 9999,
+    description: 'Master Adobe Premiere Pro with step-by-step guidance and real-world projects'
+  },
+  'digital-marketing': {
+    name: 'Digital Marketing Mastery',
+    price: 6999,
+    originalPrice: 12999,
+    description: 'Learn comprehensive digital marketing strategies'
+  },
+  'graphic-design': {
+    name: 'Graphic Design Pro',
+    price: 5499,
+    originalPrice: 10999,
+    description: 'Master Photoshop, Illustrator, and design principles'
+  },
+  'starter-package': {
+    name: 'Starter Package',
+    price: 7999,
+    originalPrice: 15999,
+    description: 'Perfect for beginners starting their digital journey'
+  },
+  'professional-package': {
+    name: 'Professional Package',
+    price: 14999,
+    originalPrice: 29999,
+    description: 'Most popular choice for career advancement'
+  },
+  'enterprise-package': {
+    name: 'Enterprise Package',
+    price: 24999,
+    originalPrice: 49999,
+    description: 'Complete skill transformation for professionals'
+  }
+};
 
 const PaymentPage: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
-  const [searchParams] = useSearchParams();
-  const packageType = searchParams.get('package') as 'single_course' | 'package' || 'single_course';
   
-  const [course, setCourse] = useState<Course | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  if (!courseId || !courseData[courseId as keyof typeof courseData]) {
+    return <Navigate to="/courses" replace />;
+  }
 
-  useEffect(() => {
-    fetchCourse();
-  }, [courseId]);
-
-  const fetchCourse = async () => {
-    try {
-      if (!courseId) {
-        throw new Error('Course ID is required');
-      }
-
-      const { data, error } = await supabase
-        .from('courses')
-        .select('*')
-        .eq('id', courseId)
-        .single();
-
-      if (error) throw error;
-      setCourse(data);
-    } catch (err: any) {
-      setError(err.message || 'Failed to load course details');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const course = courseData[courseId as keyof typeof courseData];
+  const isPackage = courseId.includes('package');
 
   const handlePaymentSuccess = () => {
-    // Redirect to success page or course access page
-    console.log('Payment successful!');
+    // Handle successful payment - could redirect to course access page
+    console.log('Payment successful for:', courseId);
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-dark">
-        <NavBar />
-        <div className="container mx-auto px-4 py-8 pt-24">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <Loader className="animate-spin text-primary mx-auto mb-4" size={48} />
-              <p className="text-white text-lg">Loading course details...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !course) {
-    return (
-      <div className="min-h-screen bg-dark">
-        <NavBar />
-        <div className="container mx-auto px-4 py-8 pt-24">
-          <div className="text-center">
-            <div className="bg-red-500/10 border border-red-500 text-red-500 p-6 rounded-lg max-w-md mx-auto">
-              <h2 className="text-xl font-bold mb-2">Error</h2>
-              <p>{error || 'Course not found'}</p>
-              <Link to="/courses" className="inline-block mt-4 text-primary hover:text-primary-light">
-                ← Back to Courses
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-dark">
       <NavBar />
       
       <div className="container mx-auto px-4 py-8 pt-24">
-        {/* Header */}
-        <div className="text-center mb-12">
+        {/* Back Navigation */}
+        <div className="mb-8">
           <Link 
-            to="/courses" 
-            className="inline-flex items-center text-primary hover:text-primary-light transition-colors mb-6"
+            to={isPackage ? "/packages" : "/courses"} 
+            className="inline-flex items-center text-primary hover:text-primary-light transition-colors"
           >
             <ArrowLeft size={20} className="mr-2" />
-            Back to Courses
+            Back to {isPackage ? 'Packages' : 'Courses'}
           </Link>
-          
+        </div>
+
+        {/* Page Header */}
+        <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Enroll in <span className="text-primary">{course.title}</span>
+            Secure <span className="text-primary">Checkout</span>
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Complete your enrollment to get lifetime access to this comprehensive course
+            Complete your enrollment for {course.name} with our secure payment system
           </p>
         </div>
 
-        {/* Course Summary */}
-        <div className="max-w-4xl mx-auto mb-12">
-          <div className="bg-dark-light rounded-xl p-8 border border-primary/20">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <h2 className="text-2xl font-bold text-white mb-4">{course.title}</h2>
-                <p className="text-gray-300 mb-6">{course.description}</p>
-                
-                <div className="space-y-3">
-                  <div className="flex items-center text-gray-300">
-                    <span className="w-24 text-sm">Level:</span>
-                    <span className="font-medium">{course.difficulty_level}</span>
-                  </div>
-                  <div className="flex items-center text-gray-300">
-                    <span className="w-24 text-sm">Duration:</span>
-                    <span className="font-medium">{course.duration_weeks} weeks</span>
-                  </div>
-                  <div className="flex items-center text-gray-300">
-                    <span className="w-24 text-sm">Lessons:</span>
-                    <span className="font-medium">{course.total_lessons} lessons</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-4xl font-bold text-primary mb-2">
-                    ₹{course.price.toLocaleString()}
-                  </div>
-                  <div className="text-gray-400">One-time payment</div>
-                  <div className="text-sm text-green-400 mt-2">
-                    ✓ Lifetime Access
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* Security Features */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
+          <div className="flex items-center justify-center space-x-3 text-gray-300">
+            <Shield className="text-primary" size={24} />
+            <span className="font-medium">Bank-Level Security</span>
+          </div>
+          <div className="flex items-center justify-center space-x-3 text-gray-300">
+            <CreditCard className="text-primary" size={24} />
+            <span className="font-medium">Multiple Payment Options</span>
+          </div>
+          <div className="flex items-center justify-center space-x-3 text-gray-300">
+            <CheckCircle className="text-primary" size={24} />
+            <span className="font-medium">Instant Access</span>
           </div>
         </div>
 
         {/* Payment Form */}
         <PaymentForm
-          courseId={course.id}
-          courseName={course.title}
+          courseId={courseId}
+          courseName={course.name}
           originalPrice={course.price}
-          packageType={packageType}
+          packageType={isPackage ? 'package' : 'single_course'}
           onPaymentSuccess={handlePaymentSuccess}
         />
 
-        {/* Security Notice */}
-        <div className="max-w-2xl mx-auto mt-12 text-center">
-          <div className="bg-dark-light rounded-lg p-6 border border-gray-600">
-            <h3 className="text-white font-bold mb-3">🔒 Secure Payment</h3>
-            <p className="text-gray-300 text-sm">
-              Your payment information is processed securely through Razorpay. 
-              We never store your payment details on our servers.
-            </p>
-            <div className="flex justify-center items-center mt-4 space-x-4 text-xs text-gray-400">
-              <span>SSL Encrypted</span>
-              <span>•</span>
-              <span>PCI Compliant</span>
-              <span>•</span>
-              <span>Bank Grade Security</span>
+        {/* Trust Indicators */}
+        <div className="mt-16 text-center">
+          <div className="bg-dark-light rounded-xl p-8 max-w-4xl mx-auto">
+            <h3 className="text-2xl font-bold text-white mb-6">Why Choose SkillRas?</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Shield className="text-primary" size={32} />
+                </div>
+                <h4 className="text-white font-bold mb-2">Secure Payments</h4>
+                <p className="text-gray-300 text-sm">
+                  Your payment information is encrypted and processed securely through Razorpay
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="text-primary" size={32} />
+                </div>
+                <h4 className="text-white font-bold mb-2">Instant Access</h4>
+                <p className="text-gray-300 text-sm">
+                  Get immediate access to your course content after successful payment
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CreditCard className="text-primary" size={32} />
+                </div>
+                <h4 className="text-white font-bold mb-2">Money-Back Guarantee</h4>
+                <p className="text-gray-300 text-sm">
+                  30-day money-back guarantee if you're not satisfied with the course
+                </p>
+              </div>
             </div>
           </div>
         </div>
