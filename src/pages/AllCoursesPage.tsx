@@ -37,7 +37,6 @@ interface Course {
   isPopular?: boolean;
   comingSoon?: boolean;
   link: string;
-  paymentLink: string;
   instructor: string;
   lastUpdated: string;
 }
@@ -66,7 +65,6 @@ const allCourses: Course[] = [
     ],
     isPopular: true,
     link: '/premiere-pro',
-    paymentLink: '/payment/premiere-pro',
     instructor: 'Alex Rodriguez',
     lastUpdated: 'December 2024'
   },
@@ -87,11 +85,12 @@ const allCourses: Course[] = [
       'Social Media Marketing',
       'Google Ads & Facebook Ads',
       'Email Marketing',
-      'Analytics & Reporting'
+      'Analytics & Reporting',
+      'Marketing Automation',
+      'ROI Optimization'
     ],
     comingSoon: true,
     link: '#',
-    paymentLink: '/payment/digital-marketing',
     instructor: 'Sarah Johnson',
     lastUpdated: 'Coming January 2025'
   },
@@ -118,7 +117,6 @@ const allCourses: Course[] = [
     ],
     comingSoon: true,
     link: '#',
-    paymentLink: '/payment/graphic-design',
     instructor: 'Michael Chen',
     lastUpdated: 'Coming February 2025'
   },
@@ -145,7 +143,6 @@ const allCourses: Course[] = [
     ],
     comingSoon: true,
     link: '#',
-    paymentLink: '/payment/web-development',
     instructor: 'David Thompson',
     lastUpdated: 'Coming March 2025'
   },
@@ -172,7 +169,6 @@ const allCourses: Course[] = [
     ],
     comingSoon: true,
     link: '#',
-    paymentLink: '/payment/photography',
     instructor: 'Emma Rodriguez',
     lastUpdated: 'Coming April 2025'
   },
@@ -199,7 +195,6 @@ const allCourses: Course[] = [
     ],
     comingSoon: true,
     link: '#',
-    paymentLink: '/payment/content-creation',
     instructor: 'Jordan Smith',
     lastUpdated: 'Coming May 2025'
   }
@@ -427,7 +422,7 @@ const AllCoursesPage: React.FC = () => {
                       Coming Soon
                     </Button>
                   ) : (
-                    <Link to={course.paymentLink} className="block">
+                    <Link to={course.link} className="block">
                       <Button 
                         className="w-full group-hover:bg-primary-light transition-colors" 
                         glowing={course.isPopular}
