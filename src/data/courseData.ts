@@ -143,7 +143,7 @@ export const pricingPlans: PricingPlan[] = [
     ],
     featured: false,
     cta: "Enroll Now",
-    purchaseLink: "https://rzp.io/rzp/premierepro" // Add your actual Stripe/payment link
+    purchaseLink: "https://skillras.com/enroll" // Add your actual Stripe/payment link
   },
   {
     id: 2,
@@ -158,7 +158,7 @@ export const pricingPlans: PricingPlan[] = [
     ],
     featured: true,
     cta: "Get Started",
-    purchaseLink: "https://rzp.io/rzp/premierepro" // Add your actual Stripe/payment link
+    purchaseLink: "https://skillras.com/enroll" // Add your actual Stripe/payment link
   },
   {
     id: 3,
@@ -174,7 +174,7 @@ export const pricingPlans: PricingPlan[] = [
     ],
     featured: false,
     cta: "Enroll Now",
-    purchaseLink: "https://rzp.io/rzp/premierepro" // Add your actual Stripe/payment link
+    purchaseLink: "https://skillras.com/enroll" // Add your actual Stripe/payment link
   }
 ];
 
