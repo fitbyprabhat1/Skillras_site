@@ -16,6 +16,8 @@
 /premierepro    /premiere-pro    301
 /course    /courses    301
 /downloads    /download    301
+/enroll   /enroll    301
+
 
 # API redirects (if you add backend later)
 /api/*    https://your-api-domain.com/api/:splat    200
