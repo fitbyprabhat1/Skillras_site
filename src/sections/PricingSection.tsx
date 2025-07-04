@@ -3,6 +3,7 @@ import { pricingPlans } from '../data/courseData';
 import { useInView } from '../hooks/useInView';
 import Button from '../components/Button';
 import { Check, Shield } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const PricingSection: React.FC = () => {
   const { ref, inView } = useInView({ threshold: 0.1 });
@@ -63,14 +64,15 @@ const PricingSection: React.FC = () => {
                   ))}
                 </ul>
                 
-                <Button 
-                  className="w-full" 
-                  variant={plan.featured ? 'primary' : 'outline'}
-                  glowing={plan.featured}
-                  onClick={() => handlePurchase(plan.purchaseLink)}
-                >
-                  {plan.cta}
-                </Button>
+                <Link to="/enroll" className="block">
+                  <Button 
+                    className="w-full" 
+                    variant={plan.featured ? 'primary' : 'outline'}
+                    glowing={plan.featured}
+                  >
+                    {plan.cta}
+                  </Button>
+                </Link>
               </div>
               
               <div className="p-4 bg-dark-lighter border-t border-dark-light flex items-center justify-center text-sm text-gray-300">

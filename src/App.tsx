@@ -8,6 +8,7 @@ import DownloadPage from './pages/DownloadPage';
 import AllCoursesPage from './pages/AllCoursesPage';
 import PackagesPage from './pages/PackagesPage';
 import PaymentPage from './pages/PaymentPage';
+import EnrollmentPage from './pages/EnrollmentPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/courses" element={<AllCoursesPage />} />
         <Route path="/packages" element={<PackagesPage />} />
         <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/enroll" element={<EnrollmentPage />} />
       </Routes>
     </Router>
   );
