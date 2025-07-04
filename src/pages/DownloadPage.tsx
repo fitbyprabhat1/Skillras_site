@@ -15,7 +15,7 @@ const DownloadPage: React.FC = () => {
               Product <span className="text-primary">Downloads</span>
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Access your purchased products instantly. Enter your details and product code to get your download link.
+              Access Downloads instantly. Enter your details and product code to get your download link.
             </p>
             
             {/* Feature highlights */}
