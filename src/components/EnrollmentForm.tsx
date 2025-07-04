@@ -40,6 +40,7 @@ interface ReferralData {
   description?: string;
   max_usage?: number;
   current_usage: number;
+  payment_link?: string; // Added payment_link field
 }
 
 interface EnrollmentFormProps {
@@ -233,9 +234,14 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
     return { discountAmount, finalPrice };
   };
 
-  const generatePaymentLink = (finalPrice: number) => {
-    // Generate payment link based on final price
-    // This is a placeholder - replace with your actual payment gateway logic
+  const getPaymentLink = () => {
+    // Use the payment link from the referral code if available, otherwise generate default
+    if (referralData?.payment_link) {
+      return referralData.payment_link;
+    }
+    
+    // Fallback to default payment link generation
+    const { finalPrice } = calculatePricing();
     const baseUrl = 'https://rzp.io/rzp/skillras';
     return `${baseUrl}-${finalPrice}`;
   };
@@ -252,7 +258,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
     
     try {
       const { discountAmount, finalPrice } = calculatePricing();
-      const generatedPaymentLink = generatePaymentLink(finalPrice);
+      const generatedPaymentLink = getPaymentLink(); // Use the new function
       
       const enrollmentData = {
         name: formData.name.trim(),
@@ -375,6 +381,11 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               {referralData.description && (
                 <p className="text-gray-300 text-sm mt-2">{referralData.description}</p>
               )}
+              {referralData.payment_link && (
+                <div className="mt-3 pt-3 border-t border-primary/20">
+                  <p className="text-xs text-gray-400">Custom payment link assigned</p>
+                </div>
+              )}
             </div>
           )}
           
@@ -492,6 +503,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               <div className="text-xs text-gray-400 mt-1">
                 Type: {referralData.code_type.charAt(0).toUpperCase() + referralData.code_type.slice(1)}
                 {referralData.max_usage && ` • ${referralData.current_usage}/${referralData.max_usage} used`}
+                {referralData.payment_link && ` • Custom payment link`}
               </div>
               
               {/* Price Calculation */}
