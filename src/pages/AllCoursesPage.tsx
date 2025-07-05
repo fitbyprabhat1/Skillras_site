@@ -48,7 +48,7 @@ const allCourses: Course[] = [
     title: 'Premiere Pro Mastery',
     description: 'Master Adobe Premiere Pro and create professional videos that captivate and convert. Learn advanced editing techniques used by top creators.',
     icon: <Video size={32} className="text-primary" />,
-    thumbnail: 'https://images.pexels.com/photos/3945313/pexels-photo-3945313.jpeg?auto=compress&cs=tinysrgb&w=800',
+    thumbnail: 'https://flyinthecoop.com/content/images/2020/12/ali-course.jpg',
     price: 4999,
     originalPrice: 9999,
     duration: '35 hours',
