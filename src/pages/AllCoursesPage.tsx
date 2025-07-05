@@ -26,6 +26,7 @@ interface Course {
   title: string;
   description: string;
   icon: React.ReactNode;
+  thumbnail: string;
   price: number;
   originalPrice?: number;
   duration: string;
@@ -47,6 +48,7 @@ const allCourses: Course[] = [
     title: 'Premiere Pro Mastery',
     description: 'Master Adobe Premiere Pro and create professional videos that captivate and convert. Learn advanced editing techniques used by top creators.',
     icon: <Video size={32} className="text-primary" />,
+    thumbnail: 'https://images.pexels.com/photos/3945313/pexels-photo-3945313.jpeg?auto=compress&cs=tinysrgb&w=800',
     price: 4999,
     originalPrice: 9999,
     duration: '35 hours',
@@ -73,6 +75,7 @@ const allCourses: Course[] = [
     title: 'Digital Marketing Mastery',
     description: 'Learn comprehensive digital marketing strategies including SEO, social media, PPC, and content marketing to grow any business.',
     icon: <TrendingUp size={32} className="text-primary" />,
+    thumbnail: 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=800',
     price: 6999,
     originalPrice: 12999,
     duration: '45 hours',
@@ -99,6 +102,7 @@ const allCourses: Course[] = [
     title: 'Graphic Design Pro',
     description: 'Master Photoshop, Illustrator, and design principles to create stunning visuals for brands, social media, and print.',
     icon: <Palette size={32} className="text-primary" />,
+    thumbnail: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=800',
     price: 5499,
     originalPrice: 10999,
     duration: '40 hours',
@@ -125,6 +129,7 @@ const allCourses: Course[] = [
     title: 'Full Stack Web Development',
     description: 'Build modern, responsive websites and web applications using React, Node.js, and the latest web technologies.',
     icon: <Code size={32} className="text-primary" />,
+    thumbnail: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=800',
     price: 8999,
     originalPrice: 15999,
     duration: '60 hours',
@@ -151,6 +156,7 @@ const allCourses: Course[] = [
     title: 'Professional Photography',
     description: 'Master photography fundamentals, composition, lighting, and post-processing to create stunning images that sell.',
     icon: <Camera size={32} className="text-primary" />,
+    thumbnail: 'https://images.pexels.com/photos/606541/pexels-photo-606541.jpeg?auto=compress&cs=tinysrgb&w=800',
     price: 4499,
     originalPrice: 8999,
     duration: '30 hours',
@@ -177,6 +183,7 @@ const allCourses: Course[] = [
     title: 'Content Creation Mastery',
     description: 'Learn to create engaging content across all platforms, build your personal brand, and monetize your audience.',
     icon: <Megaphone size={32} className="text-primary" />,
+    thumbnail: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=800',
     price: 3999,
     originalPrice: 7999,
     duration: '25 hours',
@@ -342,17 +349,31 @@ const AllCoursesPage: React.FC = () => {
                   </div>
                 )}
                 
+                {/* Course Thumbnail */}
+                <div className="relative overflow-hidden">
+                  <img 
+                    src={course.thumbnail} 
+                    alt={course.title}
+                    className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute top-4 left-4 w-12 h-12 bg-dark/80 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                    {course.icon}
+                  </div>
+                  <div className="absolute bottom-4 right-4 bg-dark/80 backdrop-blur-sm px-3 py-1 rounded-full">
+                    <div className="flex items-center text-yellow-400 text-sm">
+                      <Star size={14} className="fill-current mr-1" />
+                      <span className="font-medium">{course.rating}</span>
+                    </div>
+                  </div>
+                </div>
+                
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-dark rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      {course.icon}
-                    </div>
-                    <div className="text-right">
-                      <div className="flex items-center text-yellow-400 mb-1">
-                        <Star size={14} className="fill-current" />
-                        <span className="ml-1 text-sm font-medium">{course.rating}</span>
-                      </div>
-                      <div className="text-xs text-gray-400">{course.students.toLocaleString()} students</div>
+                    <div className="text-sm text-gray-400">{course.students.toLocaleString()} students</div>
+                    <div className="flex items-center text-sm text-gray-400">
+                      <Clock size={14} className="mr-1" />
+                      {course.duration}
                     </div>
                   </div>
                   
@@ -370,10 +391,6 @@ const AllCoursesPage: React.FC = () => {
                   </p>
                   
                   <div className="flex items-center justify-between mb-4 text-xs text-gray-400">
-                    <div className="flex items-center">
-                      <Clock size={12} className="mr-1" />
-                      {course.duration}
-                    </div>
                     <div className="flex items-center">
                       <Users size={12} className="mr-1" />
                       {course.level}
