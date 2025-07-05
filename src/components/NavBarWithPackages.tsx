@@ -253,7 +253,7 @@ const NavBarWithPackages: React.FC = () => {
               Downloads
             </Link>
             
-            <Link to="/premiere-pro">
+            <Link to="/trial">
               <Button size="sm">Try Free Course</Button>
             </Link>
           </div>
