@@ -1,0 +1,43 @@
+# Dependencies and build outputs
+node_modules/
+dist/
+build/
+.next/
+out/
+.cache/
+.tmp/
+temp/
+
+# Large/unnecessary files
+*.log
+*.map
+.DS_Store
+package-lock.json
+yarn.lock
+
+# Config files (keep essential ones)
+.env
+.env.local
+.env.production
+.git/
+.gitignore
+
+# Database/Backend (if not needed for frontend work)
+supabase_discarded_migrations/
+supabase/migrations/
+supabase/functions/
+
+# Heavy asset files
+*.mp4
+*.avi
+*.mov
+*.zip
+*.tar.gz
+public/images/large/
+public/videos/
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
