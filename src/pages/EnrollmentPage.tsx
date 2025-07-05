@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBar from '../components/NavBar';
+import NavBarWithPackages from '../components/NavBarWithPackages';
 import EnrollmentForm from '../components/EnrollmentForm';
 import { CreditCard, Shield, Clock, CheckCircle, Users, Award, Percent } from 'lucide-react';
 
@@ -14,7 +14,7 @@ const EnrollmentPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-dark">
-      <NavBar />
+      <NavBarWithPackages />
       
       <div className="container mx-auto px-4 py-8 pt-24">
         <div className="max-w-7xl mx-auto">

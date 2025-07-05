@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBar from '../components/NavBar';
+import NavBarWithPackages from '../components/NavBarWithPackages';
 import HeroSection from '../sections/HeroSection';
 import BenefitsSection from '../sections/BenefitsSection';
 import ResultsSection from '../sections/ResultsSection';
@@ -20,7 +20,7 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-dark text-white">
-      <NavBar />
+      <NavBarWithPackages />
       <HeroSection />
       <BenefitsSection />
       <ResultsSection />

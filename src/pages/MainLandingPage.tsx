@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBar from '../components/NavBar';
+import NavBarWithPackages from '../components/NavBarWithPackages';
 import MainHeroSection from '../sections/MainHeroSection';
 import CoursesSection from '../sections/CoursesSection';
 import AboutSection from '../sections/AboutSection';
@@ -19,7 +19,7 @@ const MainLandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-dark text-white">
       <WelcomePopup onSubmit={handleFormSubmit} />
-      <NavBar />
+      <NavBarWithPackages />
       <MainHeroSection />
       <CoursesSection />
       <AboutSection />

@@ -1,12 +1,12 @@
 import React from 'react';
-import NavBar from '../components/NavBar';
+import NavBarWithPackages from '../components/NavBarWithPackages';
 import ProductDownloadForm from '../components/ProductDownloadForm';
 import { Download, Shield, Clock, CheckCircle } from 'lucide-react';
 
 const DownloadPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-dark">
-      <NavBar />
+      <NavBarWithPackages />
       
       <div className="container mx-auto px-4 py-8 pt-24">
         <div className="max-w-6xl mx-auto">
