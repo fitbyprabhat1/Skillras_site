@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import Button from './Button';
-import { Menu, X, BookOpen, Download, ChevronDown, Package, Star, Check } from 'lucide-react';
+import { Menu, X, BookOpen, Download, ChevronDown, Package, Star, Check, User, LogOut } from 'lucide-react';
 
 interface PackageData {
   id: string;
@@ -109,7 +110,10 @@ const NavBarWithPackages: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [packagesDropdownOpen, setPackagesDropdownOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut, loading } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -124,12 +128,15 @@ const NavBarWithPackages: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
       if (!target.closest('.packages-dropdown')) {
         setPackagesDropdownOpen(false);
+      }
+      if (!target.closest('.user-dropdown')) {
+        setUserDropdownOpen(false);
       }
     };
 
@@ -143,6 +150,16 @@ const NavBarWithPackages: React.FC = () => {
       element.scrollIntoView({ behavior: 'smooth' });
     }
     setMobileMenuOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      setUserDropdownOpen(false);
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   return (
@@ -253,9 +270,64 @@ const NavBarWithPackages: React.FC = () => {
               Downloads
             </Link>
             
-            <Link to="/trial">
-              <Button size="sm">Try Free Course</Button>
-            </Link>
+            {/* User Authentication Section */}
+            {loading ? (
+              <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+            ) : user ? (
+              <div className="relative user-dropdown">
+                <button
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  className="flex items-center space-x-2 text-white hover:text-primary-light transition-colors"
+                >
+                  <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                    <User size={16} />
+                  </div>
+                  <ChevronDown size={16} className={`transition-transform ${userDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                
+                {userDropdownOpen && (
+                  <div className="absolute top-full right-0 mt-2 w-48 bg-dark-light border border-gray-600 rounded-xl shadow-2xl overflow-hidden animate-slideDown">
+                    <div className="p-4 border-b border-gray-600">
+                      <p className="text-white font-medium truncate">{user.email}</p>
+                      <p className="text-gray-400 text-sm">Logged in</p>
+                    </div>
+                    
+                    <div className="p-2">
+                      <Link
+                        to="/trial"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
+                      >
+                        Trial Course
+                      </Link>
+                      <Link
+                        to="/gymCoursepage"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
+                      >
+                        Gym Course
+                      </Link>
+                      <button
+                        onClick={handleSignOut}
+                        className="flex items-center w-full text-left px-3 py-2 text-red-400 hover:bg-dark-lighter rounded-lg transition-colors"
+                      >
+                        <LogOut size={16} className="mr-2" />
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link to="/trial">
+                  <Button size="sm" variant="outline">Try Free Course</Button>
+                </Link>
+                <Link to="/login">
+                  <Button size="sm">Login</Button>
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -323,9 +395,48 @@ const NavBarWithPackages: React.FC = () => {
                 Downloads
               </Link>
               
-              <Link to="/premiere-pro">
-                <Button className="w-full">Try Free Course</Button>
-              </Link>
+              {/* Mobile Auth Section */}
+              {user ? (
+                <div className="border-t border-gray-600 pt-4">
+                  <div className="text-white font-medium mb-2">
+                    {user.email}
+                  </div>
+                  <div className="space-y-2">
+                    <Link 
+                      to="/trial"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block text-white hover:text-primary-light transition-colors py-2"
+                    >
+                      Trial Course
+                    </Link>
+                    <Link 
+                      to="/gymCoursepage"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block text-white hover:text-primary-light transition-colors py-2"
+                    >
+                      Gym Course
+                    </Link>
+                    <button
+                      onClick={() => {
+                        handleSignOut();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="block text-red-400 hover:text-red-300 transition-colors py-2"
+                    >
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="border-t border-gray-600 pt-4 space-y-2">
+                  <Link to="/trial">
+                    <Button className="w-full" variant="outline">Try Free Course</Button>
+                  </Link>
+                  <Link to="/login">
+                    <Button className="w-full">Login</Button>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         )}
