@@ -155,42 +155,6 @@ const LoginPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Demo Accounts - Show at top for easy access */}
-        {!isSignUp && (
-          <div className="mb-6 bg-dark-light rounded-xl p-6 border border-primary/10">
-            <h3 className="text-white font-bold mb-4 text-center">Quick Demo Login</h3>
-            <div className="space-y-3">
-              <button
-                onClick={() => fillDemoCredentials('demo@skillras.com', 'demo123')}
-                className="w-full bg-dark rounded-lg p-3 text-left hover:bg-dark-lighter transition-colors border border-gray-600 hover:border-primary"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-white font-medium">Demo Account</p>
-                    <p className="text-gray-400 text-sm">demo@skillras.com</p>
-                  </div>
-                  <Copy size={16} className="text-gray-400" />
-                </div>
-              </button>
-              <button
-                onClick={() => fillDemoCredentials('student@skillras.com', 'student123')}
-                className="w-full bg-dark rounded-lg p-3 text-left hover:bg-dark-lighter transition-colors border border-gray-600 hover:border-primary"
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-white font-medium">Student Account</p>
-                    <p className="text-gray-400 text-sm">student@skillras.com</p>
-                  </div>
-                  <Copy size={16} className="text-gray-400" />
-                </div>
-              </button>
-            </div>
-            <p className="text-gray-400 text-xs mt-3 text-center">
-              Click to auto-fill credentials, then click Sign In
-            </p>
-          </div>
-        )}
-
         {/* Form */}
         <div className="bg-dark-light rounded-xl p-8 shadow-lg border border-primary/10">
           {error && (
