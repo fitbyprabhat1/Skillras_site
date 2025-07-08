@@ -12,6 +12,8 @@ import PackagesPage from './pages/PackagesPage';
 import PaymentPage from './pages/PaymentPage';
 import EnrollmentPage from './pages/EnrollmentPage';
 import LoginPage from './pages/LoginPage';
+import DynamicCoursePage from './pages/DynamicCoursePage';
+import AdminDashboard from './pages/AdminDashboard';
 import GymCoursePage from './pages/gymCoursepage';
 
 function App() {
@@ -22,6 +24,15 @@ function App() {
           <Route path="/" element={<MainLandingPage />} />
           <Route path="/premiere-pro" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/course/:courseId" element={<DynamicCoursePage />} />
+          <Route 
+            path="/admin" 
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } 
+          />
           <Route 
             path="/trial" 
             element={
