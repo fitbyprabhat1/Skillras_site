@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import NavBarWithPackages from '../components/NavBarWithPackages';
+import { CourseService } from '../lib/courseService';
+import type { Course } from '../types/course';
 import { 
   Video, 
   TrendingUp, 
@@ -21,205 +24,62 @@ import Button from '../components/Button';
 import { Link } from 'react-router-dom';
 import { useInView } from '../hooks/useInView';
 
-interface Course {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  thumbnail: string;
-  price: number;
-  originalPrice?: number;
-  duration: string;
-  students: number;
-  rating: number;
-  level: string;
-  category: string;
-  features: string[];
-  isPopular?: boolean;
-  comingSoon?: boolean;
-  link: string;
-  instructor: string;
-  lastUpdated: string;
-}
-
-const allCourses: Course[] = [
-  {
-    id: 'premiere-pro',
-    title: 'Premiere Pro Mastery',
-    description: 'Master Adobe Premiere Pro and create professional videos that captivate and convert. Learn advanced editing techniques used by top creators.',
-    icon: <Video size={32} className="text-primary" />,
-    thumbnail: 'https://flyinthecoop.com/content/images/2020/12/ali-course.jpg',
-    price: 4999,
-    originalPrice: 9999,
-    duration: '35 hours',
-    students: 2547,
-    rating: 4.8,
-    level: 'Beginner to Advanced',
-    category: 'Video Editing',
-    features: [
-      'Professional Video Editing',
-      'Color Grading & Correction',
-      'Audio Enhancement',
-      'Social Media Optimization',
-      'Career Guidance',
-      'Live Projects',
-      'Certificate of Completion'
-    ],
-    isPopular: true,
-    link: '/premiere-pro',
-    instructor: 'Alex Rodriguez',
-    lastUpdated: 'December 2024'
-  },
-  {
-    id: 'digital-marketing',
-    title: 'Digital Marketing Mastery',
-    description: 'Learn comprehensive digital marketing strategies including SEO, social media, PPC, and content marketing to grow any business.',
-    icon: <TrendingUp size={32} className="text-primary" />,
-    thumbnail: 'https://images.pexels.com/photos/265087/pexels-photo-265087.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 6999,
-    originalPrice: 12999,
-    duration: '45 hours',
-    students: 1823,
-    rating: 4.9,
-    level: 'Beginner to Expert',
-    category: 'Marketing',
-    features: [
-      'SEO & Content Strategy',
-      'Social Media Marketing',
-      'Google Ads & Facebook Ads',
-      'Email Marketing',
-      'Analytics & Reporting',
-      'Marketing Automation',
-      'ROI Optimization'
-    ],
-    comingSoon: true,
-    link: '#',
-    instructor: 'Sarah Johnson',
-    lastUpdated: 'Coming January 2025'
-  },
-  {
-    id: 'graphic-design',
-    title: 'Graphic Design Pro',
-    description: 'Master Photoshop, Illustrator, and design principles to create stunning visuals for brands, social media, and print.',
-    icon: <Palette size={32} className="text-primary" />,
-    thumbnail: 'https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 5499,
-    originalPrice: 10999,
-    duration: '40 hours',
-    students: 1456,
-    rating: 4.7,
-    level: 'Beginner to Advanced',
-    category: 'Design',
-    features: [
-      'Adobe Creative Suite',
-      'Brand Identity Design',
-      'Social Media Graphics',
-      'Print Design',
-      'Portfolio Building',
-      'Client Management',
-      'Freelancing Tips'
-    ],
-    comingSoon: true,
-    link: '#',
-    instructor: 'Michael Chen',
-    lastUpdated: 'Coming February 2025'
-  },
-  {
-    id: 'web-development',
-    title: 'Full Stack Web Development',
-    description: 'Build modern, responsive websites and web applications using React, Node.js, and the latest web technologies.',
-    icon: <Code size={32} className="text-primary" />,
-    thumbnail: 'https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 8999,
-    originalPrice: 15999,
-    duration: '60 hours',
-    students: 987,
-    rating: 4.8,
-    level: 'Beginner to Expert',
-    category: 'Programming',
-    features: [
-      'React & JavaScript',
-      'Node.js & Databases',
-      'Responsive Design',
-      'API Development',
-      'Deployment & Hosting',
-      'Version Control',
-      'Testing & Debugging'
-    ],
-    comingSoon: true,
-    link: '#',
-    instructor: 'David Thompson',
-    lastUpdated: 'Coming March 2025'
-  },
-  {
-    id: 'photography',
-    title: 'Professional Photography',
-    description: 'Master photography fundamentals, composition, lighting, and post-processing to create stunning images that sell.',
-    icon: <Camera size={32} className="text-primary" />,
-    thumbnail: 'https://images.pexels.com/photos/606541/pexels-photo-606541.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 4499,
-    originalPrice: 8999,
-    duration: '30 hours',
-    students: 756,
-    rating: 4.6,
-    level: 'Beginner to Advanced',
-    category: 'Photography',
-    features: [
-      'Camera Settings & Techniques',
-      'Composition & Lighting',
-      'Photo Editing',
-      'Business & Pricing',
-      'Portfolio Development',
-      'Client Relations',
-      'Equipment Guide'
-    ],
-    comingSoon: true,
-    link: '#',
-    instructor: 'Emma Rodriguez',
-    lastUpdated: 'Coming April 2025'
-  },
-  {
-    id: 'content-creation',
-    title: 'Content Creation Mastery',
-    description: 'Learn to create engaging content across all platforms, build your personal brand, and monetize your audience.',
-    icon: <Megaphone size={32} className="text-primary" />,
-    thumbnail: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=800',
-    price: 3999,
-    originalPrice: 7999,
-    duration: '25 hours',
-    students: 1234,
-    rating: 4.7,
-    level: 'Beginner to Advanced',
-    category: 'Content',
-    features: [
-      'Content Strategy',
-      'Video & Photo Creation',
-      'Social Media Growth',
-      'Brand Building',
-      'Monetization Strategies',
-      'Audience Engagement',
-      'Analytics & Insights'
-    ],
-    comingSoon: true,
-    link: '#',
-    instructor: 'Jordan Smith',
-    lastUpdated: 'Coming May 2025'
+// Icon mapping for categories
+const getCategoryIcon = (category: string) => {
+  switch (category.toLowerCase()) {
+    case 'video editing':
+      return <Video size={32} className="text-primary" />;
+    case 'marketing':
+    case 'digital marketing':
+      return <TrendingUp size={32} className="text-primary" />;
+    case 'design':
+    case 'graphic design':
+      return <Palette size={32} className="text-primary" />;
+    case 'programming':
+    case 'web development':
+      return <Code size={32} className="text-primary" />;
+    case 'photography':
+      return <Camera size={32} className="text-primary" />;
+    case 'content':
+    case 'content creation':
+      return <Megaphone size={32} className="text-primary" />;
+    default:
+      return <BookOpen size={32} className="text-primary" />;
   }
-];
+};
 
-const categories = ['All', 'Video Editing', 'Marketing', 'Design', 'Programming', 'Photography', 'Content'];
+const categories = ['All', 'Video Editing', 'Digital Marketing', 'Design', 'Programming', 'Photography', 'Content Creation'];
 const levels = ['All Levels', 'Beginner', 'Intermediate', 'Advanced', 'Expert'];
 
 const AllCoursesPage: React.FC = () => {
+  const [allCourses, setAllCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedLevel, setSelectedLevel] = useState('All Levels');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('popular');
   const { ref, inView } = useInView({ threshold: 0.1 });
 
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      const result = await CourseService.getPublishedCourses(1, 50); // Get all courses
+      setAllCourses(result.courses);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredCourses = allCourses.filter(course => {
     const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
-    const matchesLevel = selectedLevel === 'All Levels' || course.level.includes(selectedLevel);
+    const matchesLevel = selectedLevel === 'All Levels' || course.skill_level.includes(selectedLevel.toLowerCase());
     const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          course.description.toLowerCase().includes(searchTerm.toLowerCase());
     
@@ -233,13 +93,60 @@ const AllCoursesPage: React.FC = () => {
       case 'price-high':
         return b.price - a.price;
       case 'rating':
-        return b.rating - a.rating;
+        return b.average_rating - a.average_rating;
       case 'students':
-        return b.students - a.students;
+        return b.students_count - a.students_count;
       default:
-        return b.isPopular ? 1 : -1;
+        return b.is_popular ? 1 : -1;
     }
   });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-dark text-white">
+        <NavBarWithPackages />
+        <div className="pt-24 pb-16 px-4">
+          <div className="container mx-auto max-w-7xl">
+            <div className="text-center mb-16">
+              <div className="animate-pulse">
+                <div className="h-8 bg-dark-light rounded w-1/3 mx-auto mb-4"></div>
+                <div className="h-4 bg-dark-light rounded w-2/3 mx-auto"></div>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div key={i} className="bg-dark-light rounded-xl overflow-hidden animate-pulse">
+                  <div className="h-48 bg-dark"></div>
+                  <div className="p-6">
+                    <div className="h-4 bg-dark rounded w-3/4 mb-2"></div>
+                    <div className="h-3 bg-dark rounded w-full mb-4"></div>
+                    <div className="h-8 bg-dark rounded w-1/2"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-dark text-white">
+        <NavBarWithPackages />
+        <div className="pt-24 pb-16 px-4">
+          <div className="container mx-auto max-w-7xl text-center">
+            <div className="bg-red-500/10 border border-red-500 text-red-500 p-8 rounded-xl">
+              <h2 className="text-2xl font-bold mb-4">Error Loading Courses</h2>
+              <p className="mb-4">{error}</p>
+              <Button onClick={fetchCourses}>Try Again</Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-dark text-white">
@@ -329,21 +236,21 @@ const AllCoursesPage: React.FC = () => {
           >
             {sortedCourses.map((course, index) => (
               <div
-                key={course.id}
+                key={course.course_id}
                 className={`bg-dark-light rounded-xl overflow-hidden transition-all duration-700 transform hover:scale-105 hover:shadow-2xl group ${
                   inView 
                     ? 'translate-y-0 opacity-100' 
                     : 'translate-y-10 opacity-0'
-                } ${course.isPopular ? 'ring-2 ring-primary' : ''}`}
+                } ${course.is_popular ? 'ring-2 ring-primary' : ''}`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                {course.isPopular && (
+                {course.is_popular && (
                   <div className="bg-primary text-white text-center py-2 font-bold text-sm">
                     🔥 MOST POPULAR
                   </div>
                 )}
                 
-                {course.comingSoon && (
+                {course.is_coming_soon && (
                   <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-center py-2 font-bold text-sm">
                     🚀 COMING SOON
                   </div>
@@ -352,25 +259,25 @@ const AllCoursesPage: React.FC = () => {
                 {/* Course Thumbnail */}
                 <div className="relative overflow-hidden">
                   <img 
-                    src={course.thumbnail} 
+                    src={course.thumbnail_image || 'https://images.pexels.com/photos/3945313/pexels-photo-3945313.jpeg?auto=compress&cs=tinysrgb&w=800'} 
                     alt={course.title}
                     className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   <div className="absolute top-4 left-4 w-12 h-12 bg-dark/80 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                    {course.icon}
+                    {getCategoryIcon(course.category)}
                   </div>
                   <div className="absolute bottom-4 right-4 bg-dark/80 backdrop-blur-sm px-3 py-1 rounded-full">
                     <div className="flex items-center text-yellow-400 text-sm">
                       <Star size={14} className="fill-current mr-1" />
-                      <span className="font-medium">{course.rating}</span>
+                      <span className="font-medium">{course.average_rating}</span>
                     </div>
                   </div>
                 </div>
                 
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="text-sm text-gray-400">{course.students.toLocaleString()} students</div>
+                    <div className="text-sm text-gray-400">{course.students_count.toLocaleString()} students</div>
                     <div className="flex items-center text-sm text-gray-400">
                       <Clock size={14} className="mr-1" />
                       {course.duration}
@@ -393,44 +300,45 @@ const AllCoursesPage: React.FC = () => {
                   <div className="flex items-center justify-between mb-4 text-xs text-gray-400">
                     <div className="flex items-center">
                       <Users size={12} className="mr-1" />
-                      {course.level}
+                      {course.skill_level}
                     </div>
                   </div>
                   
                   <div className="mb-4">
-                    <div className="text-xs text-gray-400 mb-2">Instructor: {course.instructor}</div>
-                    <div className="text-xs text-gray-400">Updated: {course.lastUpdated}</div>
+                    <div className="text-xs text-gray-400 mb-2">Instructor: {course.instructor_name}</div>
+                    <div className="text-xs text-gray-400">Updated: {new Date(course.last_updated_date).toLocaleDateString()}</div>
                   </div>
                   
-                  <ul className="space-y-1 mb-6">
-                    {course.features.slice(0, 3).map((feature, idx) => (
-                      <li key={idx} className="flex items-center text-xs text-gray-300">
-                        <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></div>
-                        {feature}
-                      </li>
-                    ))}
-                    {course.features.length > 3 && (
-                      <li className="text-xs text-gray-400 ml-3.5">
-                        +{course.features.length - 3} more features
-                      </li>
-                    )}
-                  </ul>
+                  <div className="mb-6">
+                    <div className="flex items-center text-xs text-gray-300 mb-2">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></div>
+                      {course.total_lessons} lessons
+                    </div>
+                    <div className="flex items-center text-xs text-gray-300 mb-2">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></div>
+                      Lifetime access
+                    </div>
+                    <div className="flex items-center text-xs text-gray-300">
+                      <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2"></div>
+                      Certificate included
+                    </div>
+                  </div>
                   
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <span className="text-2xl font-bold text-primary">₹{course.price.toLocaleString()}</span>
-                      {course.originalPrice && (
-                        <span className="text-sm text-gray-400 line-through ml-2">₹{course.originalPrice.toLocaleString()}</span>
+                      {course.original_price && course.original_price > course.price && (
+                        <span className="text-sm text-gray-400 line-through ml-2">₹{course.original_price.toLocaleString()}</span>
                       )}
                     </div>
-                    {course.originalPrice && (
+                    {course.original_price && course.original_price > course.price && (
                       <div className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-xs font-medium">
-                        {Math.round((1 - course.price / course.originalPrice) * 100)}% OFF
+                        {Math.round((1 - course.price / course.original_price) * 100)}% OFF
                       </div>
                     )}
                   </div>
                   
-                  {course.comingSoon ? (
+                  {course.is_coming_soon ? (
                     <Button 
                       className="w-full" 
                       variant="outline"
@@ -439,10 +347,10 @@ const AllCoursesPage: React.FC = () => {
                       Coming Soon
                     </Button>
                   ) : (
-                    <Link to={course.link} className="block">
+                    <Link to={`/course/${course.course_id}`} className="block">
                       <Button 
                         className="w-full group-hover:bg-primary-light transition-colors" 
-                        glowing={course.isPopular}
+                        glowing={course.is_popular}
                       >
                         Enroll Now
                         <ArrowRight size={14} className="ml-2" />
