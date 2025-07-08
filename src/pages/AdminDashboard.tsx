@@ -15,7 +15,8 @@ import {
   Users,
   TrendingUp,
   DollarSign,
-  Loader
+  Loader,
+  Lock
 } from 'lucide-react';
 import Button from '../components/Button';
 
@@ -25,6 +26,10 @@ interface AdminStats {
   totalStudents: number;
   totalRevenue: number;
 }
+
+// Hardcoded credentials
+const ADMIN_EMAIL = 'admin@skillras.com';
+const ADMIN_PASSWORD = 'admin123';
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -40,6 +45,12 @@ const AdminDashboard: React.FC = () => {
     totalStudents: 0,
     totalRevenue: 0
   });
+
+  // Login state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   // Form state for course creation/editing
   const [formData, setFormData] = useState<Partial<Course>>({
@@ -58,12 +69,32 @@ const AdminDashboard: React.FC = () => {
     is_coming_soon: false
   });
 
+  // Handle hardcoded login
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError('');
+
+    if (loginEmail === ADMIN_EMAIL && loginPassword === ADMIN_PASSWORD) {
+      setIsLoggedIn(true);
+      setLoginEmail('');
+      setLoginPassword('');
+    } else {
+      setLoginError('Invalid email or password');
+    }
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setLoginEmail('');
+    setLoginPassword('');
+  };
+
   useEffect(() => {
-    if (user) {
+    if (user && isLoggedIn) {
       fetchCourses();
       fetchStats();
     }
-  }, [user]);
+  }, [user, isLoggedIn]);
 
   const fetchCourses = async () => {
     try {
@@ -184,8 +215,67 @@ const AdminDashboard: React.FC = () => {
     setIsEditing(true);
   };
 
-  // Check if user is admin (you can implement your own admin check logic)
-  const isAdmin = user?.email === 'admin@skillras.com';
+  // Check if user is admin AND logged in with hardcoded credentials
+  const isAdmin = user?.email === ADMIN_EMAIL && isLoggedIn;
+
+  // Show login form if not logged in
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen bg-dark flex items-center justify-center">
+        <div className="bg-dark-light rounded-xl p-8 max-w-md w-full mx-4">
+          <div className="text-center mb-8">
+            <Lock className="text-primary mx-auto mb-4" size={48} />
+            <h1 className="text-3xl font-bold text-white mb-2">Admin Login</h1>
+            <p className="text-gray-300">Enter your credentials to access the dashboard</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <label className="block text-white mb-2">Email</label>
+              <input
+                type="email"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-white mb-2">Password</label>
+              <input
+                type="password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+
+            {loginError && (
+              <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg text-sm">
+                {loginError}
+              </div>
+            )}
+
+            <Button type="submit" className="w-full" glowing>
+              Login
+            </Button>
+          </form>
+
+          <div className="mt-6 p-4 bg-dark rounded-lg">
+            <p className="text-gray-400 text-sm text-center">
+              <strong>Demo Credentials:</strong><br />
+              Email: admin@skillras.com<br />
+              Password: admin123
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!user || !isAdmin) {
     return (
@@ -193,6 +283,9 @@ const AdminDashboard: React.FC = () => {
         <div className="text-center">
           <h1 className="text-3xl font-bold text-white mb-4">Access Denied</h1>
           <p className="text-gray-300">You don't have permission to access this page.</p>
+          <Button onClick={handleLogout} className="mt-4" variant="outline">
+            Back to Login
+          </Button>
         </div>
       </div>
     );
@@ -218,10 +311,15 @@ const AdminDashboard: React.FC = () => {
             <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
             <p className="text-gray-300">Manage your courses and content</p>
           </div>
-          <Button onClick={() => setShowCreateForm(true)} glowing>
-            <Plus size={20} className="mr-2" />
-            Create Course
-          </Button>
+          <div className="flex items-center space-x-4">
+            <Button onClick={() => setShowCreateForm(true)} glowing>
+              <Plus size={20} className="mr-2" />
+              Create Course
+            </Button>
+            <Button onClick={handleLogout} variant="outline">
+              Logout
+            </Button>
+          </div>
         </div>
 
         {/* Stats Cards */}
