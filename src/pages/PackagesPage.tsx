@@ -58,19 +58,40 @@ const allCourses: Course[] = [
     level: 'Beginner to Advanced'
   },
   {
-    id: 'After effect',
-    name: 'Animation Pro',
+    id: 'digital-marketing',
+    name: 'Digital Marketing Mastery',
     icon: <TrendingUp size={20} className="text-primary" />,
     duration: '45 hours',
     level: 'Beginner to Expert'
   },
   {
-    id: 'Excel',
-    name: 'Excel Pro',
+    id: 'graphic-design',
+    name: 'Graphic Design Pro',
     icon: <Palette size={20} className="text-primary" />,
     duration: '40 hours',
     level: 'Beginner to Advanced'
   },
+  {
+    id: 'web-development',
+    name: 'Full Stack Web Development',
+    icon: <Code size={20} className="text-primary" />,
+    duration: '60 hours',
+    level: 'Beginner to Expert'
+  },
+  {
+    id: 'photography',
+    name: 'Professional Photography',
+    icon: <Camera size={20} className="text-primary" />,
+    duration: '30 hours',
+    level: 'Beginner to Advanced'
+  },
+  {
+    id: 'content-creation',
+    name: 'Content Creation Mastery',
+    icon: <Megaphone size={20} className="text-primary" />,
+    duration: '25 hours',
+    level: 'Beginner to Advanced'
+  }
 ];
 
 const packages: PackageData[] = [
@@ -83,14 +104,16 @@ const packages: PackageData[] = [
     discount: 50,
     courses: [
       allCourses[0], // Premiere Pro
+      allCourses[5], // Content Creation
+      allCourses[4]  // Photography
     ],
     features: [
-      '1 Complete Courses',
+      '3 Complete Courses',
       'Lifetime Access',
       'Basic Email Support',
       'Certificate of Completion',
-      'Downloadable Resources',
-      'Eligible for 30% Affilate'
+      'Mobile App Access',
+      'Downloadable Resources'
     ],
     color: 'from-blue-500 to-blue-600',
     badge: 'Best for Beginners',
@@ -103,19 +126,25 @@ const packages: PackageData[] = [
     name: 'Professional Package',
     description: 'Most popular choice for career advancement',
     price: 14999,
-    originalPrice: 20999,
+    originalPrice: 29999,
     discount: 50,
     courses: [
       allCourses[0], // Premiere Pro
       allCourses[1], // Digital Marketing
+      allCourses[2], // Graphic Design
+      allCourses[5], // Content Creation
+      allCourses[4]  // Photography
     ],
     features: [
-      '2 Complete Courses',
+      '5 Complete Courses',
       'Lifetime Access',
-      'Basic Email Support',
-      'Certificate of Completion',
-      'Downloadable Resources',
-      'Eligible for 50% Affilate'
+      'Priority Support',
+      '1-on-1 Mentoring Session',
+      'Portfolio Review',
+      'Job Assistance',
+      'Private Community Access',
+      'Monthly Live Q&A Sessions',
+      'Project Feedback'
     ],
     isPopular: true,
     color: 'from-primary to-red-600',
@@ -128,19 +157,22 @@ const packages: PackageData[] = [
     id: 'enterprise',
     name: 'Enterprise Package',
     description: 'Complete skill transformation for professionals',
-    price: 20999,
-    originalPrice: 30000,
+    price: 24999,
+    originalPrice: 49999,
     discount: 50,
     courses: allCourses,
     features: [
       'All 6 Courses (Current + Future)',
       'Lifetime Access',
-      'Basic Email Support',
-      'Certificate of Completion',
-      'Downloadable Resources',
-      'Eligible for 70% Affilate',
+      'VIP Support',
       '3 Mentoring Sessions',
       'Portfolio Review',
+      'Job Assistance',
+      'Exclusive Community Access',
+      'Monthly Live Sessions',
+      'Direct Instructor Access',
+      'Custom Learning Path',
+      'Industry Networking Events',
       'Freelance Project Opportunities'
     ],
     isPremium: true,
@@ -149,8 +181,31 @@ const packages: PackageData[] = [
     totalHours: 235,
     supportLevel: 'VIP Support',
     mentoringSessions: 3
+  },
+  {
+    id: 'custom',
+    name: 'Custom Package',
+    description: 'Tailored learning path for specific needs',
+    price: 0,
+    originalPrice: 0,
+    discount: 0,
+    courses: [],
+    features: [
+      'Customized Course Selection',
+      'Flexible Timeline',
+      'Dedicated Support',
+      'Personal Learning Advisor',
+      'Custom Pricing',
+      'Corporate Training Available',
+      'Team Discounts',
+      'Custom Content Creation'
+    ],
+    color: 'from-green-500 to-green-600',
+    badge: 'Fully Customizable',
+    totalHours: 0,
+    supportLevel: 'Dedicated Support',
+    mentoringSessions: 0
   }
-  
 ];
 
 const PackagesPage: React.FC = () => {

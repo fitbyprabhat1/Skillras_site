@@ -84,6 +84,26 @@ const packages: PackageData[] = [
     ],
     color: 'from-purple-500 to-purple-600'
   },
+  {
+    id: 'custom',
+    name: 'Custom Package',
+    description: 'Tailored learning path for specific needs',
+    price: 0,
+    originalPrice: 0,
+    courses: [
+      'Choose Your Courses',
+      'Personalized Learning Path',
+      'Custom Timeline'
+    ],
+    features: [
+      'Customized Course Selection',
+      'Flexible Timeline',
+      'Dedicated Support',
+      'Personal Learning Advisor',
+      'Custom Pricing'
+    ],
+    color: 'from-green-500 to-green-600'
+  }
 ];
 
 const NavBarWithPackages: React.FC = () => {
