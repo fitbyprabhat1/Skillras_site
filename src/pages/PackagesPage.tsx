@@ -110,15 +110,12 @@ const packages: PackageData[] = [
       allCourses[1], // Digital Marketing
     ],
     features: [
-      '5 Complete Courses',
+      '2 Complete Courses',
       'Lifetime Access',
-      'Priority Support',
-      '1-on-1 Mentoring Session',
-      'Portfolio Review',
-      'Job Assistance',
-      'Private Community Access',
-      'Monthly Live Q&A Sessions',
-      'Project Feedback'
+      'Basic Email Support',
+      'Certificate of Completion',
+      'Downloadable Resources',
+      'Eligible for 50% Affilate'
     ],
     isPopular: true,
     color: 'from-primary to-red-600',
