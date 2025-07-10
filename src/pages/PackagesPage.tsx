@@ -133,7 +133,7 @@ const packages: PackageData[] = [
     discount: 50,
     courses: allCourses,
     features: [
-      'All 6 Courses (Current + Future),
+      'All 6 Courses (Current + Future)',
       'Lifetime Access',
       'Basic Email Support',
       'Certificate of Completion',
