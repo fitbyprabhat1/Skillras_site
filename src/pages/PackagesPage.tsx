@@ -110,7 +110,7 @@ const packages: PackageData[] = [
       'Lifetime Access',
       'Basic Email Support',
       'Certificate of Completion',
-      'Downloadable Resources'
+      'Downloadable Resources',
       'Eligible for 30% Affilate'
     ],
     color: 'from-blue-500 to-blue-600',
