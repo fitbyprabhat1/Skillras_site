@@ -103,14 +103,11 @@ const packages: PackageData[] = [
     name: 'Professional Package',
     description: 'Most popular choice for career advancement',
     price: 14999,
-    originalPrice: 29999,
+    originalPrice: 20999,
     discount: 50,
     courses: [
       allCourses[0], // Premiere Pro
       allCourses[1], // Digital Marketing
-      allCourses[2], // Graphic Design
-      allCourses[5], // Content Creation
-      allCourses[4]  // Photography
     ],
     features: [
       '5 Complete Courses',
