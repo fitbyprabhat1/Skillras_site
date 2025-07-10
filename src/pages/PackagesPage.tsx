@@ -351,12 +351,22 @@ const PackagesPage: React.FC = () => {
                   
                   {/* CTA Button */}
                   <Button 
-                    onClick={() => handlePackageSelect(pkg.id)}
-                    className="w-full" 
-                    variant={pkg.isPopular || pkg.isPremium ? 'primary' : 'outline'}
-                    glowing={pkg.isPopular}
-                  >
-                    {pkg.price === 0 ? 'Get Custom Quote' : 'Choose Package'}
+                    onClick={() => handlePackageSelect = (packageId: string) => {
+  setSelectedPackage(packageId);
+
+  const paymentLinks: Record<string, string> = {
+    'starter': 'https://your-payment-gateway.com/starter ',
+    'professional': 'https://your-payment-gateway.com/professional ',
+    'enterprise': 'https://your-payment-gateway.com/enterprise ',
+    'custom': '/contact-sales' // A custom landing or contact form
+  };
+
+  if (paymentLinks[packageId]) {
+    window.location.href = paymentLinks[packageId];
+  } else {
+    console.error('No payment link found for package:', packageId);
+  }
+};
                   </Button>
                 </div>
               </div>
