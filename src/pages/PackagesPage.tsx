@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import Button from '../components/Button';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import Button from './Button';
+import { Menu, X, BookOpen, Download, ChevronDown, Package, Star, Check, User, LogOut } from 'lucide-react';
 import { 
   Package, 
   Star, 
