@@ -104,16 +104,14 @@ const packages: PackageData[] = [
     discount: 50,
     courses: [
       allCourses[0], // Premiere Pro
-      allCourses[5], // Content Creation
-      allCourses[4]  // Photography
     ],
     features: [
       '1 Complete Courses',
       'Lifetime Access',
       'Basic Email Support',
       'Certificate of Completion',
-      'Mobile App Access',
       'Downloadable Resources'
+      'Eligible for 30% Affilate'
     ],
     color: 'from-blue-500 to-blue-600',
     badge: 'Best for Beginners',
