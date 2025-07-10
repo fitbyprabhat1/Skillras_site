@@ -71,27 +71,6 @@ const allCourses: Course[] = [
     duration: '40 hours',
     level: 'Beginner to Advanced'
   },
-  {
-    id: 'web-development',
-    name: 'Full Stack Web Development',
-    icon: <Code size={20} className="text-primary" />,
-    duration: '60 hours',
-    level: 'Beginner to Expert'
-  },
-  {
-    id: 'photography',
-    name: 'Professional Photography',
-    icon: <Camera size={20} className="text-primary" />,
-    duration: '30 hours',
-    level: 'Beginner to Advanced'
-  },
-  {
-    id: 'content-creation',
-    name: 'Content Creation Mastery',
-    icon: <Megaphone size={20} className="text-primary" />,
-    duration: '25 hours',
-    level: 'Beginner to Advanced'
-  }
 ];
 
 const packages: PackageData[] = [
