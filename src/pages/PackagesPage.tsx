@@ -108,7 +108,7 @@ const packages: PackageData[] = [
       allCourses[4]  // Photography
     ],
     features: [
-      '3 Complete Courses',
+      '1 Complete Courses',
       'Lifetime Access',
       'Basic Email Support',
       'Certificate of Completion',
