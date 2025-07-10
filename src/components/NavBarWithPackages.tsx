@@ -320,11 +320,8 @@ const NavBarWithPackages: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link to="/trial">
-                  <Button size="sm" variant="outline">Try Free Course</Button>
-                </Link>
-                <Link to="/Trialpage">
-                  <Button size="sm">Login</Button>
+                <Link to="/login">
+                  <Button size="sm" variant="outline" >Login</Button>
                 </Link>
               </div>
             )}
