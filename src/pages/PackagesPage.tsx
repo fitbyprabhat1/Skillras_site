@@ -59,7 +59,7 @@ const allCourses: Course[] = [
   },
   {
     id: 'After effect',
-    name: 'Digital Marketing Mastery',
+    name: 'Animation Pro',
     icon: <TrendingUp size={20} className="text-primary" />,
     duration: '45 hours',
     level: 'Beginner to Expert'
