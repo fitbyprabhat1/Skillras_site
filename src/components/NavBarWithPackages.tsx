@@ -323,7 +323,7 @@ const NavBarWithPackages: React.FC = () => {
                 <Link to="/trial">
                   <Button size="sm" variant="outline">Try Free Course</Button>
                 </Link>
-                <Link to="/login">
+                <Link to="/Trialpage">
                   <Button size="sm">Login</Button>
                 </Link>
               </div>
