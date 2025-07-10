@@ -116,6 +116,7 @@ const packages: PackageData[] = [
       'Certificate of Completion',
       'Downloadable Resources',
       'Eligible for 50% Affilate'
+      
     ],
     isPopular: true,
     color: 'from-primary to-red-600',
