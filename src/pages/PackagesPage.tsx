@@ -138,7 +138,7 @@ const packages: PackageData[] = [
       'Basic Email Support',
       'Certificate of Completion',
       'Downloadable Resources',
-      'Eligible for 70% Affilate'
+      'Eligible for 70% Affilate',
       '3 Mentoring Sessions',
       'Portfolio Review',
       'Freelance Project Opportunities'
