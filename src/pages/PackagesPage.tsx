@@ -116,7 +116,6 @@ const packages: PackageData[] = [
       'Certificate of Completion',
       'Downloadable Resources',
       'Eligible for 50% Affilate'
-      
     ],
     isPopular: true,
     color: 'from-primary to-red-600',
@@ -129,22 +128,19 @@ const packages: PackageData[] = [
     id: 'enterprise',
     name: 'Enterprise Package',
     description: 'Complete skill transformation for professionals',
-    price: 24999,
-    originalPrice: 49999,
+    price: 20999,
+    originalPrice: 30000,
     discount: 50,
     courses: allCourses,
     features: [
-      'All 6 Courses (Current + Future)',
+      'All 6 Courses (Current + Future),
       'Lifetime Access',
-      'VIP Support',
+      'Basic Email Support',
+      'Certificate of Completion',
+      'Downloadable Resources',
+      'Eligible for 70% Affilate'
       '3 Mentoring Sessions',
       'Portfolio Review',
-      'Job Assistance',
-      'Exclusive Community Access',
-      'Monthly Live Sessions',
-      'Direct Instructor Access',
-      'Custom Learning Path',
-      'Industry Networking Events',
       'Freelance Project Opportunities'
     ],
     isPremium: true,
