@@ -58,17 +58,31 @@ const allCourses: Course[] = [
     level: 'Beginner to Advanced'
   },
   {
-    id: 'After effect',
-    name: 'After effect Mastery',
+    id: 'digital-marketing',
+    name: 'Digital Marketing Mastery',
     icon: <TrendingUp size={20} className="text-primary" />,
     duration: '45 hours',
     level: 'Beginner to Expert'
   },
   {
-    id: 'Excel',
-    name: 'Excel Pro',
+    id: 'graphic-design',
+    name: 'Graphic Design Pro',
     icon: <Palette size={20} className="text-primary" />,
     duration: '40 hours',
+    level: 'Beginner to Advanced'
+  },
+  {
+    id: 'web-development',
+    name: 'Full Stack Web Development',
+    icon: <Code size={20} className="text-primary" />,
+    duration: '60 hours',
+    level: 'Beginner to Expert'
+  },
+  {
+    id: 'photography',
+    name: 'Professional Photography',
+    icon: <Camera size={20} className="text-primary" />,
+    duration: '30 hours',
     level: 'Beginner to Advanced'
   },
   {
@@ -90,6 +104,8 @@ const packages: PackageData[] = [
     discount: 50,
     courses: [
       allCourses[0], // Premiere Pro
+      allCourses[5], // Content Creation
+      allCourses[4]  // Photography
     ],
     features: [
       '3 Complete Courses',
@@ -115,6 +131,9 @@ const packages: PackageData[] = [
     courses: [
       allCourses[0], // Premiere Pro
       allCourses[1], // Digital Marketing
+      allCourses[2], // Graphic Design
+      allCourses[5], // Content Creation
+      allCourses[4]  // Photography
     ],
     features: [
       '5 Complete Courses',
@@ -163,6 +182,30 @@ const packages: PackageData[] = [
     supportLevel: 'VIP Support',
     mentoringSessions: 3
   },
+  {
+    id: 'custom',
+    name: 'Custom Package',
+    description: 'Tailored learning path for specific needs',
+    price: 0,
+    originalPrice: 0,
+    discount: 0,
+    courses: [],
+    features: [
+      'Customized Course Selection',
+      'Flexible Timeline',
+      'Dedicated Support',
+      'Personal Learning Advisor',
+      'Custom Pricing',
+      'Corporate Training Available',
+      'Team Discounts',
+      'Custom Content Creation'
+    ],
+    color: 'from-green-500 to-green-600',
+    badge: 'Fully Customizable',
+    totalHours: 0,
+    supportLevel: 'Dedicated Support',
+    mentoringSessions: 0
+  }
 ];
 
 const PackagesPage: React.FC = () => {
@@ -515,28 +558,5 @@ const PackagesPage: React.FC = () => {
     </div>
   );
 };
-
-<a 
-  href={
-    pkg.id === 'starter' 
-      ? 'https://yourpaymentgateway.com/starter ' 
-      : pkg.id === 'professional' 
-        ? 'https://yourpaymentgateway.com/professional ' 
-        : pkg.id === 'enterprise' 
-          ? 'https://yourpaymentgateway.com/enterprise ' 
-          : 'https://yoursite.com/contact-sales '
-  } 
-  target="_blank" 
-  rel="noopener noreferrer"
-  className="block w-full"
->
-  <Button 
-    className="w-full" 
-    variant={pkg.isPopular || pkg.isPremium ? 'primary' : 'outline'}
-    glowing={pkg.isPopular}
-  >
-    {pkg.price === 0 ? 'Get Custom Quote' : 'Choose Package'}
-  </Button>
-</a>
 
 export default PackagesPage;
