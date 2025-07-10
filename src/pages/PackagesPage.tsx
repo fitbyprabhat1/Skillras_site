@@ -58,15 +58,15 @@ const allCourses: Course[] = [
     level: 'Beginner to Advanced'
   },
   {
-    id: 'digital-marketing',
+    id: 'After effect',
     name: 'Digital Marketing Mastery',
     icon: <TrendingUp size={20} className="text-primary" />,
     duration: '45 hours',
     level: 'Beginner to Expert'
   },
   {
-    id: 'graphic-design',
-    name: 'Graphic Design Pro',
+    id: 'Excel',
+    name: 'Excel Pro',
     icon: <Palette size={20} className="text-primary" />,
     duration: '40 hours',
     level: 'Beginner to Advanced'
