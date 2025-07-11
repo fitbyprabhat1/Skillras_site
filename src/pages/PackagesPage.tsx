@@ -50,6 +50,9 @@ interface PackageData {
   mentoringSessions: number;
 }
 
+const PackagesPage = () => {
+  const router = useRouter();
+
 const allCourses: Course[] = [
   {
     id: 'premiere-pro',
