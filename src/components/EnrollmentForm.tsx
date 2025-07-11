@@ -457,7 +457,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
                     ? 'border-green-500 focus:border-green-400 focus:ring-2 focus:ring-green-500/20'
                     : 'border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20'
                 }`}
-                placeholder="Enter your code (put 'New' if dont have)"
+                placeholder="Enter your code, put 'New' if dont have"
                 style={{ textTransform: 'uppercase' }}
               />
             </div>
