@@ -58,40 +58,19 @@ const allCourses: Course[] = [
     level: 'Beginner to Advanced'
   },
   {
-    id: 'digital-marketing',
-    name: 'Digital Marketing Mastery',
+    id: 'After effects',
+    name: 'After effects Mastery',
     icon: <TrendingUp size={20} className="text-primary" />,
     duration: '45 hours',
     level: 'Beginner to Expert'
   },
   {
-    id: 'graphic-design',
-    name: 'Graphic Design Pro',
+    id: 'Excel',
+    name: 'MS Excel',
     icon: <Palette size={20} className="text-primary" />,
     duration: '40 hours',
     level: 'Beginner to Advanced'
   },
-  {
-    id: 'web-development',
-    name: 'Full Stack Web Development',
-    icon: <Code size={20} className="text-primary" />,
-    duration: '60 hours',
-    level: 'Beginner to Expert'
-  },
-  {
-    id: 'photography',
-    name: 'Professional Photography',
-    icon: <Camera size={20} className="text-primary" />,
-    duration: '30 hours',
-    level: 'Beginner to Advanced'
-  },
-  {
-    id: 'content-creation',
-    name: 'Content Creation Mastery',
-    icon: <Megaphone size={20} className="text-primary" />,
-    duration: '25 hours',
-    level: 'Beginner to Advanced'
-  }
 ];
 
 const packages: PackageData[] = [
@@ -104,8 +83,6 @@ const packages: PackageData[] = [
     discount: 50,
     courses: [
       allCourses[0], // Premiere Pro
-      allCourses[5], // Content Creation
-      allCourses[4]  // Photography
     ],
     features: [
       '3 Complete Courses',
