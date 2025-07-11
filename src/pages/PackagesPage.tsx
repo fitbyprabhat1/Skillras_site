@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import Button from '../components/Button';
+import { useNavigate } from 'react-router-dom'
+
 import { 
   Package, 
   Star, 
@@ -164,8 +166,8 @@ const PackagesPage: React.FC = () => {
     router.push('/enroll');
   }
     // Here you would typically redirect to checkout or open a modal
-
-      };
+    console.log('Selected package:', packageId);
+  };
 
   const toggleComparison = () => {
     setShowComparison(!showComparison);
