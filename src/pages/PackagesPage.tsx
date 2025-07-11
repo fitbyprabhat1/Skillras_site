@@ -181,30 +181,6 @@ const packages: PackageData[] = [
     totalHours: 235,
     supportLevel: 'VIP Support',
     mentoringSessions: 3
-  },
-  {
-    id: 'custom',
-    name: 'Custom Package',
-    description: 'Tailored learning path for specific needs',
-    price: 0,
-    originalPrice: 0,
-    discount: 0,
-    courses: [],
-    features: [
-      'Customized Course Selection',
-      'Flexible Timeline',
-      'Dedicated Support',
-      'Personal Learning Advisor',
-      'Custom Pricing',
-      'Corporate Training Available',
-      'Team Discounts',
-      'Custom Content Creation'
-    ],
-    color: 'from-green-500 to-green-600',
-    badge: 'Fully Customizable',
-    totalHours: 0,
-    supportLevel: 'Dedicated Support',
-    mentoringSessions: 0
   }
 ];
 
