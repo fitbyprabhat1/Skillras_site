@@ -163,10 +163,12 @@ const PackagesPage: React.FC = () => {
   const { ref, inView } = useInView({ threshold: 0.1 });
 
   const handlePackageSelect = (packageId: string) => {
-    setSelectedPackage(packageId);
+   setSelectedPackage(packageId);
     if (packageId === "professional") {
       router.push('/enroll');
     }
+    // Here you would typically redirect to checkout or open a modal
+    console.log('Selected package:', packageId);
   };
 
   const toggleComparison = () => {
