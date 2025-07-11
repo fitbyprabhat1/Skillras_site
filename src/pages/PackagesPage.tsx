@@ -160,6 +160,7 @@ const PackagesPage: React.FC = () => {
 
   const handlePackageSelect = (packageId: string) => {
     setSelectedPackage(packageId);
+    router.push(`/enroll?package=${packageId}`);
     enroll?package=professional
     // Here you would typically redirect to checkout or open a modal
     console.log('Selected package:', packageId);
