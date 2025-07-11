@@ -63,23 +63,16 @@ const packages: PackageData[] = [
     price: 13200,
     originalPrice: 29999,
     courses: [
-      '2 Complete Courses',
+      'All Current Courses',
+    ],
+    features: [
+     '2 Complete Courses',
       'Lifetime Access',
       '50% Affilate Comission',
       'Email Support',
       'Whatsapp Support',
       'Certificate of Completion',
       'Downloadable Resources'
-    ],
-    features: [
-      'All Courses (Current + Future)',
-      'Lifetime Access',
-      'VIP Support',
-      '3 Mentoring Sessions',
-      'Portfolio Review',
-      'Job Assistance',
-      'Exclusive Community Access',
-      'Monthly Live Sessions'
     ],
     color: 'from-purple-500 to-purple-600'
   },
