@@ -7,9 +7,9 @@ const EnrollmentPage: React.FC = () => {
   // Course details - you can make this dynamic by getting from URL params or props
   const courseDetails = {
     id: 'premiere-pro-mastery',
-    name: 'Starter (Basic)',
-    originalPrice: 7999,
-    description: 'Perfect for beginners starting their digital journey.'
+    name: 'Premiere Pro Mastery: Complete Course',
+    originalPrice: 9999,
+    description: 'Master Adobe Premiere Pro with step-by-step guidance and real-world projects to elevate your video editing skills and launch your career.'
   };
 
   return (
