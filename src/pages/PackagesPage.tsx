@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import Button from '../components/Button';
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
 import { 
   Package, 
   Star, 
