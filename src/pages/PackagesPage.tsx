@@ -160,7 +160,7 @@ const PackagesPage: React.FC = () => {
 
   const handlePackageSelect = (packageId: string) => {
     setSelectedPackage(packageId);
-   if (packageId === "professional") {
+   if (packageId === "starter") {
     router.push('/enroll');
   }
     // Here you would typically redirect to checkout or open a modal
