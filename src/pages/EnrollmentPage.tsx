@@ -1,57 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import EnrollmentForm from '../components/EnrollmentForm';
 import { CreditCard, Shield, Clock, CheckCircle, Users, Award, Percent } from 'lucide-react';
 
 const EnrollmentPage: React.FC = () => {
-  const [courseDetails, setCourseDetails] = useState({
-    id: 'basic',
+  // Course details - you can make this dynamic by getting from URL params or props
+  const courseDetails = {
+    id: 'premiere-pro-mastery',
     name: 'Starter (Basic)',
     originalPrice: 7999,
     description: 'Perfect for beginners starting their digital journey.'
-  });
-
-  // Define all course packages
-  const coursePackages = {
-  basic: {
-    id: 'basic',
-    name: 'Starter (Basic)',
-    originalPrice: 7999,
-    description: 'Perfect for beginners starting their digital journey.',
-    features: ['Basic tutorials', 'Email support', 'Certificate'],
-    duration: '4 weeks',
-    level: 'Beginner'
-  },
-  professional: {
-    id: 'professional',
-    name: 'Professional',
-    originalPrice: 15999,
-    description: 'Advanced tools and techniques for professionals.',
-    features: ['Advanced tutorials', 'Priority support', 'Certificate', 'Live sessions'],
-    duration: '8 weeks',
-    level: 'Intermediate'
-  },
-  advanced: {
-    id: 'advanced',
-    name: 'Master (Advanced)',
-    originalPrice: 25999,
-    description: 'Complete mastery with exclusive content and mentorship.',
-    features: ['All content', '1-on-1 mentoring', 'Certificate', 'Lifetime updates'],
-    duration: '12 weeks',
-    level: 'Advanced'
-  }
-};
-
-  useEffect(() => {
-    // Get package from URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const packageId = urlParams.get('package') || 'basic';
-    
-    // Set course details based on package
-    if (coursePackages[packageId as keyof typeof coursePackages]) {
-      setCourseDetails(coursePackages[packageId as keyof typeof coursePackages]);
-    }
-  }, []);
+  };
 
   return (
     <div className="min-h-screen bg-dark">
@@ -178,9 +137,6 @@ const EnrollmentPage: React.FC = () => {
                   <div>
                     <h3 className="text-lg font-medium text-white mb-2">{courseDetails.name}</h3>
                     <p className="text-gray-300 text-sm mb-4">{courseDetails.description}</p>
-                    <div className="text-2xl font-bold text-primary">
-                      ₹{courseDetails.originalPrice.toLocaleString()}
-                    </div>
                   </div>
                   
                   <div className="space-y-3">
