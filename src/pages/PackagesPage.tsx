@@ -160,7 +160,12 @@ const PackagesPage: React.FC = () => {
 
   const handlePackageSelect = (packageId: string) => {
   setSelectedPackage(packageId);
+  
   if (packageId === "professional") {
+    window.location.href = '/enroll';
+  } else if (packageId === "starter") {
+    window.location.href = '/enroll';
+  } else if (packageId === "enterprise") {
     window.location.href = '/enroll';
   }
 };
