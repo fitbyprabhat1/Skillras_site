@@ -160,6 +160,7 @@ const PackagesPage: React.FC = () => {
 
   const handlePackageSelect = (packageId: string) => {
     setSelectedPackage(packageId);
+    enroll?package=professional
     // Here you would typically redirect to checkout or open a modal
     console.log('Selected package:', packageId);
   };
@@ -489,10 +490,10 @@ const PackagesPage: React.FC = () => {
             Join thousands of students who have already started their journey to success.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" glowing href="/enroll">
-  <Zap className="mr-2" size={20} />
-  Choose Your Package
-</Button>
+            <Button size="lg" glowing>
+              <Zap className="mr-2" size={20} />
+              Choose Your Package
+            </Button>
             <Button variant="outline" size="lg">
               <Shield className="mr-2" size={20} />
               30-Day Guarantee
