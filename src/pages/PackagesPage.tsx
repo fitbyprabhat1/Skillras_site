@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom'
-
 import { 
   Package, 
   Star, 
@@ -50,6 +49,9 @@ interface PackageData {
   supportLevel: string;
   mentoringSessions: number;
 }
+
+const navigate = useNavigate()
+
 
 const allCourses: Course[] = [
   {
