@@ -38,22 +38,20 @@ const packages: PackageData[] = [
     id: 'professional',
     name: 'Pro (Intermediate)',
     description: 'Most popular choice for career advancement',
-    price: 14999,
-    originalPrice: 29999,
+    price: 9600,
+    originalPrice: 14999,
     courses: [
       'Premiere Pro Mastery',
-      'Digital Marketing Mastery',
-      'Graphic Design Pro',
-      'Content Creation Mastery',
-      'Professional Photography'
+      'After effects Mastery ',
     ],
     features: [
-      '5 Complete Courses',
+      '2 Complete Courses',
       'Lifetime Access',
-      'Priority Support',
-      '1-on-1 Mentoring Session',
-      'Portfolio Review',
-      'Job Assistance'
+      '50% Affilate Comission',
+      'Email Support',
+      'Whatsapp Support',
+      'Certificate of Completion',
+      'Downloadable Resources'
     ],
     isPopular: true,
     color: 'from-primary to-red-600'
@@ -62,13 +60,16 @@ const packages: PackageData[] = [
     id: 'enterprise',
     name: 'Mastery (Advanced)',
     description: 'Complete skill transformation for professionals',
-    price: 24999,
-    originalPrice: 49999,
+    price: 13200,
+    originalPrice: 29999,
     courses: [
-      'All Current Courses',
-      'Future Course Access',
-      'Exclusive Masterclasses',
-      'Industry Workshops'
+      '2 Complete Courses',
+      'Lifetime Access',
+      '50% Affilate Comission',
+      'Email Support',
+      'Whatsapp Support',
+      'Certificate of Completion',
+      'Downloadable Resources'
     ],
     features: [
       'All Courses (Current + Future)',
