@@ -101,7 +101,7 @@ const packages: PackageData[] = [
   },
   {
     id: 'professional',
-    name: 'Professional Package',
+    name: 'Pro (Intermediate)',
     description: 'Most popular choice for career advancement',
     price: 9600,
     originalPrice: 14999,
@@ -129,7 +129,7 @@ const packages: PackageData[] = [
   },
   {
     id: 'enterprise',
-    name: 'Enterprise Package',
+    name: 'Mastery (Advanced)',
     description: 'Complete skill transformation for professionals',
     price: 13200,
     originalPrice: 29999,
