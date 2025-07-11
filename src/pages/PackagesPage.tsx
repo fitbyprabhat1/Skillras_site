@@ -163,9 +163,9 @@ const PackagesPage: React.FC = () => {
   const { ref, inView } = useInView({ threshold: 0.1 });
 
   const handlePackageSelect = (packageId: string) => {
-    setSelectedPackage(packageId);
-   if (packageId === "starter") {
-    router.push('/enroll');
+   setSelectedPackage(packageId);
+  if (packageId === "professional") {
+    navigate('/enroll');
   }
     // Here you would typically redirect to checkout or open a modal
     console.log('Selected package:', packageId);
