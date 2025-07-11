@@ -25,8 +25,6 @@ const packages: PackageData[] = [
     originalPrice: 15999,
     courses: [
       'Premiere Pro Mastery',
-      'Content Creation Mastery',
-      'Basic Photography'
     ],
     features: [
       '3 Complete Courses',
