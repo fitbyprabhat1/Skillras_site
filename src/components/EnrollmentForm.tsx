@@ -130,7 +130,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
     
     // Referral code validation
     if (!formData.referralCode.trim()) {
-      errors.referralCode = 'Referral/Coupon code is required';
+      errors.referralCode = "Referral/Coupon code is required( Enter (New) if Don't have any";
     } else if (!codeVerified) {
       errors.referralCode = 'Please verify your code first';
     }
