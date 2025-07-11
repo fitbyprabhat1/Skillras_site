@@ -7,7 +7,7 @@ const EnrollmentPage: React.FC = () => {
   // Course details - you can make this dynamic by getting from URL params or props
   const courseDetails = {
     id: 'premiere-pro-mastery',
-    name: 'Starter (Basic),
+    name: 'Starter (Basic)',
     originalPrice: 9999,
     description: 'Perfect for beginners starting their digital journey.'
   };
