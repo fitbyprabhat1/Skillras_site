@@ -1,16 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import EnrollmentForm from '../components/EnrollmentForm';
 import { CreditCard, Shield, Clock, CheckCircle, Users, Award, Percent } from 'lucide-react';
 
 const EnrollmentPage: React.FC = () => {
-  // Course details - you can make this dynamic by getting from URL params or props
-  const courseDetails = {
-    id: 'premiere-pro-mastery',
+  const [courseDetails, setCourseDetails] = useState({
+    id: 'basic',
     name: 'Starter (Basic)',
     originalPrice: 7999,
     description: 'Perfect for beginners starting their digital journey.'
+  });
+
+  // Define all course packages
+  const coursePackages = {
+    basic: {
+      id: 'basic',
+      name: 'Starter (Basic)',
+      originalPrice: 7999,
+      description: 'Perfect for beginners starting their digital journey.'
+    },
+    professional: {
+      id: 'professional',
+      name: 'Professional',
+      originalPrice: 15999,
+      description: 'Advanced tools and techniques for professionals.'
+    },
+    advanced: {
+      id: 'advanced',
+      name: 'Master (Advanced)',
+      originalPrice: 25999,
+      description: 'Complete mastery with exclusive content and mentorship.'
+    }
   };
+
+  useEffect(() => {
+    // Get package from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const packageId = urlParams.get('package') || 'basic';
+    
+    // Set course details based on package
+    if (coursePackages[packageId as keyof typeof coursePackages]) {
+      setCourseDetails(coursePackages[packageId as keyof typeof coursePackages]);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-dark">
@@ -137,6 +169,9 @@ const EnrollmentPage: React.FC = () => {
                   <div>
                     <h3 className="text-lg font-medium text-white mb-2">{courseDetails.name}</h3>
                     <p className="text-gray-300 text-sm mb-4">{courseDetails.description}</p>
+                    <div className="text-2xl font-bold text-primary">
+                      ₹{courseDetails.originalPrice.toLocaleString()}
+                    </div>
                   </div>
                   
                   <div className="space-y-3">
