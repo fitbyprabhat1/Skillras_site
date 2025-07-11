@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import Button from '../components/Button';
-import { useNavigate } from 'react-router-dom'
+import { useRouter } from 'next/router'
 import { 
   Package, 
   Star, 
@@ -50,8 +50,8 @@ interface PackageData {
   mentoringSessions: number;
 }
 
-const navigate = useNavigate()
-
+const PackagesPage = () => {
+  const router = useRouter()
 
 const allCourses: Course[] = [
   {
@@ -163,12 +163,10 @@ const PackagesPage: React.FC = () => {
   const { ref, inView } = useInView({ threshold: 0.1 });
 
   const handlePackageSelect = (packageId: string) => {
-   setSelectedPackage(packageId);
-  if (packageId === "professional") {
-    navigate('/enroll');
-  }
-    // Here you would typically redirect to checkout or open a modal
-    console.log('Selected package:', packageId);
+    setSelectedPackage(packageId);
+    if (packageId === "professional") {
+      router.push('/enroll');
+    }
   };
 
   const toggleComparison = () => {
