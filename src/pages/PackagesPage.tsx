@@ -76,20 +76,21 @@ const allCourses: Course[] = [
 const packages: PackageData[] = [
   {
     id: 'starter',
-    name: 'Starter Package',
+    name: 'Starter (Basic)',
     description: 'Perfect for beginners starting their digital journey',
     price: 7999,
-    originalPrice: 15999,
+    originalPrice: 9,999,
     discount: 50,
     courses: [
       allCourses[0], // Premiere Pro
     ],
     features: [
-      '3 Complete Courses',
+      '1 Complete Courses',
       'Lifetime Access',
+      '30% Affilate Comission',
       'Basic Email Support',
+      'Basic Whatsapp Support',
       'Certificate of Completion',
-      'Mobile App Access',
       'Downloadable Resources'
     ],
     color: 'from-blue-500 to-blue-600',
@@ -102,26 +103,22 @@ const packages: PackageData[] = [
     id: 'professional',
     name: 'Professional Package',
     description: 'Most popular choice for career advancement',
-    price: 14999,
-    originalPrice: 29999,
+    price: 10999,
+    originalPrice: 14999,
     discount: 50,
     courses: [
       allCourses[0], // Premiere Pro
-      allCourses[1], // Digital Marketing
-      allCourses[2], // Graphic Design
-      allCourses[5], // Content Creation
-      allCourses[4]  // Photography
+      allCourses[1], // after effects
+     
     ],
     features: [
-      '5 Complete Courses',
+      '1 Complete Courses',
       'Lifetime Access',
-      'Priority Support',
-      '1-on-1 Mentoring Session',
-      'Portfolio Review',
-      'Job Assistance',
-      'Private Community Access',
-      'Monthly Live Q&A Sessions',
-      'Project Feedback'
+      '30% Affilate Comission',
+      'Basic Email Support',
+      'Basic Whatsapp Support',
+      'Certificate of Completion',
+      'Downloadable Resources'
     ],
     isPopular: true,
     color: 'from-primary to-red-600',
@@ -134,22 +131,16 @@ const packages: PackageData[] = [
     id: 'enterprise',
     name: 'Enterprise Package',
     description: 'Complete skill transformation for professionals',
-    price: 24999,
-    originalPrice: 49999,
+    price: 20000,
+    originalPrice: 30000,
     discount: 50,
     courses: allCourses,
     features: [
-      'All 6 Courses (Current + Future)',
+      'All 3 Courses (Current + Future)',
       'Lifetime Access',
-      'VIP Support',
       '3 Mentoring Sessions',
       'Portfolio Review',
       'Job Assistance',
-      'Exclusive Community Access',
-      'Monthly Live Sessions',
-      'Direct Instructor Access',
-      'Custom Learning Path',
-      'Industry Networking Events',
       'Freelance Project Opportunities'
     ],
     isPremium: true,
