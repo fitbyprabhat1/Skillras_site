@@ -103,20 +103,20 @@ const packages: PackageData[] = [
     id: 'professional',
     name: 'Professional Package',
     description: 'Most popular choice for career advancement',
-    price: 10999,
+    price: 9600,
     originalPrice: 14999,
-    discount: 50,
+    discount: 36,
     courses: [
       allCourses[0], // Premiere Pro
       allCourses[1], // after effects
      
     ],
     features: [
-      '1 Complete Courses',
+      '2 Complete Courses',
       'Lifetime Access',
-      '30% Affilate Comission',
-      'Basic Email Support',
-      'Basic Whatsapp Support',
+      '50% Affilate Comission',
+      'Email Support',
+      'Whatsapp Support',
       'Certificate of Completion',
       'Downloadable Resources'
     ],
@@ -131,17 +131,18 @@ const packages: PackageData[] = [
     id: 'enterprise',
     name: 'Enterprise Package',
     description: 'Complete skill transformation for professionals',
-    price: 20000,
-    originalPrice: 30000,
-    discount: 50,
+    price: 13200,
+    originalPrice: 29999,
+    discount: 55,
     courses: allCourses,
     features: [
-      'All 3 Courses (Current + Future)',
+      '2 Complete Courses',
       'Lifetime Access',
-      '3 Mentoring Sessions',
-      'Portfolio Review',
-      'Job Assistance',
-      'Freelance Project Opportunities'
+      '50% Affilate Comission',
+      'Email Support',
+      'Whatsapp Support',
+      'Certificate of Completion',
+      'Downloadable Resources'
     ],
     isPremium: true,
     color: 'from-purple-500 to-purple-600',
