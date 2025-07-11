@@ -51,7 +51,7 @@ interface PackageData {
 }
 
 const PackagesPage = () => {
-  const router = useRouter()
+  const router = useRouter();
 
 const allCourses: Course[] = [
   {
