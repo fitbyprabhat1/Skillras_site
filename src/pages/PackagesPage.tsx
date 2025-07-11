@@ -166,7 +166,7 @@ const PackagesPage: React.FC = () => {
    setSelectedPackage(packageId);
   if (packageId === "professional") {
       router.push('/enroll');
-    }
+    };
     // Here you would typically redirect to checkout or open a modal
     console.log('Selected package:', packageId);
   };
