@@ -292,8 +292,8 @@ const NavBarWithPackages: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link to="/login">
-                  <Button size="sm" variant="outline" >Login</Button>
+                <Link to="/enroll">
+                  <Button size="sm" variant="outline" >Enroll Now</Button>
                 </Link>
               </div>
             )}
@@ -398,11 +398,8 @@ const NavBarWithPackages: React.FC = () => {
                 </div>
               ) : (
                 <div className="border-t border-gray-600 pt-4 space-y-2">
-                  <Link to="/trial">
-                    <Button className="w-full" variant="outline">Try Free Course</Button>
-                  </Link>
-                  <Link to="/login">
-                    <Button className="w-full">Login</Button>
+                  <Link to="/enroll">
+                    <Button className="w-full" variant="outline">Enroll Now</Button>
                   </Link>
                 </div>
               )}
