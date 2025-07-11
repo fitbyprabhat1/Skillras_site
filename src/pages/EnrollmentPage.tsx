@@ -8,7 +8,7 @@ const EnrollmentPage: React.FC = () => {
   const courseDetails = {
     id: 'premiere-pro-mastery',
     name: 'Starter (Basic)',
-    originalPrice: 9999,
+    originalPrice: 7999,
     description: 'Perfect for beginners starting their digital journey.'
   };
 
