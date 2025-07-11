@@ -1,117 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import React from 'react';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import EnrollmentForm from '../components/EnrollmentForm';
 import { CreditCard, Shield, Clock, CheckCircle, Users, Award, Percent } from 'lucide-react';
 
-// Course data - you can move this to a separate file or fetch from API
-const COURSES = {
-  'premiere-pro-mastery': {
-    id: 'premiere-pro-mastery',
-    name: 'Premiere Pro Mastery',
-    originalPrice: 7999,
-    description: 'Master Adobe Premiere Pro with hands-on projects and professional techniques.',
-    students: 2500,
-    duration: '12 weeks',
-    level: 'Beginner to Advanced'
-  },
-  'photoshop-fundamentals': {
-    id: 'photoshop-fundamentals',
-    name: 'Photoshop Fundamentals',
-    originalPrice: 5999,
-    description: 'Learn photo editing and digital design with Adobe Photoshop.',
-    students: 3200,
-    duration: '8 weeks',
-    level: 'Beginner'
-  },
-  'web-development-bootcamp': {
-    id: 'web-development-bootcamp',
-    name: 'Web Development Bootcamp',
-    originalPrice: 12999,
-    description: 'Full-stack web development from HTML/CSS to React and Node.js.',
-    students: 4500,
-    duration: '16 weeks',
-    level: 'Beginner to Advanced'
-  },
-  'digital-marketing-pro': {
-    id: 'digital-marketing-pro',
-    name: 'Digital Marketing Pro',
-    originalPrice: 8999,
-    description: 'Comprehensive digital marketing strategies and campaign management.',
-    students: 1800,
-    duration: '10 weeks',
-    level: 'Intermediate'
-  },
-  'ui-ux-design-mastery': {
-    id: 'ui-ux-design-mastery',
-    name: 'UI/UX Design Mastery',
-    originalPrice: 9999,
-    description: 'Create stunning user interfaces and exceptional user experiences.',
-    students: 2100,
-    duration: '14 weeks',
-    level: 'Beginner to Advanced'
-  }
-};
-
 const EnrollmentPage: React.FC = () => {
-  const { courseId } = useParams<{ courseId: string }>();
-  const [searchParams] = useSearchParams();
-  const [selectedCourse, setSelectedCourse] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Get course ID from URL params or search params
-    const currentCourseId = courseId || searchParams.get('course');
-    
-    if (currentCourseId && COURSES[currentCourseId as keyof typeof COURSES]) {
-      setSelectedCourse(COURSES[currentCourseId as keyof typeof COURSES]);
-      setError(null);
-    } else {
-      setError('Course not found. Please select a valid course.');
-    }
-    
-    setLoading(false);
-  }, [courseId, searchParams]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-dark flex items-center justify-center">
-        <div className="text-white text-xl">Loading course details...</div>
-      </div>
-    );
-  }
-
-  if (error || !selectedCourse) {
-    return (
-      <div className="min-h-screen bg-dark">
-        <NavBarWithPackages />
-        <div className="container mx-auto px-4 py-8 pt-24">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl font-bold text-white mb-6">Course Not Found</h1>
-            <p className="text-xl text-gray-300 mb-8">{error}</p>
-            
-            <div className="bg-dark-light rounded-xl p-8 border border-primary/10">
-              <h2 className="text-2xl font-bold text-white mb-6">Available Courses</h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                {Object.values(COURSES).map((course) => (
-                  <a
-                    key={course.id}
-                    href={`/enrollment/${course.id}`}
-                    className="block p-4 bg-dark rounded-lg hover:bg-dark/80 transition-colors border border-primary/20 hover:border-primary/40"
-                  >
-                    <h3 className="text-white font-medium mb-2">{course.name}</h3>
-                    <p className="text-gray-300 text-sm mb-2">{course.description}</p>
-                    <div className="text-primary font-bold">₹{course.originalPrice.toLocaleString()}</div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Course details - you can make this dynamic by getting from URL params or props
+  const courseDetails = {
+    id: 'premiere-pro-mastery',
+    name: 'Starter (Basic)',
+    originalPrice: 7999,
+    description: 'Perfect for beginners starting their digital journey.'
+  };
 
   return (
     <div className="min-h-screen bg-dark">
@@ -123,12 +22,9 @@ const EnrollmentPage: React.FC = () => {
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
               Course <span className="text-primary">Enrollment</span>
             </h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-4">
-              Enter your referral or coupon code to unlock exclusive discounts for <strong>{selectedCourse.name}</strong>.
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+              Enter your referral or coupon code to unlock exclusive discounts and enroll in your chosen course.
             </p>
-            <div className="text-lg text-primary font-medium mb-8">
-              {selectedCourse.level} • {selectedCourse.duration}
-            </div>
             
             {/* Feature highlights */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-12">
@@ -154,9 +50,9 @@ const EnrollmentPage: React.FC = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
               <EnrollmentForm 
-                courseId={selectedCourse.id}
-                courseName={selectedCourse.name}
-                originalPrice={selectedCourse.originalPrice}
+                courseId={courseDetails.id}
+                courseName={courseDetails.name}
+                originalPrice={courseDetails.originalPrice}
               />
             </div>
             
@@ -239,25 +135,14 @@ const EnrollmentPage: React.FC = () => {
                 
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-medium text-white mb-2">{selectedCourse.name}</h3>
-                    <p className="text-gray-300 text-sm mb-4">{selectedCourse.description}</p>
-                    
-                    <div className="grid grid-cols-2 gap-4 mb-4">
-                      <div className="bg-dark p-3 rounded-lg">
-                        <div className="text-primary font-bold text-sm">Duration</div>
-                        <div className="text-white">{selectedCourse.duration}</div>
-                      </div>
-                      <div className="bg-dark p-3 rounded-lg">
-                        <div className="text-primary font-bold text-sm">Level</div>
-                        <div className="text-white">{selectedCourse.level}</div>
-                      </div>
-                    </div>
+                    <h3 className="text-lg font-medium text-white mb-2">{courseDetails.name}</h3>
+                    <p className="text-gray-300 text-sm mb-4">{courseDetails.description}</p>
                   </div>
                   
                   <div className="space-y-3">
                     <div className="flex items-center space-x-3">
                       <Users className="text-primary" size={20} />
-                      <span className="text-gray-300">{selectedCourse.students.toLocaleString()}+ students enrolled</span>
+                      <span className="text-gray-300">2,500+ students enrolled</span>
                     </div>
                     
                     <div className="flex items-center space-x-3">
@@ -275,33 +160,6 @@ const EnrollmentPage: React.FC = () => {
                       <span className="text-gray-300">Lifetime course access</span>
                     </div>
                   </div>
-                </div>
-              </div>
-              
-              <div className="bg-dark-light rounded-xl p-8 border border-primary/10">
-                <h2 className="text-2xl font-bold text-white mb-6">
-                  Other Available Courses
-                </h2>
-                
-                <div className="space-y-3">
-                  {Object.values(COURSES)
-                    .filter(course => course.id !== selectedCourse.id)
-                    .slice(0, 3)
-                    .map((course) => (
-                      <a
-                        key={course.id}
-                        href={`/enrollment/${course.id}`}
-                        className="block p-4 bg-dark rounded-lg hover:bg-dark/80 transition-colors border border-primary/20 hover:border-primary/40"
-                      >
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="text-white font-medium mb-1">{course.name}</h3>
-                            <p className="text-gray-400 text-sm">{course.level}</p>
-                          </div>
-                          <div className="text-primary font-bold">₹{course.originalPrice.toLocaleString()}</div>
-                        </div>
-                      </a>
-                    ))}
                 </div>
               </div>
               
