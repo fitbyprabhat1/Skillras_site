@@ -79,7 +79,7 @@ const packages: PackageData[] = [
     name: 'Starter (Basic)',
     description: 'Perfect for beginners starting their digital journey',
     price: 7999,
-    originalPrice: 9,999,
+    originalPrice: 9999,
     discount: 50,
     courses: [
       allCourses[0], // Premiere Pro
