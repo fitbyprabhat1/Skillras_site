@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import Button from './Button';
 import { 
@@ -152,6 +152,19 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
 
   const selectedPackageData = packages.find(pkg => pkg.id === formData.selectedPackage);
 
+  useEffect(() => {
+    // Auto-fill referral code from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+    if (refCode && !formData.referralCode) {
+      setFormData((prev) => ({ ...prev, referralCode: refCode.toUpperCase() }));
+      // Trigger code verification if function exists
+      if (typeof verifyReferralCode === 'function') {
+        verifyReferralCode(refCode.toUpperCase());
+      }
+    }
+  }, []);
+
   const validateForm = (): boolean => {
     const errors: Partial<FormData> = {};
     
@@ -266,8 +279,8 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
     if (error) setError(null);
   };
 
-  const verifyReferralCode = async () => {
-    if (!formData.referralCode.trim()) {
+  const verifyReferralCode = async (code: string) => {
+    if (!code.trim()) {
       setError('Please enter a referral/coupon code');
       return;
     }
@@ -279,7 +292,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
       const { data, error } = await supabase
         .from('referral_codes')
         .select('*')
-        .eq('code', formData.referralCode.toUpperCase())
+        .eq('code', code.toUpperCase())
         .eq('is_active', true)
         .single();
 
@@ -671,7 +684,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
             </div>
             <Button
               type="button"
-              onClick={verifyReferralCode}
+              onClick={() => verifyReferralCode(formData.referralCode.toUpperCase())}
               disabled={isVerifyingCode || !formData.referralCode.trim()}
               variant={codeVerified ? 'secondary' : 'primary'}
               className="px-6"
