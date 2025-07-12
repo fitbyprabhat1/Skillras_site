@@ -6,8 +6,6 @@ import { supabase } from '../lib/supabase';
 import { 
   Mail, 
   Lock, 
-  User, 
-  Phone, 
   Eye, 
   EyeOff, 
   AlertCircle, 
@@ -20,21 +18,17 @@ import {
 } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
-    phone: '',
-    password: '',
-    confirmPassword: ''
+    password: ''
   });
 
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -64,28 +58,6 @@ const LoginPage: React.FC = () => {
       return false;
     }
 
-    if (isSignUp) {
-      if (!formData.name || !formData.phone) {
-        setError('Name and phone are required for registration');
-        return false;
-      }
-
-      if (formData.phone.length !== 10 || !/^[0-9]+$/.test(formData.phone)) {
-        setError('Phone number must be exactly 10 digits');
-        return false;
-      }
-
-      if (formData.password.length < 6) {
-        setError('Password must be at least 6 characters');
-        return false;
-      }
-
-      if (formData.password !== formData.confirmPassword) {
-        setError('Passwords do not match');
-        return false;
-      }
-    }
-
     return true;
   };
 
@@ -99,56 +71,42 @@ const LoginPage: React.FC = () => {
     setSuccess(null);
 
     try {
-      if (isSignUp) {
-        // Check if user exists in paid_users table with completed payment status
-        const { data: paidUserData, error: paidUserError } = await supabase
-          .from('paid_users')
-          .select('*')
-          .eq('email', formData.email.toLowerCase().trim())
-          .eq('payment_status', 'completed')
-          .single();
+      // For login, first check if user exists in users table
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', formData.email.toLowerCase().trim())
+        .eq('password', formData.password)
+        .single();
 
-        if (paidUserError) {
-          if (paidUserError.code === 'PGRST116') {
-            // No user found with completed payment
-            setError('Access denied. You must complete your course enrollment and payment before creating an account. Please enroll in a course first.');
-            setLoading(false);
-            return;
-          }
-          throw paidUserError;
-        }
+      if (userError || !userData) {
+        setError('Invalid email or password');
+        setLoading(false);
+        return;
+      }
 
-        // User found with completed payment, proceed with signup
-        const { data, error } = await signUp(
-          formData.email,
-          formData.password,
-          formData.phone,
-          formData.name
-        );
+      // Check if user has completed payment in paid_users table
+      const { data: paidUserData, error: paidUserError } = await supabase
+        .from('paid_users')
+        .select('*')
+        .eq('email', formData.email.toLowerCase().trim())
+        .eq('payment_status', 'completed')
+        .single();
 
-        if (error) {
-          setError(error.message);
-        } else {
-          setSuccess('Account created successfully! You can now sign in.');
-          // Switch to sign in mode
-          setIsSignUp(false);
-          // Keep email and password for easy login
-          setFormData(prev => ({
-            ...prev,
-            name: '',
-            phone: '',
-            confirmPassword: ''
-          }));
-        }
+      if (paidUserError || !paidUserData) {
+        setError('Access denied. You must complete your course enrollment and payment before accessing your account. Please complete your payment first.');
+        setLoading(false);
+        return;
+      }
+
+      // User exists and has completed payment, proceed with login
+      const { data, error } = await signIn(formData.email, formData.password);
+
+      if (error) {
+        setError(error.message);
       } else {
-        const { data, error } = await signIn(formData.email, formData.password);
-
-        if (error) {
-          setError(error.message);
-        } else {
-          setSuccess('Login successful! Redirecting...');
-          // Navigation will happen automatically via useEffect
-        }
+        setSuccess('Login successful! Redirecting...');
+        // Navigation will happen automatically via useEffect
       }
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred');
@@ -167,25 +125,11 @@ const LoginPage: React.FC = () => {
             SkillRas
           </Link>
           <h1 className="text-3xl font-bold text-white mb-2">
-            {isSignUp ? 'Create Account' : 'Welcome Back'}
+            Welcome Back
           </h1>
           <p className="text-gray-300">
-            {isSignUp 
-              ? 'Only users with completed payments can create accounts' 
-              : 'Sign in to access your courses and continue learning'
-            }
+            Sign in to access your courses and continue learning
           </p>
-          {isSignUp && (
-            <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-              <div className="flex items-center text-blue-400 mb-2">
-                <Shield size={16} className="mr-2" />
-                <span className="text-sm font-medium">Restricted Access</span>
-              </div>
-              <p className="text-gray-300 text-sm">
-                You must have completed your course enrollment and payment to create an account.
-              </p>
-            </div>
-          )}
         </div>
 
         {/* Form */}
@@ -198,7 +142,7 @@ const LoginPage: React.FC = () => {
                 {error.includes('Access denied') && (
                   <div className="mt-3 pt-3 border-t border-red-500/20">
                     <p className="text-gray-300 text-sm mb-2">
-                      To create an account, you need to complete your course enrollment first.
+                      To access your account, you need to complete your course enrollment first.
                     </p>
                     <Link 
                       to="/enroll" 
@@ -221,24 +165,6 @@ const LoginPage: React.FC = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {isSignUp && (
-              <div>
-                <label htmlFor="name" className="block text-white mb-2 font-medium flex items-center">
-                  <User size={16} className="mr-2 text-primary" />
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none transition-all duration-300"
-                  placeholder="Enter your full name"
-                  required={isSignUp}
-                />
-              </div>
-            )}
-
             <div>
               <label htmlFor="email" className="block text-white mb-2 font-medium flex items-center">
                 <Mail size={16} className="mr-2 text-primary" />
@@ -255,28 +181,6 @@ const LoginPage: React.FC = () => {
               />
             </div>
 
-            {isSignUp && (
-              <div>
-                <label htmlFor="phone" className="block text-white mb-2 font-medium flex items-center">
-                  <Phone size={16} className="mr-2 text-primary" />
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value.replace(/\D/g, '').slice(0, 10))}
-                  className="w-full px-4 py-3 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none transition-all duration-300"
-                  placeholder="Enter 10-digit phone number"
-                  maxLength={10}
-                  required={isSignUp}
-                />
-                <p className="text-gray-400 text-xs mt-1">
-                  {formData.phone.length}/10 digits
-                </p>
-              </div>
-            )}
-
             <div>
               <label htmlFor="password" className="block text-white mb-2 font-medium flex items-center">
                 <Lock size={16} className="mr-2 text-primary" />
@@ -288,8 +192,8 @@ const LoginPage: React.FC = () => {
                   id="password"
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  className="w-full px-4 py-3 pr-12 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none transition-all duration-300"
-                  placeholder={isSignUp ? "Create a password (min 6 characters)" : "Enter your password"}
+                  className="w-full px-4 py-3 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none transition-all duration-300 pr-12"
+                  placeholder="Enter your password"
                   required
                 />
                 <button
@@ -302,24 +206,6 @@ const LoginPage: React.FC = () => {
               </div>
             </div>
 
-            {isSignUp && (
-              <div>
-                <label htmlFor="confirmPassword" className="block text-white mb-2 font-medium flex items-center">
-                  <Lock size={16} className="mr-2 text-primary" />
-                  Confirm Password
-                </label>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  id="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none transition-all duration-300"
-                  placeholder="Confirm your password"
-                  required={isSignUp}
-                />
-              </div>
-            )}
-
             <Button 
               type="submit" 
               className="w-full" 
@@ -330,42 +216,29 @@ const LoginPage: React.FC = () => {
               {loading ? (
                 <div className="flex items-center justify-center">
                   <Loader className="animate-spin mr-2" size={20} />
-                  {isSignUp ? 'Creating Account...' : 'Signing In...'}
+                  Signing In...
                 </div>
               ) : (
-                isSignUp ? 'Create Account' : 'Sign In'
+                'Sign In'
               )}
             </Button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-400">
-              {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-              <button
-                onClick={() => {
-                  setIsSignUp(!isSignUp);
-                  setError(null);
-                  setSuccess(null);
-                  setFormData({
-                    name: '',
-                    email: '',
-                    phone: '',
-                    password: '',
-                    confirmPassword: ''
-                  });
-                }}
-                className="text-primary hover:text-primary-light transition-colors ml-2 font-medium"
+          {/* Demo Credentials */}
+          <div className="mt-8 pt-6 border-t border-gray-600">
+            <div className="text-center">
+              <p className="text-gray-400 text-sm mb-4">
+                Don't have an account? Enroll in a course first:
+              </p>
+              <Link 
+                to="/enroll" 
+                className="inline-flex items-center text-primary hover:text-primary-light transition-colors text-sm font-medium"
               >
-                {isSignUp ? 'Sign In' : 'Sign Up'}
-              </button>
-            </p>
+                <CreditCard size={14} className="mr-1" />
+                Enroll in Course
+              </Link>
+            </div>
           </div>
-        </div>
-
-        <div className="mt-6 text-center">
-          <Link to="/" className="text-gray-400 hover:text-primary transition-colors text-sm">
-            ← Back to Home
-          </Link>
         </div>
       </div>
     </div>
