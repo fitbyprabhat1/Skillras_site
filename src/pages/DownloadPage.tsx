@@ -130,7 +130,6 @@ const DownloadPage: React.FC = () => {
           </div>
         </div>
       </div>
-      <FooterSection />
     </div>
   );
 };
