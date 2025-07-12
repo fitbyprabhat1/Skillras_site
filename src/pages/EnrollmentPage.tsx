@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import EnrollmentForm from '../components/EnrollmentForm';
 import { CreditCard, Shield, Clock, CheckCircle, Users, Award, Percent } from 'lucide-react';
 
 const EnrollmentPage: React.FC = () => {
-  // Course details - you can make this dynamic by getting from URL params or props
-  const courseDetails = {
-    id: 'premiere-pro-mastery',
-    name: 'Premiere Pro Mastery: Complete Course',
-    originalPrice: 9999,
-    description: 'Master Adobe Premiere Pro with step-by-step guidance and real-world projects to elevate your video editing skills and launch your career.'
-  };
+  const [selectedPackage, setSelectedPackage] = useState<string>('');
+
+  useEffect(() => {
+    // Get package from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const packageParam = urlParams.get('package');
+    if (packageParam && ['starter', 'professional', 'enterprise'].includes(packageParam)) {
+      setSelectedPackage(packageParam);
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-dark">
@@ -23,7 +26,7 @@ const EnrollmentPage: React.FC = () => {
               Course <span className="text-primary">Enrollment</span>
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Enter your referral or coupon code to unlock exclusive discounts and enroll in your chosen course.
+              Select your package, enter your referral or coupon code to unlock exclusive discounts and enroll in your chosen courses.
             </p>
             
             {/* Feature highlights */}
@@ -50,9 +53,10 @@ const EnrollmentPage: React.FC = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             <div>
               <EnrollmentForm 
-                courseId={courseDetails.id}
-                courseName={courseDetails.name}
-                originalPrice={courseDetails.originalPrice}
+                courseId="multi-course-package"
+                courseName="SkillRas Course Packages"
+                originalPrice={9999}
+                preSelectedPackage={selectedPackage}
               />
             </div>
             
@@ -69,6 +73,16 @@ const EnrollmentPage: React.FC = () => {
                       1
                     </div>
                     <div>
+                      <h3 className="text-white font-medium mb-1">Select Your Package</h3>
+                      <p className="text-gray-300 text-sm">Choose from Starter, Professional, or Enterprise packages</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                      2
+                    </div>
+                    <div>
                       <h3 className="text-white font-medium mb-1">Enter Your Code</h3>
                       <p className="text-gray-300 text-sm">Input your referral or coupon code and verify it's valid</p>
                     </div>
@@ -76,7 +90,7 @@ const EnrollmentPage: React.FC = () => {
                   
                   <div className="flex items-start space-x-4">
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                      2
+                      3
                     </div>
                     <div>
                       <h3 className="text-white font-medium mb-1">Fill Your Details</h3>
@@ -86,7 +100,7 @@ const EnrollmentPage: React.FC = () => {
                   
                   <div className="flex items-start space-x-4">
                     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-                      3
+                      4
                     </div>
                     <div>
                       <h3 className="text-white font-medium mb-1">Complete Payment</h3>
@@ -105,9 +119,9 @@ const EnrollmentPage: React.FC = () => {
                   <div className="flex items-center justify-between p-4 bg-dark rounded-lg">
                     <div>
                       <h3 className="text-white font-medium">Coupon Codes</h3>
-                      <p className="text-gray-300 text-sm">Get up to 60% off on courses</p>
+                      <p className="text-gray-300 text-sm">Get up to 70% off on packages</p>
                     </div>
-                    <div className="text-primary font-bold">Up to 60%</div>
+                    <div className="text-primary font-bold">Up to 70%</div>
                   </div>
                   
                   <div className="flex items-center justify-between p-4 bg-dark rounded-lg">
@@ -115,7 +129,7 @@ const EnrollmentPage: React.FC = () => {
                       <h3 className="text-white font-medium">Referral Codes</h3>
                       <p className="text-gray-300 text-sm">Friend referral benefits</p>
                     </div>
-                    <div className="text-primary font-bold">Up to 45%</div>
+                    <div className="text-primary font-bold">Up to 50%</div>
                   </div>
                   
                   <div className="flex items-center justify-between p-4 bg-dark rounded-lg">
@@ -123,26 +137,26 @@ const EnrollmentPage: React.FC = () => {
                       <h3 className="text-white font-medium">Affiliate Codes</h3>
                       <p className="text-gray-300 text-sm">Special partner discounts</p>
                     </div>
-                    <div className="text-primary font-bold">Up to 50%</div>
+                    <div className="text-primary font-bold">Up to 60%</div>
                   </div>
                 </div>
               </div>
               
               <div className="bg-dark-light rounded-xl p-8 border border-primary/10">
                 <h2 className="text-2xl font-bold text-white mb-6">
-                  Course Details
+                  Package Details
                 </h2>
                 
                 <div className="space-y-4">
                   <div>
-                    <h3 className="text-lg font-medium text-white mb-2">{courseDetails.name}</h3>
-                    <p className="text-gray-300 text-sm mb-4">{courseDetails.description}</p>
+                    <h3 className="text-lg font-medium text-white mb-2">SkillRas Course Packages</h3>
+                    <p className="text-gray-300 text-sm mb-4">Choose from our comprehensive course packages designed for different skill levels and career goals.</p>
                   </div>
                   
                   <div className="space-y-3">
                     <div className="flex items-center space-x-3">
                       <Users className="text-primary" size={20} />
-                      <span className="text-gray-300">2,500+ students enrolled</span>
+                      <span className="text-gray-300">10,000+ students enrolled</span>
                     </div>
                     
                     <div className="flex items-center space-x-3">
