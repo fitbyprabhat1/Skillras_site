@@ -13,6 +13,8 @@ import PaymentPage from './pages/PaymentPage';
 import EnrollmentPage from './pages/EnrollmentPage';
 import LoginPage from './pages/LoginPage';
 import GymCoursePage from './pages/gymCoursepage';
+import TermsAndConditionsPage from './pages/TermsAndConditionsPage';
+
 
 function App() {
   return (
