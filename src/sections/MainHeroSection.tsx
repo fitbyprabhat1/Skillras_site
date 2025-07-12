@@ -30,7 +30,7 @@ const MainHeroSection: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-dark via-dark-light to-dark flex items-center justify-center text-white py-20 px-4 overflow-hidden">
+    <section className="relative min-h-screen bg-gradient-to-br from-dark via-dark-light to-dark flex items-center justify-center text-white py-20 px-4 overflow-hidden" style={{ backgroundColor: '#000000' }}>
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
