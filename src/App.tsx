@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import PackageProtectedRoute from './components/PackageProtectedRoute';
 import MainLandingPage from './pages/MainLandingPage';
 import LandingPage from './pages/LandingPage';
 import TrialPage from './pages/TrialPage';
@@ -11,8 +12,11 @@ import PackagesPage from './pages/PackagesPage';
 import PaymentPage from './pages/PaymentPage';
 import EnrollmentPage from './pages/EnrollmentPage';
 import LoginPage from './pages/LoginPage';
-import GymCoursePage from './pages/gymCoursepage';
 import TermsAndConditionsPage from './pages/TermsAndConditionsPage';
+import DashboardPage from './pages/DashboardPage';
+import PremiereProCoursePage from './pages/PremiereProCoursePage';
+import AfterEffectsCoursePage from './pages/AfterEffectsCoursePage';
+import ExcelCoursePage from './pages/ExcelCoursePage';
 
 function App() {
   return (
@@ -31,11 +35,35 @@ function App() {
             } 
           />
           <Route 
-            path="/gymCoursepage" 
+            path="/dashboard" 
             element={
               <ProtectedRoute>
-                <GymCoursePage />
+                <DashboardPage />
               </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/course/premiere-pro" 
+            element={
+              <PackageProtectedRoute requiredPackage="starter">
+                <PremiereProCoursePage />
+              </PackageProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/course/after-effects" 
+            element={
+              <PackageProtectedRoute requiredPackage="professional">
+                <AfterEffectsCoursePage />
+              </PackageProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/course/excel" 
+            element={
+              <PackageProtectedRoute requiredPackage="enterprise">
+                <ExcelCoursePage />
+              </PackageProtectedRoute>
             } 
           />
           <Route path="/course/:courseId" element={<CoursePage />} />
