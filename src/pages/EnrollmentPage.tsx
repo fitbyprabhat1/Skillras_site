@@ -23,10 +23,10 @@ const EnrollmentPage: React.FC = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              Course <span className="text-primary">Enrollment</span>
+              Course <span className="text-primary">Enrollment & Signup</span>
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-              Select your package, enter your referral or coupon code to unlock exclusive discounts and enroll in your chosen courses.
+              Create your account, select your package, and enter your referral or coupon code to unlock exclusive discounts and enroll in your chosen courses.
             </p>
             
             {/* Feature highlights */}
