@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -14,7 +13,6 @@ import EnrollmentPage from './pages/EnrollmentPage';
 import LoginPage from './pages/LoginPage';
 import GymCoursePage from './pages/gymCoursepage';
 import TermsAndConditionsPage from './pages/TermsAndConditionsPage';
-
 
 function App() {
   return (
@@ -46,6 +44,7 @@ function App() {
           <Route path="/packages" element={<PackagesPage />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/enroll" element={<EnrollmentPage />} />
+          <Route path="/terms" element={<TermsAndConditionsPage />} />
         </Routes>
       </Router>
     </AuthProvider>
