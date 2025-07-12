@@ -89,7 +89,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const mockUser = {
           id: userData.id,
           email: email,
-          user_metadata: { name, phone }
+          user_metadata: { name, phone },
+          app_metadata: {},
+          aud: 'authenticated',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          role: 'authenticated'
         } as User;
 
         setUser(mockUser);
@@ -120,43 +125,47 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (email: string, password: string) => {
     try {
-      // First, try Supabase Auth signin
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      // Check if user exists in our users table with password
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', email.toLowerCase().trim())
+        .eq('password', password)
+        .single();
 
-      if (error) {
-        // If Supabase Auth fails, try our demo user authentication
-        console.log('Supabase Auth signin failed, trying demo user authentication:', error.message);
-        
-        // Check if user exists in our users table (for demo accounts)
-        const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('*')
-          .eq('email', email)
-          .eq('password', password) // In production, this would be properly hashed and compared
-          .single();
-
-        if (userError || !userData) {
-          throw new Error('Invalid login credentials');
-        }
-
-        // Create a mock user object for demo purposes
-        const mockUser = {
-          id: userData.id,
-          email: email,
-          user_metadata: { 
-            name: userData.name, 
-            phone: userData.phone 
-          }
-        } as User;
-
-        setUser(mockUser);
-        return { data: { user: mockUser }, error: null };
+      if (userError || !userData) {
+        throw new Error('Invalid login credentials');
       }
 
-      return { data, error: null };
+      // Check if user has completed payment in paid_users table
+      const { data: paidUserData, error: paidUserError } = await supabase
+        .from('paid_users')
+        .select('*')
+        .eq('email', email.toLowerCase().trim())
+        .eq('payment_status', 'completed')
+        .single();
+
+      if (paidUserError || !paidUserData) {
+        throw new Error('Access denied. You must complete your course enrollment and payment before accessing your account.');
+      }
+
+      // Create a mock user object for authentication
+      const mockUser = {
+        id: userData.id,
+        email: email,
+        user_metadata: { 
+          name: userData.name, 
+          phone: userData.phone 
+        },
+        app_metadata: {},
+        aud: 'authenticated',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        role: 'authenticated'
+      } as User;
+
+      setUser(mockUser);
+      return { data: { user: mockUser }, error: null };
     } catch (error) {
       return { data: null, error };
     }
