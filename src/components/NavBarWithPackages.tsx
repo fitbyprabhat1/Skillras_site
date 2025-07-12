@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Button from './Button';
-import { Menu, X, BookOpen, Download, ChevronDown, Package, Star, Check, User, LogOut } from 'lucide-react';
+import { Menu, X, GraduationCap, Download, ChevronDown, Package, Star, Check, User, LogOut } from 'lucide-react';
 
 interface PackageData {
   id: string;
@@ -143,7 +143,7 @@ const NavBarWithPackages: React.FC = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <Link to="/" className="text-white font-bold text-xl md:text-2xl flex items-center">
-            <BookOpen className="mr-2 text-primary" size={28} />
+            <GraduationCap className="mr-2 text-primary" size={28} />
             SkillRas
           </Link>
 
