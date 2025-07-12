@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useUserPackage } from '../hooks/useUserPackage';
 import Button from './Button';
-import { Menu, X, GraduationCap, Download, ChevronDown, Package, Star, Check, User, LogOut } from 'lucide-react';
+import { Menu, X, GraduationCap, Download, ChevronDown, Package, Star, Check, User, LogOut, Crown, Video, TrendingUp, Palette } from 'lucide-react';
 
 interface PackageData {
   id: string;
@@ -86,6 +87,7 @@ const NavBarWithPackages: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut, loading } = useAuth();
+  const { userPackage, getAvailableCourses } = useUserPackage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -265,20 +267,66 @@ const NavBarWithPackages: React.FC = () => {
                     </div>
                     
                     <div className="p-2">
-                      <Link
-                        to="/trial"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
-                      >
-                        Trial Course
-                      </Link>
-                      <Link
-                        to="/gymCoursepage"
-                        onClick={() => setUserDropdownOpen(false)}
-                        className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
-                      >
-                        Gym Course
-                      </Link>
+                      {userPackage ? (
+                        <>
+                          <Link
+                            to="/dashboard"
+                            onClick={() => setUserDropdownOpen(false)}
+                            className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
+                          >
+                            <Crown size={16} className="mr-2 inline" />
+                            My Dashboard
+                          </Link>
+                          <div className="border-t border-gray-600 my-2"></div>
+                          <div className="text-gray-400 text-xs px-3 py-1">Your Courses:</div>
+                          <Link
+                            to="/course/premiere-pro"
+                            onClick={() => setUserDropdownOpen(false)}
+                            className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
+                          >
+                            <Video size={16} className="mr-2 inline" />
+                            Premiere Pro
+                          </Link>
+                          {userPackage.package_selected !== 'starter' && (
+                            <Link
+                              to="/course/after-effects"
+                              onClick={() => setUserDropdownOpen(false)}
+                              className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
+                            >
+                              <TrendingUp size={16} className="mr-2 inline" />
+                              After Effects
+                            </Link>
+                          )}
+                          {userPackage.package_selected === 'enterprise' && (
+                            <Link
+                              to="/course/excel"
+                              onClick={() => setUserDropdownOpen(false)}
+                              className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
+                            >
+                              <Palette size={16} className="mr-2 inline" />
+                              MS Excel
+                            </Link>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <Link
+                            to="/trial"
+                            onClick={() => setUserDropdownOpen(false)}
+                            className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
+                          >
+                            Trial Course
+                          </Link>
+                          <Link
+                            to="/gymCoursepage"
+                            onClick={() => setUserDropdownOpen(false)}
+                            className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
+                          >
+                            Gym Course
+                          </Link>
+                        </>
+                      )}
+                      <div className="border-t border-gray-600 my-2"></div>
                       <button
                         onClick={handleSignOut}
                         className="flex items-center w-full text-left px-3 py-2 text-red-400 hover:bg-dark-lighter rounded-lg transition-colors"
@@ -374,20 +422,64 @@ const NavBarWithPackages: React.FC = () => {
                     {user.email}
                   </div>
                   <div className="space-y-2">
-                    <Link 
-                      to="/trial"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block text-white hover:text-primary-light transition-colors py-2"
-                    >
-                      Trial Course
-                    </Link>
-                    <Link 
-                      to="/gymCoursepage"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="block text-white hover:text-primary-light transition-colors py-2"
-                    >
-                      Gym Course
-                    </Link>
+                    {userPackage ? (
+                      <>
+                        <Link 
+                          to="/dashboard"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="block text-white hover:text-primary-light transition-colors py-2 flex items-center"
+                        >
+                          <Crown size={16} className="mr-2" />
+                          My Dashboard
+                        </Link>
+                        <div className="text-gray-400 text-xs py-1">Your Courses:</div>
+                        <Link 
+                          to="/course/premiere-pro"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="block text-white hover:text-primary-light transition-colors py-2 flex items-center"
+                        >
+                          <Video size={16} className="mr-2" />
+                          Premiere Pro
+                        </Link>
+                        {userPackage.package_selected !== 'starter' && (
+                          <Link 
+                            to="/course/after-effects"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="block text-white hover:text-primary-light transition-colors py-2 flex items-center"
+                          >
+                            <TrendingUp size={16} className="mr-2" />
+                            After Effects
+                          </Link>
+                        )}
+                        {userPackage.package_selected === 'enterprise' && (
+                          <Link 
+                            to="/course/excel"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="block text-white hover:text-primary-light transition-colors py-2 flex items-center"
+                          >
+                            <Palette size={16} className="mr-2" />
+                            MS Excel
+                          </Link>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <Link 
+                          to="/trial"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="block text-white hover:text-primary-light transition-colors py-2"
+                        >
+                          Trial Course
+                        </Link>
+                        <Link 
+                          to="/gymCoursepage"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="block text-white hover:text-primary-light transition-colors py-2"
+                        >
+                          Gym Course
+                        </Link>
+                      </>
+                    )}
                     <button
                       onClick={() => {
                         handleSignOut();
