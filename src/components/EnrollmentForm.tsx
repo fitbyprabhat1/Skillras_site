@@ -440,7 +440,8 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
         payment_link: generatedPaymentLink,
         payment_status: 'pending',
         ip_address: null,
-        user_agent: navigator.userAgent
+        user_agent: navigator.userAgent,
+        package_selected: formData.selectedPackage
       };
 
       const { data: enrollmentResult, error: enrollmentError } = await supabase
