@@ -16,7 +16,8 @@ import {
   Percent,
   Tag,
   ExternalLink,
-  UserCheck
+  UserCheck,
+  Package
 } from 'lucide-react';
 
 interface FormData {
@@ -28,6 +29,7 @@ interface FormData {
   state: string;
   pincode: string;
   referralCode: string;
+  selectedPackage: string;
 }
 
 interface ReferralData {
@@ -40,14 +42,61 @@ interface ReferralData {
   description?: string;
   max_usage?: number;
   current_usage: number;
-  payment_link?: string; // Added payment_link field
+  payment_link?: string;
+  payment_link2?: string;
+  payment_link3?: string;
+}
+
+interface PackageData {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  originalPrice: number;
+  discount: number;
+  color: string;
+  badge?: string;
 }
 
 interface EnrollmentFormProps {
   courseId: string;
   courseName: string;
   originalPrice: number;
+  preSelectedPackage?: string;
 }
+
+const packages: PackageData[] = [
+  {
+    id: 'starter',
+    name: 'Starter (Basic)',
+    description: 'Perfect for beginners starting their digital journey',
+    price: 7999,
+    originalPrice: 9999,
+    discount: 50,
+    color: 'from-blue-500 to-blue-600',
+    badge: 'Best for Beginners'
+  },
+  {
+    id: 'professional',
+    name: 'Pro (Intermediate)',
+    description: 'Most popular choice for career advancement',
+    price: 9600,
+    originalPrice: 14999,
+    discount: 36,
+    color: 'from-primary to-red-600',
+    badge: 'Most Popular'
+  },
+  {
+    id: 'enterprise',
+    name: 'Mastery (Advanced)',
+    description: 'Complete skill transformation for professionals',
+    price: 13200,
+    originalPrice: 29999,
+    discount: 55,
+    color: 'from-purple-500 to-purple-600',
+    badge: 'Best Value'
+  }
+];
 
 const indianStates = [
   'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 
@@ -63,7 +112,7 @@ const qualifications = [
   '10th Pass', '12th Pass', 'Diploma', 'Graduate', 'Post Graduate', 'PhD', 'Other'
 ];
 
-const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, originalPrice }) => {
+const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, originalPrice, preSelectedPackage }) => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -72,7 +121,8 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
     qualification: '',
     state: '',
     pincode: '',
-    referralCode: ''
+    referralCode: '',
+    selectedPackage: preSelectedPackage || ''
   });
   
   const [isLoading, setIsLoading] = useState(false);
@@ -84,8 +134,15 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
   const [validationErrors, setValidationErrors] = useState<Partial<FormData>>({});
   const [paymentLink, setPaymentLink] = useState<string | null>(null);
 
+  const selectedPackageData = packages.find(pkg => pkg.id === formData.selectedPackage);
+
   const validateForm = (): boolean => {
     const errors: Partial<FormData> = {};
+    
+    // Package validation
+    if (!formData.selectedPackage) {
+      errors.selectedPackage = 'Please select a package';
+    }
     
     // Name validation
     if (!formData.name.trim()) {
@@ -226,24 +283,49 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
   };
 
   const calculatePricing = () => {
-    if (!referralData) return { discountAmount: 0, finalPrice: originalPrice };
+    if (!selectedPackageData) return { discountAmount: 0, finalPrice: originalPrice };
     
-    const discountAmount = Math.floor(originalPrice * referralData.discount_percentage / 100);
-    const finalPrice = originalPrice - discountAmount;
+    const basePrice = selectedPackageData.price;
+    const discountAmount = Math.floor(basePrice * (referralData?.discount_percentage || 0) / 100);
+    const finalPrice = basePrice - discountAmount;
     
     return { discountAmount, finalPrice };
   };
 
   const getPaymentLink = () => {
-    // Use the payment link from the referral code if available, otherwise generate default
-    if (referralData?.payment_link) {
-      return referralData.payment_link;
+    if (!selectedPackageData || !referralData) {
+      return null;
     }
-    
-    // Fallback to default payment link generation
-    const { finalPrice } = calculatePricing();
-    const baseUrl = 'https://rzp.io/rzp/skillras';
-    return `${baseUrl}-${finalPrice}`;
+
+    // Get the appropriate payment link based on selected package
+    let paymentLink = '';
+    switch (formData.selectedPackage) {
+      case 'starter':
+        paymentLink = referralData.payment_link || '';
+        break;
+      case 'professional':
+        paymentLink = referralData.payment_link2 || '';
+        break;
+      case 'enterprise':
+        paymentLink = referralData.payment_link3 || '';
+        break;
+      default:
+        paymentLink = referralData.payment_link || '';
+    }
+
+    // If no specific payment link for the package, use the default one
+    if (!paymentLink) {
+      paymentLink = referralData.payment_link || '';
+    }
+
+    // If still no payment link, generate a default one
+    if (!paymentLink) {
+      const { finalPrice } = calculatePricing();
+      const baseUrl = 'https://rzp.io/rzp/skillras';
+      paymentLink = `${baseUrl}-${finalPrice}`;
+    }
+
+    return paymentLink;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -258,7 +340,11 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
     
     try {
       const { discountAmount, finalPrice } = calculatePricing();
-      const generatedPaymentLink = getPaymentLink(); // Use the new function
+      const generatedPaymentLink = getPaymentLink();
+      
+      if (!generatedPaymentLink) {
+        throw new Error('Unable to generate payment link. Please try again.');
+      }
       
       const enrollmentData = {
         name: formData.name.trim(),
@@ -270,14 +356,15 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
         pincode: formData.pincode,
         course_id: courseId,
         course_name: courseName,
-        original_price: originalPrice,
+        package_selected: formData.selectedPackage,
+        original_price: selectedPackageData?.price || originalPrice,
         referral_code: formData.referralCode.toUpperCase(),
         referrer_name: referralData?.referrer_name || null,
         discount_percentage: referralData?.discount_percentage || 0,
         discount_amount: discountAmount,
         final_price: finalPrice,
         payment_link: generatedPaymentLink,
-        ip_address: null, // You can implement IP detection if needed
+        ip_address: null,
         user_agent: navigator.userAgent
       };
 
@@ -317,7 +404,8 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
       qualification: '',
       state: '',
       pincode: '',
-      referralCode: ''
+      referralCode: '',
+      selectedPackage: preSelectedPackage || ''
     });
     setSuccess(false);
     setReferralData(null);
@@ -342,24 +430,30 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
             Your enrollment has been processed successfully
           </p>
           
-          {/* Course Details */}
-          <div className="bg-dark rounded-lg p-6 mb-6 border border-primary/20">
-            <h3 className="text-white font-bold text-lg mb-2">{courseName}</h3>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-300">Original Price:</span>
-                <span className="text-gray-300">₹{originalPrice.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-green-400">Discount ({referralData?.discount_percentage}%):</span>
-                <span className="text-green-400">-₹{discountAmount.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between font-bold text-lg border-t border-gray-600 pt-2">
-                <span className="text-white">Final Price:</span>
-                <span className="text-primary">₹{finalPrice.toLocaleString()}</span>
+          {/* Package Details */}
+          {selectedPackageData && (
+            <div className="bg-dark rounded-lg p-6 mb-6 border border-primary/20">
+              <h3 className="text-white font-bold text-lg mb-2">{selectedPackageData.name}</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-300">Package Price:</span>
+                  <span className="text-gray-300">₹{selectedPackageData.price.toLocaleString()}</span>
+                </div>
+                {referralData && (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-green-400">Discount ({referralData.discount_percentage}%):</span>
+                      <span className="text-green-400">-₹{discountAmount.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between font-bold text-lg border-t border-gray-600 pt-2">
+                      <span className="text-white">Final Price:</span>
+                      <span className="text-primary">₹{finalPrice.toLocaleString()}</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
-          </div>
+          )}
           
           {/* Referrer Information */}
           {referralData && (
@@ -380,11 +474,6 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               </div>
               {referralData.description && (
                 <p className="text-gray-300 text-sm mt-2">{referralData.description}</p>
-              )}
-              {referralData.payment_link && (
-                <div className="mt-3 pt-3 border-t border-primary/20">
-                  <p className="text-xs text-gray-400">Custom payment link assigned</p>
-                </div>
               )}
             </div>
           )}
@@ -423,10 +512,6 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
         <p className="text-gray-300 mb-4">
           Enroll in <span className="text-primary font-semibold">{courseName}</span>
         </p>
-        <div className="bg-dark rounded-lg p-4 border border-primary/20">
-          <div className="text-2xl font-bold text-primary">₹{originalPrice.toLocaleString()}</div>
-          <div className="text-gray-300 text-sm">Course Price</div>
-        </div>
       </div>
 
       {error && (
@@ -437,6 +522,51 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Package Selection */}
+        <div className="bg-dark rounded-lg p-6 border border-primary/20">
+          <h3 className="text-white font-bold mb-4 flex items-center">
+            <Package className="mr-2 text-primary" size={20} />
+            Select Package
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {packages.map((pkg) => (
+              <div
+                key={pkg.id}
+                className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
+                  formData.selectedPackage === pkg.id
+                    ? 'border-primary bg-primary/10'
+                    : 'border-gray-600 hover:border-primary/50'
+                }`}
+                onClick={() => handleInputChange('selectedPackage', pkg.id)}
+              >
+                {pkg.badge && (
+                  <div className="absolute -top-2 -right-2 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                    {pkg.badge}
+                  </div>
+                )}
+                <div className="text-center">
+                  <h4 className="text-white font-bold text-sm mb-1">{pkg.name}</h4>
+                  <p className="text-gray-400 text-xs mb-2">{pkg.description}</p>
+                  <div className="text-primary font-bold">₹{pkg.price.toLocaleString()}</div>
+                  {pkg.originalPrice > pkg.price && (
+                    <div className="text-gray-400 text-xs line-through">
+                      ₹{pkg.originalPrice.toLocaleString()}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          {validationErrors.selectedPackage && (
+            <p className="text-red-500 text-sm mt-2 flex items-center">
+              <AlertCircle size={14} className="mr-1" />
+              {validationErrors.selectedPackage}
+            </p>
+          )}
+        </div>
+
         {/* Referral/Coupon Code Section */}
         <div className="bg-dark rounded-lg p-6 border border-primary/20">
           <h3 className="text-white font-bold mb-4 flex items-center">
@@ -503,26 +633,27 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               <div className="text-xs text-gray-400 mt-1">
                 Type: {referralData.code_type.charAt(0).toUpperCase() + referralData.code_type.slice(1)}
                 {referralData.max_usage && ` • ${referralData.current_usage}/${referralData.max_usage} used`}
-                {referralData.payment_link && ` • Custom payment link`}
               </div>
               
               {/* Price Calculation */}
-              <div className="mt-3 pt-3 border-t border-green-500/20">
-                <div className="space-y-1 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Original Price:</span>
-                    <span className="text-gray-300">₹{originalPrice.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-400">Discount:</span>
-                    <span className="text-green-400">-₹{calculatePricing().discountAmount.toLocaleString()}</span>
-                  </div>
-                  <div className="flex justify-between font-bold border-t border-green-500/20 pt-1">
-                    <span className="text-white">Final Price:</span>
-                    <span className="text-primary">₹{calculatePricing().finalPrice.toLocaleString()}</span>
+              {selectedPackageData && (
+                <div className="mt-3 pt-3 border-t border-green-500/20">
+                  <div className="space-y-1 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">Package Price:</span>
+                      <span className="text-gray-300">₹{selectedPackageData.price.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-green-400">Discount:</span>
+                      <span className="text-green-400">-₹{calculatePricing().discountAmount.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between font-bold border-t border-green-500/20 pt-1">
+                      <span className="text-white">Final Price:</span>
+                      <span className="text-primary">₹{calculatePricing().finalPrice.toLocaleString()}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           )}
         </div>
@@ -716,7 +847,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
           className="w-full" 
           size="lg"
           glowing
-          disabled={isLoading || !codeVerified}
+          disabled={isLoading || !codeVerified || !formData.selectedPackage}
         >
           {isLoading ? (
             <div className="flex items-center justify-center">
