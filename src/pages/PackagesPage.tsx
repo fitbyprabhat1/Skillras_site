@@ -17,9 +17,6 @@ import {
   Video,
   TrendingUp,
   Palette,
-  Camera,
-  Code,
-  Megaphone
 } from 'lucide-react';
 import { useInView } from '../hooks/useInView';
 
@@ -154,7 +151,7 @@ const packages: PackageData[] = [
 ];
 
 const PackagesPage: React.FC = () => {
-  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const [, setSelectedPackage] = useState<string | null>(null);
   const [showComparison, setShowComparison] = useState(false);
   const { ref, inView } = useInView({ threshold: 0.1 });
 
@@ -162,11 +159,11 @@ const PackagesPage: React.FC = () => {
   setSelectedPackage(packageId);
   
   if (packageId === "professional") {
-    window.location.href = '/enroll';
+    window.location.href = '/enroll?package=professional';
   } else if (packageId === "starter") {
-    window.location.href = '/enroll';
+    window.location.href = '/enroll?package=starter';
   } else if (packageId === "enterprise") {
-    window.location.href = '/enroll';
+    window.location.href = '/enroll?package=enterprise';
   }
 };
 
@@ -228,8 +225,8 @@ const PackagesPage: React.FC = () => {
       {/* Packages Grid */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-7xl">
-          <div 
-            ref={ref}
+          <div
+            ref={ref as React.RefObject<HTMLDivElement>}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
           >
             {packages.map((pkg, index) => (
