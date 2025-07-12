@@ -17,7 +17,7 @@ const handleFormSubmit = (data: { name: string; email: string; phone: string }) 
 
 const MainLandingPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-dark text-white">
+    <div className="min-h-screen bg-dark text-white w-full overflow-x-hidden" style={{ backgroundColor: '#000000' }}>
       <WelcomePopup onSubmit={handleFormSubmit} />
       <NavBarWithPackages />
       <MainHeroSection />
