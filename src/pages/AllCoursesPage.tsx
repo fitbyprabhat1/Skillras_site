@@ -498,6 +498,7 @@ const AllCoursesPage: React.FC = () => {
           </div>
         </div>
       </section>
+      <FooterSection />
     </div>
   );
 };
