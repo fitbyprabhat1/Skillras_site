@@ -30,6 +30,8 @@ interface FormData {
   pincode: string;
   referralCode: string;
   selectedPackage: string;
+  password: string;
+  confirmPassword: string;
 }
 
 interface ReferralData {
@@ -134,7 +136,9 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
     state: '',
     pincode: '',
     referralCode: '',
-    selectedPackage: preSelectedPackage || ''
+    selectedPackage: preSelectedPackage || '',
+    password: '',
+    confirmPassword: ''
   });
   
   const [isLoading, setIsLoading] = useState(false);
@@ -185,6 +189,19 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
       errors.age = 'Age must be between 13 and 100';
     }
     
+    // Password validation
+    if (!formData.password.trim()) {
+      errors.password = 'Password is required';
+    } else if (formData.password.trim().length < 6) {
+      errors.password = 'Password must be at least 6 characters';
+    }
+
+    if (!formData.confirmPassword.trim()) {
+      errors.confirmPassword = 'Confirm Password is required';
+    } else if (formData.confirmPassword.trim() !== formData.password.trim()) {
+      errors.confirmPassword = 'Passwords do not match';
+    }
+    
     // State validation
     if (!formData.state) {
       errors.state = 'State is required';
@@ -231,6 +248,11 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
         setCodeVerified(false);
         setReferralData(null);
       }
+    }
+
+    // Special handling for password and confirm password
+    if (field === 'password' || field === 'confirmPassword') {
+      processedValue = value.trim();
     }
     
     setFormData(prev => ({ ...prev, [field]: processedValue }));
@@ -380,6 +402,25 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
         throw new Error('Unable to generate payment link. Please try again.');
       }
       
+      // First, create user account in users table
+      const userAccountData = {
+        name: formData.name.trim(),
+        email: formData.email.toLowerCase().trim(),
+        phone: formData.phone,
+        password: formData.password.trim()
+      };
+
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .insert([userAccountData])
+        .select();
+
+      if (userError) {
+        console.error('User creation error:', userError);
+        throw new Error('Failed to create user account. Please try again.');
+      }
+
+      // Then, create enrollment record in paid_users table
       const enrollmentData = {
         name: formData.name.trim(),
         email: formData.email.toLowerCase().trim(),
@@ -390,7 +431,6 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
         pincode: formData.pincode,
         course_id: courseId,
         course_name: courseName,
-        package_selected: formData.selectedPackage,
         original_price: selectedPackageData?.price || originalPrice,
         referral_code: formData.referralCode.trim() ? formData.referralCode.toUpperCase() : null,
         referrer_name: referralData?.referrer_name || null,
@@ -398,17 +438,18 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
         discount_amount: discountAmount,
         final_price: finalPrice,
         payment_link: generatedPaymentLink,
+        payment_status: 'pending',
         ip_address: null,
         user_agent: navigator.userAgent
       };
 
-      const { data, error: supabaseError } = await supabase
+      const { data: enrollmentResult, error: enrollmentError } = await supabase
         .from('paid_users')
         .insert([enrollmentData])
         .select();
 
-      if (supabaseError) {
-        console.error('Enrollment error:', supabaseError);
+      if (enrollmentError) {
+        console.error('Enrollment error:', enrollmentError);
         throw new Error('Failed to process enrollment. Please try again.');
       }
 
@@ -439,7 +480,9 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
       state: '',
       pincode: '',
       referralCode: '',
-      selectedPackage: preSelectedPackage || ''
+      selectedPackage: preSelectedPackage || '',
+      password: '',
+      confirmPassword: ''
     });
     setSuccess(false);
     setReferralData(null);
@@ -459,9 +502,9 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
             <CheckCircle className="text-green-500" size={40} />
           </div>
           
-          <h2 className="text-3xl font-bold text-white mb-3">Enrollment Successful!</h2>
+          <h2 className="text-3xl font-bold text-white mb-3">Account Created & Enrollment Successful!</h2>
           <p className="text-gray-300 mb-8">
-            Your enrollment has been processed successfully
+            Your account has been created and enrollment has been processed successfully
           </p>
           
           {/* Package Details */}
@@ -542,9 +585,9 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
         <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
           <CreditCard className="text-primary" size={40} />
         </div>
-        <h2 className="text-3xl font-bold text-white mb-3">Course Enrollment</h2>
+        <h2 className="text-3xl font-bold text-white mb-3">Create Account & Enroll</h2>
         <p className="text-gray-300 mb-4">
-          Enroll in <span className="text-primary font-semibold">{courseName}</span>
+          Create your account and enroll in <span className="text-primary font-semibold">{courseName}</span>
         </p>
       </div>
 
@@ -900,6 +943,57 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               {formData.pincode.length}/6 digits
             </p>
           </div>
+
+          {/* Password and Confirm Password Fields */}
+          <div>
+            <label htmlFor="password" className="block text-white mb-2 font-medium flex items-center">
+              <Hash size={16} className="mr-2 text-primary" />
+              Password <span className="text-red-500 ml-1">*</span>
+            </label>
+            <input
+              type="password"
+              id="password"
+              value={formData.password}
+              onChange={(e) => handleInputChange('password', e.target.value)}
+              className={`w-full px-4 py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 ${
+                validationErrors.password 
+                  ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20' 
+                  : 'border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20'
+              }`}
+              placeholder="Enter your password"
+            />
+            {validationErrors.password && (
+              <p className="text-red-500 text-sm mt-2 flex items-center">
+                <AlertCircle size={14} className="mr-1" />
+                {validationErrors.password}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="confirmPassword" className="block text-white mb-2 font-medium flex items-center">
+              <Hash size={16} className="mr-2 text-primary" />
+              Confirm Password <span className="text-red-500 ml-1">*</span>
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+              className={`w-full px-4 py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 ${
+                validationErrors.confirmPassword 
+                  ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20' 
+                  : 'border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20'
+              }`}
+              placeholder="Confirm your password"
+            />
+            {validationErrors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-2 flex items-center">
+                <AlertCircle size={14} className="mr-1" />
+                {validationErrors.confirmPassword}
+              </p>
+            )}
+          </div>
         </div>
 
         <Button 
@@ -912,12 +1006,12 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
           {isLoading ? (
             <div className="flex items-center justify-center">
               <Loader className="animate-spin mr-2" size={20} />
-              Processing Enrollment...
+              Creating Account & Processing Enrollment...
             </div>
           ) : (
             <>
               <CreditCard className="mr-2" size={20} />
-              Enroll Now
+              Create Account & Enroll
             </>
           )}
         </Button>
