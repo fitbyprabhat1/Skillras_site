@@ -22,13 +22,27 @@ export const useAuth = () => {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (user) {
+      setLoading(false);
+      return;
+    }
     // Get initial session
     const getInitialSession = async () => {
+      // Try to restore user from localStorage first
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+        setLoading(false);
+        return;
+      }
       const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
       setUser(session?.user ?? null);
@@ -165,6 +179,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } as User;
 
       setUser(mockUser);
+      localStorage.setItem('user', JSON.stringify(mockUser));
       return { data: { user: mockUser }, error: null };
     } catch (error) {
       return { data: null, error };
@@ -183,6 +198,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Always clear local state
       setUser(null);
       setSession(null);
+      localStorage.removeItem('user');
     }
   };
 
