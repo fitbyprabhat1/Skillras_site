@@ -105,8 +105,8 @@ const FooterSection: React.FC = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-400 hover:text-primary transition-colors">
-                  Support Center
+                <a href="/terms" className="text-gray-400 hover:text-primary transition-colors">
+                  Term and Conditions
                 </a>
               </li>
             </ul>
