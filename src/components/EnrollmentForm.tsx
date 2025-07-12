@@ -56,6 +56,9 @@ interface PackageData {
   discount: number;
   color: string;
   badge?: string;
+  payment_link?: string;
+  payment_link2?: string;
+  payment_link3?: string;
 }
 
 interface EnrollmentFormProps {
@@ -74,7 +77,10 @@ const packages: PackageData[] = [
     originalPrice: 9999,
     discount: 50,
     color: 'from-blue-500 to-blue-600',
-    badge: 'Best for Beginners'
+    badge: 'Best for Beginners',
+    payment_link: 'https://rzp.io/rzp/skillras-starter',
+    payment_link2: 'https://rzp.io/rzp/skillras-starter',
+    payment_link3: 'https://rzp.io/rzp/skillras-starter'
   },
   {
     id: 'professional',
@@ -84,7 +90,10 @@ const packages: PackageData[] = [
     originalPrice: 14999,
     discount: 36,
     color: 'from-primary to-red-600',
-    badge: 'Most Popular'
+    badge: 'Most Popular',
+    payment_link: 'https://rzp.io/rzp/skillras-professional',
+    payment_link2: 'https://rzp.io/rzp/skillras-professional',
+    payment_link3: 'https://rzp.io/rzp/skillras-professional'
   },
   {
     id: 'enterprise',
@@ -94,7 +103,10 @@ const packages: PackageData[] = [
     originalPrice: 29999,
     discount: 55,
     color: 'from-purple-500 to-purple-600',
-    badge: 'Best Value'
+    badge: 'Best Value',
+    payment_link: 'https://rzp.io/rzp/skillras-enterprise',
+    payment_link2: 'https://rzp.io/rzp/skillras-enterprise',
+    payment_link3: 'https://rzp.io/rzp/skillras-enterprise'
   }
 ];
 
@@ -185,11 +197,9 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
       errors.pincode = 'Pincode must be exactly 6 digits';
     }
     
-    // Referral code validation
-    if (!formData.referralCode.trim()) {
-      errors.referralCode = 'Referral/Coupon code is required';
-    } else if (!codeVerified) {
-      errors.referralCode = 'Please verify your code first';
+    // Referral code validation - Make it optional
+    if (formData.referralCode.trim() && !codeVerified) {
+      errors.referralCode = 'Please verify your code first or remove it';
     }
     
     setValidationErrors(errors);
@@ -293,39 +303,63 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
   };
 
   const getPaymentLink = () => {
-    if (!selectedPackageData || !referralData) {
+    if (!selectedPackageData) {
       return null;
     }
 
-    // Get the appropriate payment link based on selected package
-    let paymentLink = '';
+    // If referral data is available, use the specific payment links from the referral code
+    if (referralData) {
+      let paymentLink = '';
+      switch (formData.selectedPackage) {
+        case 'starter':
+          paymentLink = referralData.payment_link || '';
+          break;
+        case 'professional':
+          paymentLink = referralData.payment_link2 || '';
+          break;
+        case 'enterprise':
+          paymentLink = referralData.payment_link3 || '';
+          break;
+        default:
+          paymentLink = referralData.payment_link || '';
+      }
+
+      // If no specific payment link for the package, use the default one
+      if (!paymentLink) {
+        paymentLink = referralData.payment_link || '';
+      }
+
+      // If still no payment link, use default package link
+      if (!paymentLink) {
+        switch (formData.selectedPackage) {
+          case 'starter':
+            paymentLink = selectedPackageData.payment_link || '';
+            break;
+          case 'professional':
+            paymentLink = selectedPackageData.payment_link2 || '';
+            break;
+          case 'enterprise':
+            paymentLink = selectedPackageData.payment_link3 || '';
+            break;
+          default:
+            paymentLink = selectedPackageData.payment_link || '';
+        }
+      }
+
+      return paymentLink;
+    }
+
+    // If no referral data, use default package payment links
     switch (formData.selectedPackage) {
       case 'starter':
-        paymentLink = referralData.payment_link || '';
-        break;
+        return selectedPackageData.payment_link || '';
       case 'professional':
-        paymentLink = referralData.payment_link2 || '';
-        break;
+        return selectedPackageData.payment_link2 || '';
       case 'enterprise':
-        paymentLink = referralData.payment_link3 || '';
-        break;
+        return selectedPackageData.payment_link3 || '';
       default:
-        paymentLink = referralData.payment_link || '';
+        return selectedPackageData.payment_link || '';
     }
-
-    // If no specific payment link for the package, use the default one
-    if (!paymentLink) {
-      paymentLink = referralData.payment_link || '';
-    }
-
-    // If still no payment link, generate a default one
-    if (!paymentLink) {
-      const { finalPrice } = calculatePricing();
-      const baseUrl = 'https://rzp.io/rzp/skillras';
-      paymentLink = `${baseUrl}-${finalPrice}`;
-    }
-
-    return paymentLink;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -358,7 +392,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
         course_name: courseName,
         package_selected: formData.selectedPackage,
         original_price: selectedPackageData?.price || originalPrice,
-        referral_code: formData.referralCode.toUpperCase(),
+        referral_code: formData.referralCode.trim() ? formData.referralCode.toUpperCase() : null,
         referrer_name: referralData?.referrer_name || null,
         discount_percentage: referralData?.discount_percentage || 0,
         discount_amount: discountAmount,
@@ -571,7 +605,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
         <div className="bg-dark rounded-lg p-6 border border-primary/20">
           <h3 className="text-white font-bold mb-4 flex items-center">
             <Hash className="mr-2 text-primary" size={20} />
-            Referral/Coupon Code
+            Referral/Coupon Code (Optional)
           </h3>
           
           <div className="flex gap-3">
@@ -587,7 +621,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
                     ? 'border-green-500 focus:border-green-400 focus:ring-2 focus:ring-green-500/20'
                     : 'border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20'
                 }`}
-                placeholder="Enter your code"
+                placeholder="Enter your code (optional)"
                 style={{ textTransform: 'uppercase' }}
               />
             </div>
@@ -654,6 +688,32 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
                   </div>
                 </div>
               )}
+            </div>
+          )}
+          
+          {!formData.referralCode.trim() && selectedPackageData && (
+            <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-blue-400 font-medium">✓ No Code Applied</span>
+                <span className="text-blue-400 font-bold">
+                  Full Price
+                </span>
+              </div>
+              <p className="text-gray-300 text-sm">Proceeding with standard package pricing</p>
+              
+              {/* Price Calculation for No Code */}
+              <div className="mt-3 pt-3 border-t border-blue-500/20">
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-300">Package Price:</span>
+                    <span className="text-gray-300">₹{selectedPackageData.price.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between font-bold border-t border-blue-500/20 pt-1">
+                    <span className="text-white">Final Price:</span>
+                    <span className="text-primary">₹{selectedPackageData.price.toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -847,7 +907,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
           className="w-full" 
           size="lg"
           glowing
-          disabled={isLoading || !codeVerified || !formData.selectedPackage}
+          disabled={isLoading || (formData.referralCode.trim() && !codeVerified) || !formData.selectedPackage}
         >
           {isLoading ? (
             <div className="flex items-center justify-center">
