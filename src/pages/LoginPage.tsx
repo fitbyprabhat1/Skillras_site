@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Button from '../components/Button';
+import { supabase } from '../lib/supabase';
 import { 
   Mail, 
   Lock, 
@@ -13,7 +14,9 @@ import {
   CheckCircle,
   Loader,
   BookOpen,
-  Copy
+  Copy,
+  Shield,
+  CreditCard
 } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
@@ -97,6 +100,25 @@ const LoginPage: React.FC = () => {
 
     try {
       if (isSignUp) {
+        // Check if user exists in paid_users table with completed payment status
+        const { data: paidUserData, error: paidUserError } = await supabase
+          .from('paid_users')
+          .select('*')
+          .eq('email', formData.email.toLowerCase().trim())
+          .eq('payment_status', 'completed')
+          .single();
+
+        if (paidUserError) {
+          if (paidUserError.code === 'PGRST116') {
+            // No user found with completed payment
+            setError('Access denied. You must complete your course enrollment and payment before creating an account. Please enroll in a course first.');
+            setLoading(false);
+            return;
+          }
+          throw paidUserError;
+        }
+
+        // User found with completed payment, proceed with signup
         const { data, error } = await signUp(
           formData.email,
           formData.password,
@@ -149,10 +171,21 @@ const LoginPage: React.FC = () => {
           </h1>
           <p className="text-gray-300">
             {isSignUp 
-              ? 'Join thousands of students learning new skills' 
+              ? 'Only users with completed payments can create accounts' 
               : 'Sign in to access your courses and continue learning'
             }
           </p>
+          {isSignUp && (
+            <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+              <div className="flex items-center text-blue-400 mb-2">
+                <Shield size={16} className="mr-2" />
+                <span className="text-sm font-medium">Restricted Access</span>
+              </div>
+              <p className="text-gray-300 text-sm">
+                You must have completed your course enrollment and payment to create an account.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Form */}
@@ -160,7 +193,23 @@ const LoginPage: React.FC = () => {
           {error && (
             <div className="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded-lg mb-6 flex items-start animate-slideDown">
               <AlertCircle className="mr-3 flex-shrink-0 mt-0.5" size={20} />
-              <span className="text-sm">{error}</span>
+              <div className="flex-1">
+                <span className="text-sm">{error}</span>
+                {error.includes('Access denied') && (
+                  <div className="mt-3 pt-3 border-t border-red-500/20">
+                    <p className="text-gray-300 text-sm mb-2">
+                      To create an account, you need to complete your course enrollment first.
+                    </p>
+                    <Link 
+                      to="/enroll" 
+                      className="inline-flex items-center text-primary hover:text-primary-light transition-colors text-sm font-medium"
+                    >
+                      <CreditCard size={14} className="mr-1" />
+                      Complete Enrollment
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
