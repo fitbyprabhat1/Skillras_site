@@ -296,6 +296,11 @@ const NavBarWithPackages: React.FC = () => {
                   <Button size="sm" variant="outline" >Enroll Now</Button>
                 </Link>
               </div>
+      <div className="flex items-center space-x-4">
+                <Link to="/enroll">
+                  <Button size="sm" variant="outline" >Enroll Now</Button>
+                </Link>
+              </div>
             )}
           </div>
 
