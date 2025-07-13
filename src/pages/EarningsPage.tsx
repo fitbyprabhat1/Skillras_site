@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import NavBarWithPackages from '../components/NavBarWithPackages';
-import { TrendingUp, Users, DollarSign, Calendar, Package, MapPin, Mail, Phone, User, Edit, Camera } from 'lucide-react';
+import { TrendingUp, Users, DollarSign, Calendar, Package, MapPin, Mail, Phone, User, Edit, Camera, Filter, ChevronLeft, ChevronRight, SortAsc, SortDesc } from 'lucide-react';
 import Button from '../components/Button';
 import { useCountUp } from '../hooks/useCountUp';
 
@@ -36,6 +36,18 @@ const EarningsPage: React.FC = () => {
   const [photoLink, setPhotoLink] = useState<string>('');
   const [isEditingPhoto, setIsEditingPhoto] = useState(false);
   const [photoError, setPhotoError] = useState<string | null>(null);
+
+  // Filtering and pagination state
+  const [dateFilter, setDateFilter] = useState<string>('all');
+  const [fromDate, setFromDate] = useState<string>('');
+  const [toDate, setToDate] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<'date' | 'amount' | 'name'>('date');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showFilters, setShowFilters] = useState(false);
+  const [showDateFilter, setShowDateFilter] = useState(false);
+  const itemsPerPage = 6;
 
   // Counting animations for earnings
   const weeklyCount = useCountUp({ 
@@ -203,6 +215,101 @@ const EarningsPage: React.FC = () => {
       month: 'short',
       day: 'numeric'
     });
+  };
+
+  // Filter and sort users
+  const getFilteredAndSortedUsers = () => {
+    if (!earningsData?.referredUsers) return [];
+
+    let filteredUsers = [...earningsData.referredUsers];
+
+    // Apply date filter
+    if (fromDate || toDate) {
+      filteredUsers = filteredUsers.filter(user => {
+        const userDate = new Date(user.created_at);
+        let afterFrom = true;
+        let beforeTo = true;
+        if (fromDate) afterFrom = userDate >= new Date(fromDate);
+        if (toDate) beforeTo = userDate <= new Date(toDate + 'T23:59:59');
+        return afterFrom && beforeTo;
+      });
+    } else if (dateFilter !== 'all') {
+      const now = new Date();
+      let filterDate: Date;
+      
+      switch (dateFilter) {
+        case 'today':
+          filterDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          break;
+        case 'week':
+          filterDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case 'month':
+          filterDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          break;
+        default:
+          filterDate = new Date(0);
+      }
+      
+      filteredUsers = filteredUsers.filter(user => 
+        new Date(user.created_at) >= filterDate
+      );
+    }
+
+    // Apply status filter
+    if (statusFilter !== 'all') {
+      filteredUsers = filteredUsers.filter(user => 
+        user.payment_status === statusFilter
+      );
+    }
+
+    // Apply sorting
+    filteredUsers.sort((a, b) => {
+      let comparison = 0;
+      
+      switch (sortBy) {
+        case 'date':
+          comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          break;
+        case 'amount':
+          comparison = (a.final_price || 0) - (b.final_price || 0);
+          break;
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+      }
+      
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    return filteredUsers;
+  };
+
+  const filteredUsers = getFilteredAndSortedUsers();
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+
+  const handleSort = (field: 'date' | 'amount' | 'name') => {
+    if (sortBy === field) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(field);
+      setSortOrder('desc');
+    }
+    setCurrentPage(1);
+  };
+
+  const resetFilters = () => {
+    setDateFilter('all');
+    setFromDate('');
+    setToDate('');
+    setStatusFilter('all');
+    setSortBy('date');
+    setSortOrder('desc');
+    setCurrentPage(1);
+    setShowDateFilter(false);
   };
 
   if (loading) {
@@ -434,79 +541,201 @@ const EarningsPage: React.FC = () => {
           </div>
 
           {/* Users List */}
-          <div className="bg-dark-light border border-primary/20 rounded-xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white flex items-center">
-                <Users className="mr-3 text-primary" size={24} />
-                Referred Users ({earningsData?.totalUsers || 0})
+          <div className="bg-dark-light border border-primary/20 rounded-xl p-4 md:p-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+              <h2 className="text-xl md:text-2xl font-bold text-white flex items-center">
+                <Users className="mr-3 text-primary" size={20} />
+                Referred Users ({filteredUsers.length})
               </h2>
+              
+              {/* Filter Toggle Button */}
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={() => setShowFilters(!showFilters)}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center text-xs"
+                >
+                  <Filter size={14} className="mr-1" />
+                  Filters
+                </Button>
+                <Button
+                  onClick={() => setShowDateFilter(!showDateFilter)}
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center text-xs"
+                >
+                  <Calendar size={14} className="mr-1" />
+                  Filter by Date
+                </Button>
+                <Button
+                  onClick={resetFilters}
+                  variant="outline"
+                  size="sm"
+                  className="text-xs"
+                >
+                  Reset
+                </Button>
+              </div>
             </div>
 
-            {earningsData?.referredUsers.length === 0 ? (
+            {/* Filters Section */}
+            {showFilters && (
+              <div className="bg-dark-lighter rounded-lg p-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Status Filter */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Payment Status</label>
+                    <select
+                      value={statusFilter}
+                      onChange={(e) => {
+                        setStatusFilter(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                      className="w-full px-3 py-2 bg-dark border border-gray-600 rounded-lg text-white text-sm focus:border-primary focus:outline-none"
+                    >
+                      <option value="all">All Status</option>
+                      <option value="completed">Completed</option>
+                      <option value="processing">Processing</option>
+                      <option value="pending">Pending</option>
+                      <option value="failed">Failed</option>
+                    </select>
+                  </div>
+
+                  {/* Sort Options */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Sort By</label>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => handleSort('date')}
+                        variant={sortBy === 'date' ? 'primary' : 'outline'}
+                        size="sm"
+                        className="text-xs flex items-center"
+                      >
+                        {sortBy === 'date' ? (sortOrder === 'asc' ? <SortAsc size={12} /> : <SortDesc size={12} />) : null}
+                        Date
+                      </Button>
+                      <Button
+                        onClick={() => handleSort('amount')}
+                        variant={sortBy === 'amount' ? 'primary' : 'outline'}
+                        size="sm"
+                        className="text-xs flex items-center"
+                      >
+                        {sortBy === 'amount' ? (sortOrder === 'asc' ? <SortAsc size={12} /> : <SortDesc size={12} />) : null}
+                        Amount
+                      </Button>
+                      <Button
+                        onClick={() => handleSort('name')}
+                        variant={sortBy === 'name' ? 'primary' : 'outline'}
+                        size="sm"
+                        className="text-xs flex items-center"
+                      >
+                        {sortBy === 'name' ? (sortOrder === 'asc' ? <SortAsc size={12} /> : <SortDesc size={12} />) : null}
+                        Name
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Date Filter Section */}
+            {showDateFilter && (
+              <div className="bg-dark-lighter rounded-lg p-4 mb-6">
+                <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                  <div className="flex-1">
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Custom Date Range</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="date"
+                        value={fromDate}
+                        onChange={e => {
+                          setFromDate(e.target.value);
+                          setDateFilter('all');
+                          setCurrentPage(1);
+                        }}
+                        className="flex-1 px-3 py-2 bg-dark border border-gray-600 rounded-lg text-white text-sm focus:border-primary focus:outline-none"
+                        max={toDate || undefined}
+                        placeholder="From"
+                      />
+                      <span className="text-gray-400 self-center">to</span>
+                      <input
+                        type="date"
+                        value={toDate}
+                        onChange={e => {
+                          setToDate(e.target.value);
+                          setDateFilter('all');
+                          setCurrentPage(1);
+                        }}
+                        className="flex-1 px-3 py-2 bg-dark border border-gray-600 rounded-lg text-white text-sm focus:border-primary focus:outline-none"
+                        min={fromDate || undefined}
+                        placeholder="To"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => setShowDateFilter(false)}
+                      variant="outline"
+                      size="sm"
+                      className="text-xs"
+                    >
+                      Close
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {filteredUsers.length === 0 ? (
               <div className="text-center py-12">
                 <Users className="text-gray-500 mx-auto mb-4" size={48} />
-                <h3 className="text-xl font-semibold text-gray-400 mb-2">No Users Yet</h3>
+                <h3 className="text-xl font-semibold text-gray-400 mb-2">No Users Found</h3>
                 <p className="text-gray-500">
-                  Share your affiliate link to start earning commissions
+                  {earningsData?.referredUsers.length === 0 
+                    ? 'Share your affiliate link to start earning commissions'
+                    : 'Try adjusting your filters to see more results'
+                  }
                 </p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-gray-700">
-                      <th className="text-left py-3 px-4 text-gray-300 font-medium">User</th>
-                      <th className="text-left py-3 px-4 text-gray-300 font-medium">Package</th>
-                      <th className="text-left py-3 px-4 text-gray-300 font-medium">Amount</th>
-                      <th className="text-left py-3 px-4 text-gray-300 font-medium">Status</th>
-                      <th className="text-left py-3 px-4 text-gray-300 font-medium">Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {earningsData?.referredUsers.map((user) => (
-                      <tr key={user.id} className="border-b border-gray-800 hover:bg-dark-lighter transition-colors">
-                        <td className="py-4 px-4">
-                          <div>
-                            <div className="text-white font-medium">{user.name}</div>
-                            <div className="text-gray-400 text-sm flex items-center mt-1">
-                              <Mail size={12} className="mr-1" />
-                              <a 
-                                href={`mailto:${user.email}`}
-                                className="text-blue-400 hover:text-blue-300 transition-colors"
-                                title="Send email"
-                              >
-                                {user.email}
-                              </a>
-                            </div>
-                            <div className="text-gray-400 text-sm flex items-center mt-1">
-                              <Phone size={12} className="mr-1" />
-                              <a 
-                                href={`tel:${user.phone}`}
-                                className="text-blue-400 hover:text-blue-300 transition-colors"
-                                title="Call phone number"
-                              >
-                                {user.phone}
-                              </a>
-                            </div>
-                            <div className="text-gray-400 text-sm flex items-center mt-1">
-                              <MapPin size={12} className="mr-1" />
-                              {user.state}
+              <>
+                {/* Mobile Cards View */}
+                <div className="grid grid-cols-1 gap-4 mb-6">
+                  {paginatedUsers.map((user) => (
+                    <div key={user.id} className="bg-dark-lighter border border-gray-700 rounded-lg p-4 hover:border-primary/30 transition-colors">
+                      <div className="flex flex-col space-y-3">
+                        {/* User Info */}
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <h3 className="text-white font-semibold text-lg mb-1">{user.name}</h3>
+                            <div className="space-y-1">
+                              <div className="flex items-center text-gray-400 text-sm">
+                                <Mail size={12} className="mr-2" />
+                                <a 
+                                  href={`mailto:${user.email}`}
+                                  className="text-blue-400 hover:text-blue-300 transition-colors"
+                                >
+                                  {user.email}
+                                </a>
+                              </div>
+                              <div className="flex items-center text-gray-400 text-sm">
+                                <Phone size={12} className="mr-2" />
+                                <a 
+                                  href={`tel:${user.phone}`}
+                                  className="text-blue-400 hover:text-blue-300 transition-colors"
+                                >
+                                  {user.phone}
+                                </a>
+                              </div>
+                              <div className="flex items-center text-gray-400 text-sm">
+                                <MapPin size={12} className="mr-2" />
+                                {user.state}
+                              </div>
                             </div>
                           </div>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="flex items-center">
-                            <Package size={16} className="text-primary mr-2" />
-                            <span className="text-white capitalize">{user.package_selected}</span>
-                          </div>
-                          <div className="text-gray-400 text-sm mt-1">{user.course_name || 'Course not specified'}</div>
-                        </td>
-                        <td className="py-4 px-4">
-                          <div className="text-green-400 font-semibold">
-                            {formatCurrency(user.final_price)}
-                          </div>
-                        </td>
-                        <td className="py-4 px-4">
+                          
+                          {/* Status Badge */}
                           <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                             user.payment_status === 'completed' 
                               ? 'bg-green-500/20 text-green-400' 
@@ -520,15 +749,69 @@ const EarningsPage: React.FC = () => {
                              user.payment_status === 'processing' ? 'Processing' :
                              user.payment_status === 'failed' ? 'Failed' : 'Pending'}
                           </span>
-                        </td>
-                        <td className="py-4 px-4 text-gray-400 text-sm">
-                          {formatDate(user.created_at)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        </div>
+
+                        {/* Package and Amount */}
+                        <div className="flex items-center justify-between pt-2 border-t border-gray-700">
+                          <div className="flex items-center">
+                            <Package size={16} className="text-primary mr-2" />
+                            <span className="text-white capitalize text-sm">{user.package_selected}</span>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-green-400 font-semibold text-lg">
+                              {formatCurrency(user.final_price)}
+                            </div>
+                            <div className="text-gray-400 text-xs">
+                              {formatDate(user.created_at)}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Course Info */}
+                        {user.course_name && (
+                          <div className="text-gray-400 text-sm pt-2 border-t border-gray-700">
+                            Course: {user.course_name}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-700">
+                    <div className="text-gray-400 text-sm">
+                      Showing {startIndex + 1}-{Math.min(endIndex, filteredUsers.length)} of {filteredUsers.length} users
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        onClick={() => setCurrentPage(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center text-xs"
+                      >
+                        <ChevronLeft size={14} className="mr-1" />
+                        Previous
+                      </Button>
+                      <span className="text-gray-400 text-sm px-3">
+                        Page {currentPage} of {totalPages}
+                      </span>
+                      <Button
+                        onClick={() => setCurrentPage(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        variant="outline"
+                        size="sm"
+                        className="flex items-center text-xs"
+                      >
+                        Next
+                        <ChevronRight size={14} className="ml-1" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
