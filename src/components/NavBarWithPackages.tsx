@@ -151,9 +151,11 @@ const NavBarWithPackages: React.FC = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/" className="text-white hover:text-primary-light transition-colors">
-              Home
-            </Link>
+            {!user && (
+              <Link to="/" className="text-white hover:text-primary-light transition-colors">
+                Home
+              </Link>
+            )}
             <Link to="/courses" className="text-white hover:text-primary-light transition-colors">
               All Courses
             </Link>
@@ -363,13 +365,15 @@ const NavBarWithPackages: React.FC = () => {
         {mobileMenuOpen && (
           <div className="md:hidden bg-dark-light mt-4 rounded-lg py-4 px-2 animate-fadeIn">
             <div className="flex flex-col space-y-4">
-              <Link 
-                to="/" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-white hover:text-primary-light transition-colors py-2"
-              >
-                Home
-              </Link>
+              {!user && (
+                <Link 
+                  to="/" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-white hover:text-primary-light transition-colors py-2"
+                >
+                  Home
+                </Link>
+              )}
               <Link 
                 to="/courses" 
                 onClick={() => setMobileMenuOpen(false)}
