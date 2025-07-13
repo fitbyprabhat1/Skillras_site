@@ -184,9 +184,18 @@ const courseModules: CourseModule[] = [
 
 const PremiereProCoursePage: React.FC = () => {
   const [selectedChapter, setSelectedChapter] = React.useState<CourseChapter>(courseModules[0].chapters[0]);
-  const [progress, setProgress] = React.useState(0);
   const [expandedModule, setExpandedModule] = React.useState<number>(1);
   const { userPackage } = useUserPackage();
+
+  // Device cache for completed chapters
+  const [completedChapters, setCompletedChapters] = React.useState<number[]>(() => {
+    const stored = localStorage.getItem('premierepro_completed_chapters');
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  React.useEffect(() => {
+    localStorage.setItem('premierepro_completed_chapters', JSON.stringify(completedChapters));
+  }, [completedChapters]);
 
   const handleChapterSelect = (chapter: CourseChapter) => {
     if (!chapter.isLocked) {
@@ -194,14 +203,10 @@ const PremiereProCoursePage: React.FC = () => {
     }
   };
 
-  const handleChapterComplete = () => {
-    const totalChapters = courseModules.reduce((acc, module) => acc + module.chapters.length, 0);
-    const unlockedChapters = courseModules.reduce((acc, module) => 
-      acc + module.chapters.filter(chapter => !chapter.isLocked).length, 0
-    );
-    const progressIncrement = 100 / unlockedChapters;
-    const newProgress = Math.min(progress + progressIncrement, 100);
-    setProgress(newProgress);
+  const handleMarkAsComplete = () => {
+    if (!completedChapters.includes(selectedChapter.id)) {
+      setCompletedChapters([...completedChapters, selectedChapter.id]);
+    }
   };
 
   const toggleModule = (moduleId: number) => {
@@ -216,30 +221,7 @@ const PremiereProCoursePage: React.FC = () => {
     <div className="min-h-screen bg-dark">
       <NavBarWithPackages />
       <div className="pt-20">
-        {/* Header */}
-        <div className="bg-dark-light border-b border-gray-700">
-          <div className="container mx-auto px-4 py-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-white mb-2">Premiere Pro Mastery</h1>
-                <p className="text-gray-300">Master Adobe Premiere Pro with step-by-step guidance</p>
-              </div>
-              <div className="flex items-center space-x-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">{Math.round(progress)}%</div>
-                  <div className="text-xs text-gray-400">Complete</div>
-                </div>
-                <div className="w-32 bg-gray-700 rounded-full h-2">
-                  <div 
-                    className="bg-primary h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${progress}%` }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        {/* Header removed */}
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Video Player Section */}
@@ -283,11 +265,15 @@ const PremiereProCoursePage: React.FC = () => {
                     </div>
                   </div>
                 )}
-                
-                {!selectedChapter.isLocked && (
-                  <Button onClick={handleChapterComplete} className="w-full">
+                {/* Mark as Complete Button */}
+                {!selectedChapter.isLocked && !completedChapters.includes(selectedChapter.id) && (
+                  <Button onClick={handleMarkAsComplete} className="w-full">
                     Mark as Complete
                   </Button>
+                )}
+                {/* Completed message */}
+                {!selectedChapter.isLocked && completedChapters.includes(selectedChapter.id) && (
+                  <div className="w-full text-green-500 text-center font-semibold py-2">Chapter Completed!</div>
                 )}
               </div>
             </div>
@@ -317,51 +303,56 @@ const PremiereProCoursePage: React.FC = () => {
                       
                       {expandedModule === module.id && (
                         <div className="p-4 bg-dark-light">
-                          {module.chapters.map((chapter) => (
-                            <div
-                              key={chapter.id}
-                              onClick={() => handleChapterSelect(chapter)}
-                              className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                                selectedChapter.id === chapter.id
-                                  ? 'bg-primary/20 border border-primary/30'
-                                  : 'hover:bg-dark-lighter'
-                              }`}
-                            >
-                              <div className="flex-shrink-0">
-                                {chapter.isCompleted ? (
-                                  <CheckCircle size={16} className="text-green-500" />
-                                ) : chapter.isLocked ? (
-                                  <Lock size={16} className="text-gray-500" />
-                                ) : (
-                                  <Play size={16} className="text-primary" />
-                                )}
-                              </div>
-                              
-                              <div className="flex-1 min-w-0">
-                                <h4 className="text-white font-medium text-sm leading-tight">
-                                  {chapter.title}
-                                </h4>
-                                <p className="text-xs text-gray-400 mt-1">
-                                  {chapter.duration}
-                                </p>
-                                {chapter.downloadableResource && (
-                                  <div className="flex items-center mt-2">
-                                    <FileText size={14} className="text-primary mr-1" />
-                                    <span className="text-xs text-primary">
-                                      {chapter.downloadableResource.type} Resource
+                          {module.chapters.map((chapter) => {
+                            const isCompleted = completedChapters.includes(chapter.id);
+                            return (
+                              <div
+                                key={chapter.id}
+                                onClick={() => handleChapterSelect(chapter)}
+                                className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                                  isCompleted
+                                    ? 'bg-green-900/40 border border-green-500/30'
+                                    : selectedChapter.id === chapter.id
+                                    ? 'bg-primary/20 border border-primary/30'
+                                    : 'hover:bg-dark-lighter'
+                                }`}
+                              >
+                                <div className="flex-shrink-0">
+                                  {isCompleted ? (
+                                    <CheckCircle size={16} className="text-green-500" />
+                                  ) : chapter.isLocked ? (
+                                    <Lock size={16} className="text-gray-500" />
+                                  ) : (
+                                    <Play size={16} className="text-primary" />
+                                  )}
+                                </div>
+                                
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="text-white font-medium text-sm leading-tight">
+                                    {chapter.title}
+                                  </h4>
+                                  <p className="text-xs text-gray-400 mt-1">
+                                    {chapter.duration}
+                                  </p>
+                                  {chapter.downloadableResource && (
+                                    <div className="flex items-center mt-2">
+                                      <FileText size={14} className="text-primary mr-1" />
+                                      <span className="text-xs text-primary">
+                                        {chapter.downloadableResource.type} Resource
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                                {chapter.isLocked && (
+                                  <div className="flex-shrink-0">
+                                    <span className="text-xs bg-primary bg-opacity-20 text-primary px-2 py-1 rounded">
+                                      Premium
                                     </span>
                                   </div>
                                 )}
                               </div>
-                              {chapter.isLocked && (
-                                <div className="flex-shrink-0">
-                                  <span className="text-xs bg-primary bg-opacity-20 text-primary px-2 py-1 rounded">
-                                    Premium
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       )}
                     </div>
