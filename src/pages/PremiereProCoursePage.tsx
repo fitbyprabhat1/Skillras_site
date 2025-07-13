@@ -227,6 +227,13 @@ const PremiereProCoursePage: React.FC = () => {
   const allChapterIds = courseModules.flatMap(module => module.chapters.map(ch => ch.id));
   const allCompleted = allChapterIds.every(id => completedChapters.includes(id));
 
+  // Find flat list of all chapters
+  const allChapters = courseModules.flatMap(module => module.chapters);
+  const unlockedChapters = allChapters.filter(ch => !ch.isLocked);
+  const currentIndex = unlockedChapters.findIndex(ch => ch.id === selectedChapter.id);
+  const prevChapter = currentIndex > 0 ? unlockedChapters[currentIndex - 1] : null;
+  const nextChapter = currentIndex < unlockedChapters.length - 1 ? unlockedChapters[currentIndex + 1] : null;
+
   return (
     <div className="min-h-screen bg-dark">
       <NavBarWithPackages />
@@ -234,8 +241,7 @@ const PremiereProCoursePage: React.FC = () => {
         {/* Mobile: Course Content Button */}
         <div className="sm:hidden flex justify-between items-center mb-4 px-4">
           <Button onClick={() => setSidebarOpen(true)} variant="outline" size="sm" className="flex items-center">
-            <Menu size={20} className="mr-2" />
-            Course Content
+            <Menu size={20} />
           </Button>
           {/* Optionally, show current chapter title here */}
           <span className="text-white font-semibold truncate ml-2">{selectedChapter.title}</span>
@@ -244,6 +250,27 @@ const PremiereProCoursePage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Video Player Section */}
             <div className="lg:col-span-2">
+              {/* Next/Previous Chapter Buttons - now above video player and chapter title */}
+              <div className="flex flex-row gap-2 mb-4 justify-between">
+                <Button
+                  onClick={() => prevChapter && handleChapterSelect(prevChapter)}
+                  disabled={!prevChapter}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                >
+                  Previous
+                </Button>
+                <Button
+                  onClick={() => nextChapter && handleChapterSelect(nextChapter)}
+                  disabled={!nextChapter}
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                >
+                  Next
+                </Button>
+              </div>
               <div className="bg-dark-light rounded-xl overflow-hidden shadow-lg">
                 {selectedChapter.videoId ? (
                   <YouTubeEmbed videoId={selectedChapter.videoId} />
