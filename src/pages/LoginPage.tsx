@@ -121,7 +121,7 @@ const LoginPage: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center text-white text-2xl font-bold mb-6">
-            <BookOpen className="mr-2 text-primary" size={32} />
+            <img src="/android-chrome-192x192.png" alt="Logo" style={{ height: 32, width: 32, marginRight: 8, borderRadius: '8px' }} />
             SkillRas
           </Link>
           <h1 className="text-3xl font-bold text-white mb-2">
