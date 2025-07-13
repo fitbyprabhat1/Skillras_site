@@ -260,28 +260,29 @@ const EarningsPage: React.FC = () => {
           {/* Profile Section */}
           <div className="bg-dark-light border border-primary/20 rounded-xl p-6 mb-8">
             <div className="flex flex-col md:flex-row items-center justify-between">
-              <div className="flex items-center space-x-6 mb-4 md:mb-0">
+              <div className="flex items-center space-x-4 md:space-x-6 mb-4 md:mb-0 w-full md:w-auto">
                 {/* Profile Photo */}
                 <div className="relative">
                   {photoLink ? (
                     <img 
                       src={photoLink} 
                       alt="Profile" 
-                      className="w-20 h-20 rounded-full object-cover border-2 border-primary/30"
+                      className="w-24 h-24 md:w-20 md:h-20 rounded-2xl md:rounded-full object-cover border-2 border-primary/30"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
                         e.currentTarget.nextElementSibling?.classList.remove('hidden');
                       }}
                     />
                   ) : null}
-                  <div className={`w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary/30 ${photoLink ? 'hidden' : ''}`}>
-                    <User className="text-primary" size={32} />
+                  <div className={`w-24 h-24 md:w-20 md:h-20 rounded-2xl md:rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary/30 ${photoLink ? 'hidden' : ''}`}>
+                    <User className="text-primary md:hidden" size={40} />
+                    <User className="text-primary hidden md:block" size={32} />
                   </div>
                   
                   {/* Edit Photo Button */}
                   <button
                     onClick={() => setIsEditingPhoto(true)}
-                    className="absolute -bottom-1 -right-1 w-8 h-8 bg-primary rounded-full flex items-center justify-center hover:bg-primary-light transition-colors"
+                    className="absolute -bottom-1 -right-1 w-8 h-8 md:w-8 md:h-8 bg-primary rounded-full flex items-center justify-center hover:bg-primary-light transition-colors"
                     title="Edit photo"
                   >
                     <Camera size={16} className="text-white" />
@@ -289,11 +290,11 @@ const EarningsPage: React.FC = () => {
                 </div>
 
                 {/* User Info */}
-                <div className="text-left">
-                  <h2 className="text-2xl font-bold text-white mb-1">
+                <div className="text-left flex-1">
+                  <h2 className="text-3xl md:text-2xl font-bold text-white mb-1">
                     {user?.user_metadata?.name || user?.email}
                   </h2>
-                  <p className="text-gray-300 mb-1">{user?.email}</p>
+                  <p className="text-gray-300 mb-1 text-sm md:text-base">{user?.email}</p>
                   <div className="flex items-center space-x-2">
                     <Package className="text-primary" size={16} />
                     <span className="text-primary font-medium capitalize">
@@ -344,67 +345,71 @@ const EarningsPage: React.FC = () => {
           </div>
 
           {/* Earnings Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <div className="bg-dark-light border border-green-500/20 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <Calendar className="text-green-500" size={24} />
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-8 md:mb-12">
+            <div className="bg-dark-light border border-green-500/20 rounded-lg md:rounded-xl p-3 md:p-6">
+              <div className="flex items-center justify-between mb-2 md:mb-4">
+                <div className="w-8 h-8 md:w-12 md:h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                  <Calendar className="text-green-500 md:hidden" size={16} />
+                  <Calendar className="text-green-500 hidden md:block" size={24} />
                 </div>
-                <span className="text-gray-400 text-sm">This Week</span>
+                <span className="text-gray-400 text-xs md:text-sm">This Week</span>
               </div>
-              <div className="text-3xl font-bold text-green-400 mb-2">
+              <div className="text-lg md:text-3xl font-bold text-green-400 mb-1 md:mb-2">
                 {formatCurrency(weeklyCount)}
               </div>
-              <p className="text-gray-400 text-sm">
+              <p className="text-gray-400 text-xs md:text-sm">
                 {earningsData?.referredUsers.filter(user => 
                   new Date(user.created_at) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
                 ).length || 0} new users this week
               </p>
             </div>
 
-            <div className="bg-dark-light border border-green-500/20 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <Calendar className="text-green-500" size={24} />
+            <div className="bg-dark-light border border-green-500/20 rounded-lg md:rounded-xl p-3 md:p-6">
+              <div className="flex items-center justify-between mb-2 md:mb-4">
+                <div className="w-8 h-8 md:w-12 md:h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                  <Calendar className="text-green-500 md:hidden" size={16} />
+                  <Calendar className="text-green-500 hidden md:block" size={24} />
                 </div>
-                <span className="text-gray-400 text-sm">This Month</span>
+                <span className="text-gray-400 text-xs md:text-sm">This Month</span>
               </div>
-              <div className="text-3xl font-bold text-green-400 mb-2">
+              <div className="text-lg md:text-3xl font-bold text-green-400 mb-1 md:mb-2">
                 {formatCurrency(monthlyCount)}
               </div>
-              <p className="text-gray-400 text-sm">
+              <p className="text-gray-400 text-xs md:text-sm">
                 {earningsData?.referredUsers.filter(user => 
                   new Date(user.created_at) >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
                 ).length || 0} new users this month
               </p>
             </div>
 
-                          <div className="bg-dark-light border border-green-500/20 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                    <DollarSign className="text-green-500" size={24} />
-                  </div>
-                  <span className="text-gray-400 text-sm">All Time</span>
+                                      <div className="bg-dark-light border border-green-500/20 rounded-lg md:rounded-xl p-3 md:p-6">
+              <div className="flex items-center justify-between mb-2 md:mb-4">
+                <div className="w-8 h-8 md:w-12 md:h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                  <DollarSign className="text-green-500 md:hidden" size={16} />
+                  <DollarSign className="text-green-500 hidden md:block" size={24} />
                 </div>
-                <div className="text-3xl font-bold text-green-400 mb-2">
-                  {formatCurrency(allTimeCount)}
-                </div>
-                <p className="text-gray-400 text-sm">
-                  {earningsData?.totalUsers || 0} total users referred
-                </p>
+                <span className="text-gray-400 text-xs md:text-sm">All Time</span>
               </div>
+              <div className="text-lg md:text-3xl font-bold text-green-400 mb-1 md:mb-2">
+                {formatCurrency(allTimeCount)}
+              </div>
+              <p className="text-gray-400 text-xs md:text-sm">
+                {earningsData?.totalUsers || 0} total users referred
+              </p>
+            </div>
 
-              <div className="bg-dark-light border border-yellow-500/20 rounded-xl p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="text-yellow-500" size={24} />
+              <div className="bg-dark-light border border-yellow-500/20 rounded-lg md:rounded-xl p-3 md:p-6">
+                <div className="flex items-center justify-between mb-2 md:mb-4">
+                  <div className="w-8 h-8 md:w-12 md:h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+                    <TrendingUp className="text-yellow-500 md:hidden" size={16} />
+                    <TrendingUp className="text-yellow-500 hidden md:block" size={24} />
                   </div>
-                  <span className="text-gray-400 text-sm">Potential</span>
+                  <span className="text-gray-400 text-xs md:text-sm">Potential</span>
                 </div>
-                <div className="text-3xl font-bold text-yellow-400 mb-2">
+                <div className="text-lg md:text-3xl font-bold text-yellow-400 mb-1 md:mb-2">
                   {formatCurrency(potentialCount)}
                 </div>
-                <p className="text-gray-400 text-sm">
+                <p className="text-gray-400 text-xs md:text-sm">
                   {earningsData?.referredUsers.filter(user => user.payment_status !== 'completed').length || 0} pending users
                 </p>
               </div>
