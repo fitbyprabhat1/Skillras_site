@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import Button from './Button';
 import { Menu, X, BookOpen, Download } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
 
 const NavBar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,7 +43,7 @@ const NavBar: React.FC = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <Link to="/" className="text-white font-bold text-xl md:text-2xl flex items-center">
-            <BookOpen className="mr-2 text-primary" size={28} />
+            <img src="/android-chrome-192x192.png" alt="Logo" style={{ height: 32, width: 32, marginRight: 8, borderRadius: '8px' }} />
             SkillRas
           </Link>
 
@@ -114,9 +116,11 @@ const NavBar: React.FC = () => {
               </>
             ) : (
               <>
-                <Link to="/" className="text-white hover:text-primary-light transition-colors">
-                  Home
-                </Link>
+                {!user && (
+                  <Link to="/" className="text-white hover:text-primary-light transition-colors">
+                    Home
+                  </Link>
+                )}
                 <Link to="/download" className="text-white hover:text-primary-light transition-colors flex items-center">
                   <Download size={16} className="mr-1" />
                   Downloads
@@ -220,13 +224,15 @@ const NavBar: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <Link 
-                    to="/" 
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-white hover:text-primary-light transition-colors py-2"
-                  >
-                    Home
-                  </Link>
+                  {!user && (
+                    <Link 
+                      to="/" 
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="text-white hover:text-primary-light transition-colors py-2"
+                    >
+                      Home
+                    </Link>
+                  )}
                   <Link 
                     to="/download" 
                     onClick={() => setMobileMenuOpen(false)}
