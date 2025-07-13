@@ -5,6 +5,7 @@ import { Video, TrendingUp, Palette, Lock, Crown, Star, CheckCircle, Copy, Dolla
 import Button from './Button';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useCountUp } from '../hooks/useCountUp';
 
 interface Course {
   id: string;
@@ -216,6 +217,14 @@ const PackageCourseDashboard: React.FC = () => {
     'enterprise': 'Enterprise'
   };
 
+  // Add this after earningsData is available
+  const totalEarningsCount = useCountUp({
+    end: earningsData?.allTimeEarnings || 0,
+    duration: 2000,
+    start: 0,
+    delay: 0,
+  });
+
   if (!userPackage) {
     return (
       <div className="min-h-screen bg-dark flex items-center justify-center">
@@ -274,7 +283,7 @@ const PackageCourseDashboard: React.FC = () => {
                     </div>
                   ) : (
                     <div className="text-lg md:text-2xl font-bold text-green-400">
-                      {earningsData ? formatCurrency(earningsData.allTimeEarnings) : '₹0'}
+                      {earningsData ? formatCurrency(totalEarningsCount) : '₹0'}
                     </div>
                   )}
                   <p className="text-gray-300 text-xs md:text-sm">
