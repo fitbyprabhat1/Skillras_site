@@ -461,7 +461,10 @@ const TrialPage: React.FC = () => {
     <div className="min-h-screen bg-dark">
       <nav className="bg-dark-light p-4 border-b border-dark-lighter">
         <div className="container mx-auto flex justify-between items-center">
-          <Link to="/" className="text-white text-xl font-bold">SkillRas</Link>
+          <Link to="/" className="text-white text-xl font-bold flex items-center">
+            <img src="/android-chrome-192x192.png" alt="Logo" style={{ height: 32, width: 32, marginRight: 8, borderRadius: '8px' }} />
+            SkillRas
+          </Link>
           <div className="flex items-center gap-4">
             <div className="text-white">
               Progress: {Math.round(progress)}%
