@@ -243,34 +243,12 @@ const PremiereProCoursePage: React.FC = () => {
           <Button onClick={() => setSidebarOpen(true)} variant="outline" size="sm" className="flex items-center">
             <Menu size={20} />
           </Button>
-          {/* Optionally, show current chapter title here */}
-          <span className="text-white font-semibold truncate ml-2">{selectedChapter.title}</span>
+          {/* Removed chapter title from here */}
         </div>
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Video Player Section */}
             <div className="lg:col-span-2">
-              {/* Next/Previous Chapter Buttons - now above video player and chapter title */}
-              <div className="flex flex-row gap-2 mb-4 justify-between">
-                <Button
-                  onClick={() => prevChapter && handleChapterSelect(prevChapter)}
-                  disabled={!prevChapter}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                >
-                  Previous
-                </Button>
-                <Button
-                  onClick={() => nextChapter && handleChapterSelect(nextChapter)}
-                  disabled={!nextChapter}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                >
-                  Next
-                </Button>
-              </div>
               <div className="bg-dark-light rounded-xl overflow-hidden shadow-lg">
                 {selectedChapter.videoId ? (
                   <YouTubeEmbed videoId={selectedChapter.videoId} />
@@ -325,6 +303,27 @@ const PremiereProCoursePage: React.FC = () => {
                     </Button>
                   </div>
                 )}
+                {/* Next/Previous Chapter Buttons - now below mark as complete area */}
+                <div className="flex flex-row gap-2 mt-4 justify-between">
+                  <Button
+                    onClick={() => prevChapter && handleChapterSelect(prevChapter)}
+                    disabled={!prevChapter}
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    onClick={() => nextChapter && handleChapterSelect(nextChapter)}
+                    disabled={!nextChapter}
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                  >
+                    Next
+                  </Button>
+                </div>
                 {/* Get Certificate Button */}
                 {allCompleted && (
                   <Link to="/getcertificate">
