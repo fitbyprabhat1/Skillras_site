@@ -290,8 +290,7 @@ const PackageCourseDashboard: React.FC = () => {
                 <Link to="/earnings">
                   <Button 
                     variant="outline" 
-                    className="flex items-center border-green-500 text-green-400 hover:bg-green-500 hover:text-white shadow-lg shadow-green-500/20 hover:shadow-green-500/40 transition-all duration-300"
-                    glowing
+                    className="flex items-center border-green-500 text-green-400 hover:bg-green-500 hover:text-white shadow-lg shadow-green-500/20 hover:shadow-green-500/40 transition-all duration-300 animate-pulse"
                   >
                     <TrendingUp size={16} className="mr-2" />
                     View Earnings
