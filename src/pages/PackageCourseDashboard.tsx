@@ -143,6 +143,14 @@ const PackageCourseDashboard: React.FC = () => {
               </div>
             )}
           </div>
+          <div className="mt-4 md:mt-0">
+            <Link to="/earnings">
+              <Button variant="outline" className="flex items-center">
+                <TrendingUp size={16} className="mr-2" />
+                View Earnings
+              </Button>
+            </Link>
+          </div>
         </div>
         {/* Header */}
         <div className="text-center mb-12">
