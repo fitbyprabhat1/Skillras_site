@@ -23,25 +23,63 @@ export const useUserPackage = () => {
       }
 
       try {
-        const { data, error } = await supabase
-          .from('paid_users')
-          .select('package_selected, payment_status, email, name')
-          .eq('email', user.email.toLowerCase().trim())
-          .eq('payment_status', 'completed')
-          .single();
+        // First, try to use the secure function if available
+        let data = null;
+        let error = null;
+
+        try {
+          // Try using the secure function first
+          const { data: functionData, error: functionError } = await supabase
+            .rpc('get_user_enrollments_secure', { user_email: user.email.toLowerCase().trim() });
+
+          if (!functionError && functionData && functionData.length > 0) {
+            // Use the first enrollment record
+            const enrollment = functionData[0];
+            data = {
+              package_selected: enrollment.package_selected,
+              payment_status: enrollment.payment_status,
+              email: enrollment.email,
+              name: enrollment.name
+            };
+          } else {
+            // Fallback to direct table query
+            const { data: tableData, error: tableError } = await supabase
+              .from('paid_users')
+              .select('package_selected, payment_status, email, name')
+              .eq('email', user.email.toLowerCase().trim())
+              .eq('payment_status', 'completed')
+              .single();
+
+            data = tableData;
+            error = tableError;
+          }
+        } catch (functionErr) {
+          // If function doesn't exist, fallback to direct query
+          const { data: tableData, error: tableError } = await supabase
+            .from('paid_users')
+            .select('package_selected, payment_status, email, name')
+            .eq('email', user.email.toLowerCase().trim())
+            .eq('payment_status', 'completed')
+            .single();
+
+          data = tableData;
+          error = tableError;
+        }
 
         if (error) {
           if (error.code === 'PGRST116') {
             // No rows returned - user not found or payment not completed
             setUserPackage(null);
           } else {
-            setError(error.message);
+            console.error('Database access error:', error);
+            setError('Access denied. Please ensure you have completed your enrollment and payment.');
           }
         } else {
           setUserPackage(data);
         }
       } catch (err) {
-        setError('Failed to fetch user package information');
+        console.error('Failed to fetch user package information:', err);
+        setError('Failed to fetch user package information. Please try again later.');
       } finally {
         setLoading(false);
       }
