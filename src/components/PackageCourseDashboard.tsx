@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useUserPackage } from '../hooks/useUserPackage';
-import { Video, TrendingUp, Palette, Lock, Crown, Star, CheckCircle, Copy } from 'lucide-react';
+import { Video, TrendingUp, Palette, Lock, Crown, Star, CheckCircle, Copy, DollarSign } from 'lucide-react';
 import Button from './Button';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -17,11 +17,18 @@ interface Course {
   isAvailable: boolean;
 }
 
+interface EarningsData {
+  totalUsers: number;
+  allTimeEarnings: number;
+}
+
 const PackageCourseDashboard: React.FC = () => {
   const { userPackage, getAvailableCourses, hasAccessToPackage } = useUserPackage();
   const { user } = useAuth();
   const [affiliateCode, setAffiliateCode] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [earningsData, setEarningsData] = useState<EarningsData | null>(null);
+  const [earningsLoading, setEarningsLoading] = useState(true);
 
   useEffect(() => {
     const fetchAffiliateCode = async () => {
@@ -38,6 +45,43 @@ const PackageCourseDashboard: React.FC = () => {
     fetchAffiliateCode();
   }, [user?.email]);
 
+  useEffect(() => {
+    const fetchEarningsData = async () => {
+      if (!user?.email || !affiliateCode) return;
+
+      try {
+        setEarningsLoading(true);
+        
+        // Get all users who used this referral code (only completed payments for earnings)
+        const { data: referredUsers, error: usersError } = await supabase
+          .from('paid_users')
+          .select('*')
+          .eq('referral_code', affiliateCode)
+          .eq('payment_status', 'completed')
+          .order('created_at', { ascending: false });
+
+        if (usersError) {
+          console.error('Failed to fetch referred users:', usersError);
+          return;
+        }
+
+        // Calculate total earnings
+        const allTimeEarnings = referredUsers?.reduce((sum, user) => sum + (user.final_price || 0), 0) || 0;
+
+        setEarningsData({
+          totalUsers: referredUsers?.length || 0,
+          allTimeEarnings
+        });
+      } catch (err) {
+        console.error('Error fetching earnings data:', err);
+      } finally {
+        setEarningsLoading(false);
+      }
+    };
+
+    fetchEarningsData();
+  }, [user?.email, affiliateCode]);
+
   const shareUrl = affiliateCode
     ? `${window.location.origin}/enroll?ref=${affiliateCode}`
     : '';
@@ -48,6 +92,15 @@ const PackageCourseDashboard: React.FC = () => {
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 1500);
     }
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
   };
 
   const allCourses: Course[] = [
@@ -213,6 +266,39 @@ const PackageCourseDashboard: React.FC = () => {
             </Link>
           </div>
         </div>
+
+        {/* Total Lifetime Earnings Display */}
+        {affiliateCode && (
+          <div className="mb-8 bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                  <DollarSign className="text-green-500" size={24} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white mb-1">Total Lifetime Earnings</h3>
+                  {earningsLoading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-gray-300 text-sm">Loading earnings...</span>
+                    </div>
+                  ) : (
+                    <div className="text-2xl font-bold text-green-400">
+                      {earningsData ? formatCurrency(earningsData.allTimeEarnings) : '₹0'}
+                    </div>
+                  )}
+                  <p className="text-gray-300 text-sm">
+                    {earningsData ? `${earningsData.totalUsers} user${earningsData.totalUsers !== 1 ? 's' : ''} referred` : 'No users referred yet'}
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-green-400 font-semibold text-sm">Lifetime Total</div>
+                <div className="text-gray-400 text-xs">From completed payments</div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Course Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
