@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useUserPackage } from '../hooks/useUserPackage';
 import Button from './Button';
+import { supabase } from '../lib/supabase';
 import { Menu, X, GraduationCap, Download, ChevronDown, Package, Star, Check, User, LogOut, Crown, Video, TrendingUp, Palette } from 'lucide-react';
 
 interface PackageData {
@@ -84,6 +85,7 @@ const NavBarWithPackages: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [packagesDropdownOpen, setPackagesDropdownOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [userPhotoLink, setUserPhotoLink] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut, loading } = useAuth();
@@ -101,6 +103,29 @@ const NavBarWithPackages: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Fetch user's profile photo
+  useEffect(() => {
+    const fetchUserPhoto = async () => {
+      if (!user?.email) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('paid_users')
+          .select('photo_link')
+          .eq('email', user.email.toLowerCase().trim())
+          .single();
+
+        if (data && data.photo_link) {
+          setUserPhotoLink(data.photo_link);
+        }
+      } catch (err) {
+        console.log('No profile photo found for navbar');
+      }
+    };
+
+    fetchUserPhoto();
+  }, [user?.email]);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -255,8 +280,21 @@ const NavBarWithPackages: React.FC = () => {
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                   className="flex items-center space-x-2 text-white hover:text-primary-light transition-colors"
                 >
-                  <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                    <User size={16} />
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center overflow-hidden border border-primary/30">
+                    {userPhotoLink ? (
+                      <img 
+                        src={userPhotoLink} 
+                        alt="Profile" 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                        }}
+                      />
+                    ) : null}
+                    <div className={`w-full h-full bg-primary flex items-center justify-center ${userPhotoLink ? 'hidden' : ''}`}>
+                      <User size={16} className="text-white" />
+                    </div>
                   </div>
                   <ChevronDown size={16} className={`transition-transform ${userDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
@@ -422,8 +460,28 @@ const NavBarWithPackages: React.FC = () => {
               {/* Mobile Auth Section */}
               {user ? (
                 <div className="border-t border-gray-600 pt-4">
-                  <div className="text-white font-medium mb-2">
-                    {user.email}
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center overflow-hidden border border-primary/30">
+                      {userPhotoLink ? (
+                        <img 
+                          src={userPhotoLink} 
+                          alt="Profile" 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                          }}
+                        />
+                      ) : null}
+                      <div className={`w-full h-full bg-primary flex items-center justify-center ${userPhotoLink ? 'hidden' : ''}`}>
+                        <User size={20} className="text-white" />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-white font-medium">
+                        {user.email}
+                      </div>
+                    </div>
                   </div>
                   <div className="space-y-2">
                     {userPackage ? (
