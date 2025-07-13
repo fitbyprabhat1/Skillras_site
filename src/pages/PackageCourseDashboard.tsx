@@ -5,6 +5,7 @@ import { Video, TrendingUp, Palette, Lock, Crown, Star, CheckCircle, Copy, Dolla
 import Button from './Button';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { useCountUp } from '../hooks/useCountUp';
 
 interface Course {
   id: string;
@@ -137,7 +138,9 @@ const PackageCourseDashboard: React.FC = () => {
             discount_percentage: 20,
             is_active: true,
             created_by: 'admin',
-            payment_link: DEFAULT_PAYMENT_LINK,
+            payment_link: 'https://rzp.io/rzp/skillras1',
+            payment_link2: 'https://rzp.io/rzp/skillras2',
+            payment_link3: 'https://rzp.io/rzp/skillras3',
           },
         ]);
       if (insertError) {
@@ -216,6 +219,14 @@ const PackageCourseDashboard: React.FC = () => {
     'enterprise': 'Enterprise'
   };
 
+  // Add this after earningsData is available
+  const totalEarningsCount = useCountUp({
+    end: earningsData?.allTimeEarnings || 0,
+    duration: 2000,
+    start: 0,
+    delay: 0,
+  });
+
   if (!userPackage) {
     return (
       <div className="min-h-screen bg-dark flex items-center justify-center">
@@ -260,8 +271,8 @@ const PackageCourseDashboard: React.FC = () => {
       {/* Total Lifetime Earnings Display */}
       {affiliateCode && (
           <div className="mb-6 md:mb-8 bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl p-4 md:p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3 md:space-x-4">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div className="flex items-center space-x-3 md:space-x-4 mb-4 md:mb-0">
                 <div className="w-10 h-10 md:w-12 md:h-12 bg-green-500/20 rounded-full flex items-center justify-center">
                   <DollarSign className="text-green-500" size={20} />
                 </div>
@@ -274,7 +285,7 @@ const PackageCourseDashboard: React.FC = () => {
                     </div>
                   ) : (
                     <div className="text-lg md:text-2xl font-bold text-green-400">
-                      {earningsData ? formatCurrency(earningsData.allTimeEarnings) : '₹0'}
+                      {earningsData ? formatCurrency(totalEarningsCount) : '₹0'}
                     </div>
                   )}
                   <p className="text-gray-300 text-xs md:text-sm">
@@ -282,11 +293,16 @@ const PackageCourseDashboard: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <div className="text-right">
-                <div className="text-green-400 font-semibold text-xs md:text-sm mb-2">Lifetime Total</div>
-                <div className="text-gray-400 text-xs mb-3">From completed payments</div>
+              <div className="flex flex-col items-end space-y-2 md:space-y-0">
+                <div className="text-right">
+                  <div className="text-green-400 font-semibold text-xs md:text-sm">Lifetime Total</div>
+                  <div className="text-gray-400 text-xs">From completed payments</div>
+                </div>
                 <Link to="/earnings">
-                  <Button variant="outline" className="flex items-center border-green-500 text-green-400 hover:bg-green-500 hover:text-white">
+                  <Button 
+                    variant="outline" 
+                    className="flex items-center border-green-500 text-green-400 hover:bg-green-500 hover:text-white shadow-lg shadow-green-500/20 hover:shadow-green-500/40 transition-all duration-300 animate-pulse"
+                  >
                     <TrendingUp size={16} className="mr-2" />
                     View Earnings
                   </Button>
