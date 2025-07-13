@@ -240,17 +240,17 @@ const PackageCourseDashboard: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <Crown className="text-primary mr-3" size={32} />
-            <h1 className="text-4xl font-bold text-white">
+        <div className="text-center mb-8 md:mb-12">
+          <div className="flex items-center justify-center mb-3 md:mb-4">
+            <Crown className="text-primary mr-2 md:mr-3" size={24} />
+            <h1 className="text-2xl md:text-4xl font-bold text-white">
               Welcome, {userPackage.name}!
             </h1>
           </div>
-          <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 inline-block">
+          <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 md:p-4 inline-block">
             <div className="flex items-center space-x-2">
-              <Star className="text-primary" size={20} />
-              <span className="text-white font-semibold">
+              <Star className="text-primary" size={16} />
+              <span className="text-white font-semibold text-sm md:text-base">
                 {packageNames[userPackage.package_selected as keyof typeof packageNames]} Package
               </span>
             </div>
@@ -259,32 +259,44 @@ const PackageCourseDashboard: React.FC = () => {
 
       {/* Total Lifetime Earnings Display */}
       {affiliateCode && (
-          <div className="mb-8 bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                  <DollarSign className="text-green-500" size={24} />
+          <div className="mb-6 md:mb-8 bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl p-4 md:p-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div className="flex items-center space-x-3 md:space-x-4 mb-4 md:mb-0">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                  <DollarSign className="text-green-500" size={20} />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-white mb-1">Total Lifetime Earnings</h3>
+                  <h3 className="text-base md:text-lg font-bold text-white mb-1">Total Lifetime Earnings</h3>
                   {earningsLoading ? (
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-                      <span className="text-gray-300 text-sm">Loading earnings...</span>
+                      <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-gray-300 text-xs md:text-sm">Loading earnings...</span>
                     </div>
                   ) : (
-                    <div className="text-2xl font-bold text-green-400">
+                    <div className="text-lg md:text-2xl font-bold text-green-400">
                       {earningsData ? formatCurrency(earningsData.allTimeEarnings) : '₹0'}
                     </div>
                   )}
-                  <p className="text-gray-300 text-sm">
+                  <p className="text-gray-300 text-xs md:text-sm">
                     {earningsData ? `${earningsData.totalUsers} user${earningsData.totalUsers !== 1 ? 's' : ''} referred` : 'No users referred yet'}
                   </p>
                 </div>
               </div>
-              <div className="text-right">
-                <div className="text-green-400 font-semibold text-sm">Lifetime Total</div>
-                <div className="text-gray-400 text-xs">From completed payments</div>
+              <div className="flex flex-col items-end space-y-2 md:space-y-0">
+                <div className="text-right">
+                  <div className="text-green-400 font-semibold text-xs md:text-sm">Lifetime Total</div>
+                  <div className="text-gray-400 text-xs">From completed payments</div>
+                </div>
+                <Link to="/earnings">
+                  <Button 
+                    variant="outline" 
+                    className="flex items-center border-green-500 text-green-400 hover:bg-green-500 hover:text-white shadow-lg shadow-green-500/20 hover:shadow-green-500/40 transition-all duration-300"
+                    glowing
+                  >
+                    <TrendingUp size={16} className="mr-2" />
+                    View Earnings
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
@@ -384,14 +396,6 @@ const PackageCourseDashboard: React.FC = () => {
                 {/* Optionally add more platforms here */}
               </div>
             )}
-          </div>
-          <div className="mt-4 md:mt-0">
-            <Link to="/earnings">
-              <Button variant="outline" className="flex items-center">
-                <TrendingUp size={16} className="mr-2" />
-                View Earnings
-              </Button>
-            </Link>
           </div>
         </div>
 
