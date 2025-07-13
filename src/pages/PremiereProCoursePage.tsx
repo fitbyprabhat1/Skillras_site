@@ -240,8 +240,9 @@ const PremiereProCoursePage: React.FC = () => {
       <div className="pt-20">
         {/* Mobile: Course Content Button */}
         <div className="sm:hidden flex justify-between items-center mb-4 px-4">
-          <Button onClick={() => setSidebarOpen(true)} variant="outline" size="sm" className="flex items-center">
+          <Button onClick={() => setSidebarOpen(true)} variant="outline" size="sm" className="flex items-center gap-2">
             <Menu size={20} />
+            <span>Course Content</span>
           </Button>
           {/* Removed chapter title from here */}
         </div>
