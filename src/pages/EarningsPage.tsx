@@ -245,59 +245,58 @@ const EarningsPage: React.FC = () => {
       <div className="pt-20">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
-          <div className="text-center mb-12">
-            <div className="flex items-center justify-center mb-4">
-              <TrendingUp className="text-primary mr-3" size={32} />
-              <h1 className="text-4xl font-bold text-white">
+          <div className="text-center mb-8 md:mb-12">
+            <div className="flex items-center justify-center mb-3 md:mb-4">
+              <TrendingUp className="text-primary mr-2 md:mr-3" size={24} />
+              <h1 className="text-2xl md:text-4xl font-bold text-white">
                 Your Earnings Dashboard
               </h1>
             </div>
-            <p className="text-gray-300 text-lg">
+            <p className="text-gray-300 text-sm md:text-lg">
               Track your affiliate earnings and referred users
             </p>
           </div>
 
           {/* Profile Section */}
-          <div className="bg-dark-light border border-primary/20 rounded-xl p-6 mb-8">
+          <div className="bg-dark-light border border-primary/20 rounded-xl p-4 md:p-6 mb-6 md:mb-8">
             <div className="flex flex-col md:flex-row items-center justify-between">
-              <div className="flex items-center space-x-4 md:space-x-6 mb-4 md:mb-0 w-full md:w-auto">
+              <div className="flex items-center space-x-3 md:space-x-6 mb-4 md:mb-0 w-full md:w-auto">
                 {/* Profile Photo */}
                 <div className="relative">
                   {photoLink ? (
                     <img 
                       src={photoLink} 
                       alt="Profile" 
-                      className="w-24 h-24 md:w-20 md:h-20 rounded-2xl md:rounded-full object-cover border-2 border-primary/30"
+                      className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover border-2 border-primary/30"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
                         e.currentTarget.nextElementSibling?.classList.remove('hidden');
                       }}
                     />
                   ) : null}
-                  <div className={`w-24 h-24 md:w-20 md:h-20 rounded-2xl md:rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary/30 ${photoLink ? 'hidden' : ''}`}>
-                    <User className="text-primary md:hidden" size={40} />
-                    <User className="text-primary hidden md:block" size={32} />
+                  <div className={`w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/20 flex items-center justify-center border-2 border-primary/30 ${photoLink ? 'hidden' : ''}`}>
+                    <User className="text-primary" size={24} />
                   </div>
                   
                   {/* Edit Photo Button */}
                   <button
                     onClick={() => setIsEditingPhoto(true)}
-                    className="absolute -bottom-1 -right-1 w-8 h-8 md:w-8 md:h-8 bg-primary rounded-full flex items-center justify-center hover:bg-primary-light transition-colors"
+                    className="absolute -bottom-1 -right-1 w-6 h-6 md:w-8 md:h-8 bg-primary rounded-full flex items-center justify-center hover:bg-primary-light transition-colors"
                     title="Edit photo"
                   >
-                    <Camera size={16} className="text-white" />
+                    <Camera size={12} className="text-white" />
                   </button>
                 </div>
 
                 {/* User Info */}
                 <div className="text-left flex-1">
-                  <h2 className="text-3xl md:text-2xl font-bold text-white mb-1">
+                  <h2 className="text-lg md:text-2xl font-bold text-white mb-1">
                     {user?.user_metadata?.name || user?.email}
                   </h2>
-                  <p className="text-gray-300 mb-1 text-sm md:text-base">{user?.email}</p>
+                  <p className="text-gray-300 mb-1 text-xs md:text-base">{user?.email}</p>
                   <div className="flex items-center space-x-2">
-                    <Package className="text-primary" size={16} />
-                    <span className="text-primary font-medium capitalize">
+                    <Package className="text-primary" size={14} />
+                    <span className="text-primary font-medium capitalize text-sm">
                       {earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected || 'User'}
                     </span>
                   </div>
@@ -334,19 +333,19 @@ const EarningsPage: React.FC = () => {
                       type="url"
                       value={photoLink}
                       onChange={(e) => setPhotoLink(e.target.value)}
-                      placeholder="Enter photo URL (e.g., https://example.com/photo.jpg)"
-                      className="px-4 py-2 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none transition-all duration-300"
+                      placeholder="Enter photo URL"
+                      className="px-3 md:px-4 py-2 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none transition-all duration-300 text-sm"
                     />
                     {photoError && (
-                      <p className="text-red-400 text-sm">{photoError}</p>
+                      <p className="text-red-400 text-xs">{photoError}</p>
                     )}
                     <div className="flex space-x-2">
                       <Button
                         onClick={handlePhotoUpdate}
                         size="sm"
-                        className="flex items-center"
+                        className="flex items-center text-xs"
                       >
-                        <Edit size={14} className="mr-1" />
+                        <Edit size={12} className="mr-1" />
                         Save Photo
                       </Button>
                       <Button
@@ -356,6 +355,7 @@ const EarningsPage: React.FC = () => {
                         }}
                         variant="outline"
                         size="sm"
+                        className="text-xs"
                       >
                         Cancel
                       </Button>
@@ -367,74 +367,70 @@ const EarningsPage: React.FC = () => {
           </div>
 
           {/* Earnings Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-8 md:mb-12">
-            <div className="bg-dark-light border border-green-500/20 rounded-lg md:rounded-xl p-3 md:p-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
+            <div className="bg-dark-light border border-green-500/20 rounded-lg p-3 md:p-6">
               <div className="flex items-center justify-between mb-2 md:mb-4">
                 <div className="w-8 h-8 md:w-12 md:h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <Calendar className="text-green-500 md:hidden" size={16} />
-                  <Calendar className="text-green-500 hidden md:block" size={24} />
+                  <Calendar className="text-green-500" size={16} />
                 </div>
-                <span className="text-gray-400 text-xs md:text-sm">This Week</span>
+                <span className="text-gray-400 text-xs">This Week</span>
               </div>
-              <div className="text-lg md:text-3xl font-bold text-green-400 mb-1 md:mb-2">
+              <div className="text-base md:text-2xl font-bold text-green-400 mb-1 md:mb-2">
                 {formatCurrency(weeklyCount)}
               </div>
-              <p className="text-gray-400 text-xs md:text-sm">
+              <p className="text-gray-400 text-xs">
                 {earningsData?.referredUsers.filter(user => 
                   new Date(user.created_at) >= new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
                 ).length || 0} new users this week
               </p>
             </div>
 
-            <div className="bg-dark-light border border-green-500/20 rounded-lg md:rounded-xl p-3 md:p-6">
+            <div className="bg-dark-light border border-green-500/20 rounded-lg p-3 md:p-6">
               <div className="flex items-center justify-between mb-2 md:mb-4">
                 <div className="w-8 h-8 md:w-12 md:h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <Calendar className="text-green-500 md:hidden" size={16} />
-                  <Calendar className="text-green-500 hidden md:block" size={24} />
+                  <Calendar className="text-green-500" size={16} />
                 </div>
-                <span className="text-gray-400 text-xs md:text-sm">This Month</span>
+                <span className="text-gray-400 text-xs">This Month</span>
               </div>
-              <div className="text-lg md:text-3xl font-bold text-green-400 mb-1 md:mb-2">
+              <div className="text-base md:text-2xl font-bold text-green-400 mb-1 md:mb-2">
                 {formatCurrency(monthlyCount)}
               </div>
-              <p className="text-gray-400 text-xs md:text-sm">
+              <p className="text-gray-400 text-xs">
                 {earningsData?.referredUsers.filter(user => 
                   new Date(user.created_at) >= new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
                 ).length || 0} new users this month
               </p>
             </div>
 
-                                      <div className="bg-dark-light border border-green-500/20 rounded-lg md:rounded-xl p-3 md:p-6">
+            <div className="bg-dark-light border border-green-500/20 rounded-lg p-3 md:p-6">
               <div className="flex items-center justify-between mb-2 md:mb-4">
                 <div className="w-8 h-8 md:w-12 md:h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <DollarSign className="text-green-500 md:hidden" size={16} />
-                  <DollarSign className="text-green-500 hidden md:block" size={24} />
+                  <DollarSign className="text-green-500" size={16} />
                 </div>
-                <span className="text-gray-400 text-xs md:text-sm">All Time</span>
+                <span className="text-gray-400 text-xs">All Time</span>
               </div>
-              <div className="text-lg md:text-3xl font-bold text-green-400 mb-1 md:mb-2">
+              <div className="text-base md:text-2xl font-bold text-green-400 mb-1 md:mb-2">
                 {formatCurrency(allTimeCount)}
               </div>
-              <p className="text-gray-400 text-xs md:text-sm">
+              <p className="text-gray-400 text-xs">
                 {earningsData?.totalUsers || 0} total users referred
               </p>
             </div>
 
-              <div className="bg-dark-light border border-yellow-500/20 rounded-lg md:rounded-xl p-3 md:p-6">
-                <div className="flex items-center justify-between mb-2 md:mb-4">
-                  <div className="w-8 h-8 md:w-12 md:h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="text-yellow-500 md:hidden" size={16} />
-                    <TrendingUp className="text-yellow-500 hidden md:block" size={24} />
-                  </div>
-                  <span className="text-gray-400 text-xs md:text-sm">Potential</span>
+            <div className="bg-dark-light border border-yellow-500/20 rounded-lg p-3 md:p-6">
+              <div className="flex items-center justify-between mb-2 md:mb-4">
+                <div className="w-8 h-8 md:w-12 md:h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+                  <TrendingUp className="text-yellow-500" size={16} />
                 </div>
-                <div className="text-lg md:text-3xl font-bold text-yellow-400 mb-1 md:mb-2">
-                  {formatCurrency(potentialCount)}
-                </div>
-                <p className="text-gray-400 text-xs md:text-sm">
-                  {earningsData?.referredUsers.filter(user => user.payment_status !== 'completed').length || 0} pending users
-                </p>
+                <span className="text-gray-400 text-xs">Potential</span>
               </div>
+              <div className="text-base md:text-2xl font-bold text-yellow-400 mb-1 md:mb-2">
+                {formatCurrency(potentialCount)}
+              </div>
+              <p className="text-gray-400 text-xs">
+                {earningsData?.referredUsers.filter(user => user.payment_status !== 'completed').length || 0} pending users
+              </p>
+            </div>
           </div>
 
           {/* Users List */}
