@@ -594,37 +594,37 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
   }
 
   return (
-    <div className="max-w-2xl mx-auto bg-dark-light rounded-xl p-8 shadow-lg border border-primary/10">
-      <div className="text-center mb-8">
-        <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6">
-          <CreditCard className="text-primary" size={40} />
+    <div className="max-w-2xl mx-auto bg-dark-light rounded-xl p-4 md:p-8 shadow-lg border border-primary/10">
+      <div className="text-center mb-6 md:mb-8">
+        <div className="w-16 h-16 md:w-20 md:h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4 md:mb-6">
+          <CreditCard className="text-primary" size={32} />
         </div>
-        <h2 className="text-3xl font-bold text-white mb-3">Create Account & Enroll</h2>
-        <p className="text-gray-300 mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-3">Create Account & Enroll</h2>
+        <p className="text-gray-300 mb-3 md:mb-4 text-sm md:text-base">
           Create your account and enroll in <span className="text-primary font-semibold">{courseName}</span>
         </p>
       </div>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded-lg mb-6 flex items-start animate-slideDown">
-          <AlertCircle className="mr-3 flex-shrink-0 mt-0.5" size={20} />
+        <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 md:p-4 rounded-lg mb-4 md:mb-6 flex items-start animate-slideDown">
+          <AlertCircle className="mr-2 md:mr-3 flex-shrink-0 mt-0.5" size={18} />
           <span className="text-sm">{error}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
         {/* Package Selection */}
-        <div className="bg-dark rounded-lg p-6 border border-primary/20">
-          <h3 className="text-white font-bold mb-4 flex items-center">
-            <Package className="mr-2 text-primary" size={20} />
+        <div className="bg-dark rounded-lg p-4 md:p-6 border border-primary/20">
+          <h3 className="text-white font-bold mb-3 md:mb-4 flex items-center text-sm md:text-base">
+            <Package className="mr-2 text-primary" size={18} />
             Select Package
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 md:gap-4">
             {packages.map((pkg) => (
               <div
                 key={pkg.id}
-                className={`relative p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
+                className={`relative p-3 md:p-4 rounded-lg border-2 cursor-pointer transition-all duration-300 ${
                   formData.selectedPackage === pkg.id
                     ? 'border-primary bg-primary/10'
                     : 'border-gray-600 hover:border-primary/50'
@@ -632,14 +632,14 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
                 onClick={() => handleInputChange('selectedPackage', pkg.id)}
               >
                 {pkg.badge && (
-                  <div className="absolute -top-2 -right-2 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                  <div className="absolute -top-1 -right-1 md:-top-2 md:-right-2 bg-primary text-white text-xs px-1 md:px-2 py-0.5 md:py-1 rounded-full">
                     {pkg.badge}
                   </div>
                 )}
                 <div className="text-center">
-                  <h4 className="text-white font-bold text-sm mb-1">{pkg.name}</h4>
+                  <h4 className="text-white font-bold text-xs md:text-sm mb-1">{pkg.name}</h4>
                   <p className="text-gray-400 text-xs mb-2">{pkg.description}</p>
-                  <div className="text-primary font-bold">₹{pkg.price.toLocaleString()}</div>
+                  <div className="text-primary font-bold text-sm md:text-base">₹{pkg.price.toLocaleString()}</div>
                   {pkg.originalPrice > pkg.price && (
                     <div className="text-gray-400 text-xs line-through">
                       ₹{pkg.originalPrice.toLocaleString()}
@@ -651,27 +651,27 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
           </div>
           
           {validationErrors.selectedPackage && (
-            <p className="text-red-500 text-sm mt-2 flex items-center">
-              <AlertCircle size={14} className="mr-1" />
+            <p className="text-red-500 text-xs md:text-sm mt-2 flex items-center">
+              <AlertCircle size={12} className="mr-1" />
               {validationErrors.selectedPackage}
             </p>
           )}
         </div>
 
         {/* Referral/Coupon Code Section */}
-        <div className="bg-dark rounded-lg p-6 border border-primary/20">
-          <h3 className="text-white font-bold mb-4 flex items-center">
-            <Hash className="mr-2 text-primary" size={20} />
+        <div className="bg-dark rounded-lg p-4 md:p-6 border border-primary/20">
+          <h3 className="text-white font-bold mb-3 md:mb-4 flex items-center text-sm md:text-base">
+            <Hash className="mr-2 text-primary" size={18} />
             Referral/Coupon Code (Optional)
           </h3>
           
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-2 md:gap-3">
             <div className="flex-1">
               <input
                 type="text"
                 value={formData.referralCode}
                 onChange={(e) => handleInputChange('referralCode', e.target.value)}
-                className={`w-full px-4 py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 font-mono ${
+                className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 font-mono text-sm md:text-base ${
                   validationErrors.referralCode 
                     ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20' 
                     : codeVerified
@@ -687,12 +687,12 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               onClick={() => verifyReferralCode(formData.referralCode.toUpperCase())}
               disabled={isVerifyingCode || !formData.referralCode.trim()}
               variant={codeVerified ? 'secondary' : 'primary'}
-              className="px-6"
+              className="px-4 md:px-6 py-2 md:py-3 text-sm md:text-base"
             >
               {isVerifyingCode ? (
-                <Loader className="animate-spin" size={20} />
+                <Loader className="animate-spin" size={18} />
               ) : codeVerified ? (
-                <CheckCircle size={20} />
+                <CheckCircle size={18} />
               ) : (
                 'Verify'
               )}
@@ -776,9 +776,9 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
         </div>
 
         {/* Personal Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div>
-            <label htmlFor="name" className="block text-white mb-2 font-medium flex items-center">
+            <label htmlFor="name" className="block text-white mb-2 font-medium flex items-center text-sm md:text-base">
               <User size={16} className="mr-2 text-primary" />
               Full Name <span className="text-red-500 ml-1">*</span>
             </label>
@@ -787,7 +787,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               id="name"
               value={formData.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
-              className={`w-full px-4 py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 ${
+              className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 text-sm md:text-base ${
                 validationErrors.name 
                   ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20' 
                   : 'border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20'
@@ -795,15 +795,15 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               placeholder="Enter your full name"
             />
             {validationErrors.name && (
-              <p className="text-red-500 text-sm mt-2 flex items-center">
-                <AlertCircle size={14} className="mr-1" />
+              <p className="text-red-500 text-xs md:text-sm mt-2 flex items-center">
+                <AlertCircle size={12} className="mr-1" />
                 {validationErrors.name}
               </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="email" className="block text-white mb-2 font-medium flex items-center">
+            <label htmlFor="email" className="block text-white mb-2 font-medium flex items-center text-sm md:text-base">
               <Mail size={16} className="mr-2 text-primary" />
               Email Address <span className="text-red-500 ml-1">*</span>
             </label>
@@ -812,7 +812,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               id="email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
-              className={`w-full px-4 py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 ${
+              className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 text-sm md:text-base ${
                 validationErrors.email 
                   ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20' 
                   : 'border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20'
@@ -820,15 +820,15 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               placeholder="Enter your email address"
             />
             {validationErrors.email && (
-              <p className="text-red-500 text-sm mt-2 flex items-center">
-                <AlertCircle size={14} className="mr-1" />
+              <p className="text-red-500 text-xs md:text-sm mt-2 flex items-center">
+                <AlertCircle size={12} className="mr-1" />
                 {validationErrors.email}
               </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="phone" className="block text-white mb-2 font-medium flex items-center">
+            <label htmlFor="phone" className="block text-white mb-2 font-medium flex items-center text-sm md:text-base">
               <Phone size={16} className="mr-2 text-primary" />
               Phone Number <span className="text-red-500 ml-1">*</span>
             </label>
@@ -837,7 +837,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               id="phone"
               value={formData.phone}
               onChange={(e) => handleInputChange('phone', e.target.value)}
-              className={`w-full px-4 py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 ${
+              className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 text-sm md:text-base ${
                 validationErrors.phone 
                   ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20' 
                   : 'border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20'
@@ -846,8 +846,8 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               maxLength={10}
             />
             {validationErrors.phone && (
-              <p className="text-red-500 text-sm mt-2 flex items-center">
-                <AlertCircle size={14} className="mr-1" />
+              <p className="text-red-500 text-xs md:text-sm mt-2 flex items-center">
+                <AlertCircle size={12} className="mr-1" />
                 {validationErrors.phone}
               </p>
             )}
@@ -857,7 +857,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
           </div>
 
           <div>
-            <label htmlFor="age" className="block text-white mb-2 font-medium flex items-center">
+            <label htmlFor="age" className="block text-white mb-2 font-medium flex items-center text-sm md:text-base">
               <Calendar size={16} className="mr-2 text-primary" />
               Age
             </label>
@@ -866,7 +866,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               id="age"
               value={formData.age}
               onChange={(e) => handleInputChange('age', e.target.value)}
-              className={`w-full px-4 py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 ${
+              className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 text-sm md:text-base ${
                 validationErrors.age 
                   ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20' 
                   : 'border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20'
@@ -876,15 +876,15 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               max="100"
             />
             {validationErrors.age && (
-              <p className="text-red-500 text-sm mt-2 flex items-center">
-                <AlertCircle size={14} className="mr-1" />
+              <p className="text-red-500 text-xs md:text-sm mt-2 flex items-center">
+                <AlertCircle size={12} className="mr-1" />
                 {validationErrors.age}
               </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="qualification" className="block text-white mb-2 font-medium flex items-center">
+            <label htmlFor="qualification" className="block text-white mb-2 font-medium flex items-center text-sm md:text-base">
               <GraduationCap size={16} className="mr-2 text-primary" />
               Qualification
             </label>
@@ -892,7 +892,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               id="qualification"
               value={formData.qualification}
               onChange={(e) => handleInputChange('qualification', e.target.value)}
-              className="w-full px-4 py-3 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none transition-all duration-300"
+              className="w-full px-3 md:px-4 py-2 md:py-3 rounded-lg bg-dark border border-gray-600 text-white focus:border-primary focus:outline-none transition-all duration-300 text-sm md:text-base"
             >
               <option value="">Select qualification</option>
               {qualifications.map(qual => (
@@ -902,7 +902,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
           </div>
 
           <div>
-            <label htmlFor="state" className="block text-white mb-2 font-medium flex items-center">
+            <label htmlFor="state" className="block text-white mb-2 font-medium flex items-center text-sm md:text-base">
               <MapPin size={16} className="mr-2 text-primary" />
               State <span className="text-red-500 ml-1">*</span>
             </label>
@@ -910,7 +910,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               id="state"
               value={formData.state}
               onChange={(e) => handleInputChange('state', e.target.value)}
-              className={`w-full px-4 py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 ${
+              className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 text-sm md:text-base ${
                 validationErrors.state 
                   ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20' 
                   : 'border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20'
@@ -922,15 +922,15 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               ))}
             </select>
             {validationErrors.state && (
-              <p className="text-red-500 text-sm mt-2 flex items-center">
-                <AlertCircle size={14} className="mr-1" />
+              <p className="text-red-500 text-xs md:text-sm mt-2 flex items-center">
+                <AlertCircle size={12} className="mr-1" />
                 {validationErrors.state}
               </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="pincode" className="block text-white mb-2 font-medium flex items-center">
+            <label htmlFor="pincode" className="block text-white mb-2 font-medium flex items-center text-sm md:text-base">
               <MapPin size={16} className="mr-2 text-primary" />
               Pincode <span className="text-red-500 ml-1">*</span>
             </label>
@@ -939,7 +939,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               id="pincode"
               value={formData.pincode}
               onChange={(e) => handleInputChange('pincode', e.target.value)}
-              className={`w-full px-4 py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 ${
+              className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 text-sm md:text-base ${
                 validationErrors.pincode 
                   ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20' 
                   : 'border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20'
@@ -948,8 +948,8 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               maxLength={6}
             />
             {validationErrors.pincode && (
-              <p className="text-red-500 text-sm mt-2 flex items-center">
-                <AlertCircle size={14} className="mr-1" />
+              <p className="text-red-500 text-xs md:text-sm mt-2 flex items-center">
+                <AlertCircle size={12} className="mr-1" />
                 {validationErrors.pincode}
               </p>
             )}
@@ -960,7 +960,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
 
           {/* Password and Confirm Password Fields */}
           <div>
-            <label htmlFor="password" className="block text-white mb-2 font-medium flex items-center">
+            <label htmlFor="password" className="block text-white mb-2 font-medium flex items-center text-sm md:text-base">
               <Hash size={16} className="mr-2 text-primary" />
               Password <span className="text-red-500 ml-1">*</span>
             </label>
@@ -969,7 +969,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               id="password"
               value={formData.password}
               onChange={(e) => handleInputChange('password', e.target.value)}
-              className={`w-full px-4 py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 ${
+              className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 text-sm md:text-base ${
                 validationErrors.password 
                   ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20' 
                   : 'border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20'
@@ -977,15 +977,15 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               placeholder="Enter your password"
             />
             {validationErrors.password && (
-              <p className="text-red-500 text-sm mt-2 flex items-center">
-                <AlertCircle size={14} className="mr-1" />
+              <p className="text-red-500 text-xs md:text-sm mt-2 flex items-center">
+                <AlertCircle size={12} className="mr-1" />
                 {validationErrors.password}
               </p>
             )}
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-white mb-2 font-medium flex items-center">
+            <label htmlFor="confirmPassword" className="block text-white mb-2 font-medium flex items-center text-sm md:text-base">
               <Hash size={16} className="mr-2 text-primary" />
               Confirm Password <span className="text-red-500 ml-1">*</span>
             </label>
@@ -994,7 +994,7 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               id="confirmPassword"
               value={formData.confirmPassword}
               onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-              className={`w-full px-4 py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 ${
+              className={`w-full px-3 md:px-4 py-2 md:py-3 rounded-lg bg-dark border text-white focus:outline-none transition-all duration-300 text-sm md:text-base ${
                 validationErrors.confirmPassword 
                   ? 'border-red-500 focus:border-red-400 focus:ring-2 focus:ring-red-500/20' 
                   : 'border-gray-600 focus:border-primary focus:ring-2 focus:ring-primary/20'
@@ -1002,8 +1002,8 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
               placeholder="Confirm your password"
             />
             {validationErrors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-2 flex items-center">
-                <AlertCircle size={14} className="mr-1" />
+              <p className="text-red-500 text-xs md:text-sm mt-2 flex items-center">
+                <AlertCircle size={12} className="mr-1" />
                 {validationErrors.confirmPassword}
               </p>
             )}
@@ -1012,33 +1012,33 @@ const EnrollmentForm: React.FC<EnrollmentFormProps> = ({ courseId, courseName, o
 
         <Button 
           type="submit" 
-          className="w-full" 
+          className="w-full py-3 md:py-4 text-sm md:text-base" 
           size="lg"
           glowing
           disabled={isLoading || (formData.referralCode.trim() && !codeVerified) || !formData.selectedPackage}
         >
           {isLoading ? (
             <div className="flex items-center justify-center">
-              <Loader className="animate-spin mr-2" size={20} />
-              Creating Account & Processing Enrollment...
+              <Loader className="animate-spin mr-2" size={18} />
+              <span className="text-sm md:text-base">Creating Account & Processing Enrollment...</span>
             </div>
           ) : (
             <>
-              <CreditCard className="mr-2" size={20} />
-              Create Account & Enroll
+              <CreditCard className="mr-2" size={18} />
+              <span className="text-sm md:text-base">Create Account & Enroll</span>
             </>
           )}
         </Button>
       </form>
 
-      <div className="mt-8 pt-6 border-t border-gray-600">
+      <div className="mt-6 md:mt-8 pt-4 md:pt-6 border-t border-gray-600">
         <div className="text-center">
-          <p className="text-gray-400 text-sm mb-3">
+          <p className="text-gray-400 text-xs md:text-sm mb-2 md:mb-3">
             Need help with your referral code?
           </p>
           <a 
             href="mailto:admin@skillras.com" 
-            className="text-primary hover:text-primary-light transition-colors text-sm font-medium"
+            className="text-primary hover:text-primary-light transition-colors text-xs md:text-sm font-medium"
           >
             Contact Support
           </a>
