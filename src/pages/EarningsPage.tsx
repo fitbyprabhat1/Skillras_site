@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import NavBarWithPackages from '../components/NavBarWithPackages';
-import { Link } from 'react-router-dom';
 import { TrendingUp, Users, DollarSign, Calendar, Package, MapPin, Mail, Phone, User, Edit, Camera } from 'lucide-react';
 import Button from '../components/Button';
 import { useCountUp } from '../hooks/useCountUp';
@@ -302,26 +301,28 @@ const EarningsPage: React.FC = () => {
                       {earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected || 'User'}
                     </span>
                   </div>
-                  
-                  {/* Commission Notice */}
-                  <div className="mt-2 p-2 bg-primary/10 border border-primary/20 rounded-lg">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <TrendingUp className="text-primary" size={14} />
-                        <span className="text-primary text-xs font-medium">
-                          {earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected === 'starter' ? '30%' :
-                           earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected === 'professional' ? '50%' :
-                           earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected === 'enterprise' ? '70%' : '30%'} Commission
-                        </span>
-                      </div>
-                      {(earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected === 'starter' || 
-                        earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected === 'professional') && (
-                        <Link to="/packages" className="text-xs text-primary hover:text-primary-light transition-colors underline">
-                          _Upgrade for 70%
-                        </Link>
-                      )}
-                    </div>
-                  </div>
+                  {/* Commission and upgrade message */}
+                  {(() => {
+                    const pkg = earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected;
+                    let commission = 0;
+                    if (pkg === 'starter') commission = 30;
+                    else if (pkg === 'professional') commission = 50;
+                    else if (pkg === 'enterprise') commission = 70;
+                    return (
+                      <>
+                        {commission > 0 && (
+                          <div className="text-xs text-gray-400 mt-1">
+                            You have the <span className="capitalize text-primary font-semibold">{pkg}</span> package and earn <span className="text-green-400 font-semibold">{commission}%</span> commission.
+                          </div>
+                        )}
+                        {pkg !== 'enterprise' && pkg && (
+                          <div className="text-xs text-yellow-400 mt-1">
+                            To earn up to <span className="font-semibold">70%</span>, please <a href="/packages" className="underline hover:text-yellow-300">upgrade your package</a>.
+                          </div>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
 
