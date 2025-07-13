@@ -1,5 +1,5 @@
 import React from 'react';
-import { Lock, Play, CheckCircle, FileText, Download, Crown } from 'lucide-react';
+import { Lock, Play, CheckCircle, FileText, Download, Crown, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import YouTubeEmbed from '../components/YouTubeEmbed';
@@ -186,6 +186,7 @@ const PremiereProCoursePage: React.FC = () => {
   const [selectedChapter, setSelectedChapter] = React.useState<CourseChapter>(courseModules[0].chapters[0]);
   const [expandedModule, setExpandedModule] = React.useState<number>(1);
   const { userPackage } = useUserPackage();
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
   // Device cache for completed chapters
   const [completedChapters, setCompletedChapters] = React.useState<number[]>(() => {
@@ -209,6 +210,11 @@ const PremiereProCoursePage: React.FC = () => {
     }
   };
 
+  // Add handler to mark chapter as incomplete
+  const handleMarkIncomplete = () => {
+    setCompletedChapters(completedChapters.filter(id => id !== selectedChapter.id));
+  };
+
   const toggleModule = (moduleId: number) => {
     setExpandedModule(expandedModule === moduleId ? 0 : moduleId);
   };
@@ -217,11 +223,23 @@ const PremiereProCoursePage: React.FC = () => {
     window.open(url, '_blank');
   };
 
+  // Check if all chapters are completed
+  const allChapterIds = courseModules.flatMap(module => module.chapters.map(ch => ch.id));
+  const allCompleted = allChapterIds.every(id => completedChapters.includes(id));
+
   return (
     <div className="min-h-screen bg-dark">
       <NavBarWithPackages />
       <div className="pt-20">
-        {/* Header removed */}
+        {/* Mobile: Course Content Button */}
+        <div className="sm:hidden flex justify-between items-center mb-4 px-4">
+          <Button onClick={() => setSidebarOpen(true)} variant="outline" size="sm" className="flex items-center">
+            <Menu size={20} className="mr-2" />
+            Course Content
+          </Button>
+          {/* Optionally, show current chapter title here */}
+          <span className="text-white font-semibold truncate ml-2">{selectedChapter.title}</span>
+        </div>
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Video Player Section */}
@@ -273,91 +291,124 @@ const PremiereProCoursePage: React.FC = () => {
                 )}
                 {/* Completed message */}
                 {!selectedChapter.isLocked && completedChapters.includes(selectedChapter.id) && (
-                  <div className="w-full text-green-500 text-center font-semibold py-2">Chapter Completed!</div>
+                  <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-2 text-green-500 text-center font-semibold py-2">
+                    <span>Chapter Completed!</span>
+                    <Button onClick={handleMarkIncomplete} variant="outline" size="sm" className="text-red-500 border-red-500 hover:bg-red-100">
+                      Mark Incomplete
+                    </Button>
+                  </div>
+                )}
+                {/* Get Certificate Button */}
+                {allCompleted && (
+                  <Link to="/getcertificate">
+                    <Button className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white font-bold">
+                      Get Certificate
+                    </Button>
+                  </Link>
                 )}
               </div>
             </div>
 
-            {/* Course Navigation */}
-            <div className="lg:col-span-1">
-              <div className="bg-dark-light rounded-xl p-6 sticky top-8">
-                <h3 className="text-white font-bold text-lg mb-4">Course Content</h3>
-                
-                <div className="space-y-4">
-                  {courseModules.map((module) => (
-                    <div key={module.id} className="border border-gray-700 rounded-lg overflow-hidden">
-                      <button
-                        onClick={() => toggleModule(module.id)}
-                        className="w-full p-4 text-left bg-dark-lighter hover:bg-dark-lightest transition-colors"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h4 className="text-white font-medium">{module.title}</h4>
-                            <p className="text-gray-400 text-sm">{module.description}</p>
-                          </div>
-                          <div className="text-gray-400">
-                            {expandedModule === module.id ? '−' : '+'}
-                          </div>
+            {/* Course Navigation Sidebar */}
+            {/* Desktop: static sidebar, Mobile: drawer */}
+            {/* Mobile Drawer Overlay */}
+            {sidebarOpen && (
+              <div className="fixed inset-0 z-40 bg-black bg-opacity-40 sm:hidden" onClick={() => setSidebarOpen(false)}></div>
+            )}
+            <div
+              className={
+                `lg:col-span-1 ` +
+                `sm:static sm:translate-x-0 sm:relative ` +
+                `sm:block ` +
+                `fixed top-0 left-0 h-full z-50 w-4/5 max-w-xs bg-dark-light rounded-r-xl p-6 transition-transform duration-300 ` +
+                `${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} ` +
+                `sm:rounded-xl sm:p-6 sm:sticky sm:top-8 sm:h-auto sm:w-auto sm:max-w-none ` +
+                `sm:shadow-none shadow-lg`
+              }
+              style={{ boxShadow: sidebarOpen ? '0 0 0 100vmax rgba(0,0,0,0.4)' : undefined }}
+            >
+              {/* Close button for mobile */}
+              <div className="sm:hidden flex justify-end mb-4">
+                <Button onClick={() => setSidebarOpen(false)} variant="outline" size="sm">
+                  <X size={24} />
+                </Button>
+              </div>
+              <h3 className="text-white font-bold text-lg mb-4">Course Content</h3>
+              <div className="space-y-4">
+                {courseModules.map((module) => (
+                  <div key={module.id} className="border border-gray-700 rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => toggleModule(module.id)}
+                      className="w-full p-4 text-left bg-dark-lighter hover:bg-dark-lightest transition-colors"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-white font-medium">{module.title}</h4>
+                          <p className="text-gray-400 text-sm">{module.description}</p>
                         </div>
-                      </button>
-                      
-                      {expandedModule === module.id && (
-                        <div className="p-4 bg-dark-light">
-                          {module.chapters.map((chapter) => {
-                            const isCompleted = completedChapters.includes(chapter.id);
-                            return (
-                              <div
-                                key={chapter.id}
-                                onClick={() => handleChapterSelect(chapter)}
-                                className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                                  isCompleted
-                                    ? 'bg-green-900/40 border border-green-500/30'
-                                    : selectedChapter.id === chapter.id
-                                    ? 'bg-primary/20 border border-primary/30'
-                                    : 'hover:bg-dark-lighter'
-                                }`}
-                              >
-                                <div className="flex-shrink-0">
-                                  {isCompleted ? (
-                                    <CheckCircle size={16} className="text-green-500" />
-                                  ) : chapter.isLocked ? (
-                                    <Lock size={16} className="text-gray-500" />
-                                  ) : (
-                                    <Play size={16} className="text-primary" />
-                                  )}
-                                </div>
-                                
-                                <div className="flex-1 min-w-0">
-                                  <h4 className="text-white font-medium text-sm leading-tight">
-                                    {chapter.title}
-                                  </h4>
-                                  <p className="text-xs text-gray-400 mt-1">
-                                    {chapter.duration}
-                                  </p>
-                                  {chapter.downloadableResource && (
-                                    <div className="flex items-center mt-2">
-                                      <FileText size={14} className="text-primary mr-1" />
-                                      <span className="text-xs text-primary">
-                                        {chapter.downloadableResource.type} Resource
-                                      </span>
-                                    </div>
-                                  )}
-                                </div>
-                                {chapter.isLocked && (
-                                  <div className="flex-shrink-0">
-                                    <span className="text-xs bg-primary bg-opacity-20 text-primary px-2 py-1 rounded">
-                                      Premium
+                        <div className="text-gray-400">
+                          {expandedModule === module.id ? '−' : '+'}
+                        </div>
+                      </div>
+                    </button>
+                    {expandedModule === module.id && (
+                      <div className="p-4 bg-dark-light">
+                        {module.chapters.map((chapter) => {
+                          const isCompleted = completedChapters.includes(chapter.id);
+                          return (
+                            <div
+                              key={chapter.id}
+                              onClick={() => {
+                                handleChapterSelect(chapter);
+                                setSidebarOpen(false); // close sidebar on mobile when chapter selected
+                              }}
+                              className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                                isCompleted
+                                  ? 'bg-green-900/40 border border-green-500/30'
+                                  : selectedChapter.id === chapter.id
+                                  ? 'bg-primary/20 border border-primary/30'
+                                  : 'hover:bg-dark-lighter'
+                              }`}
+                            >
+                              <div className="flex-shrink-0">
+                                {isCompleted ? (
+                                  <CheckCircle size={16} className="text-green-500" />
+                                ) : chapter.isLocked ? (
+                                  <Lock size={16} className="text-gray-500" />
+                                ) : (
+                                  <Play size={16} className="text-primary" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-white font-medium text-sm leading-tight">
+                                  {chapter.title}
+                                </h4>
+                                <p className="text-xs text-gray-400 mt-1">
+                                  {chapter.duration}
+                                </p>
+                                {chapter.downloadableResource && (
+                                  <div className="flex items-center mt-2">
+                                    <FileText size={14} className="text-primary mr-1" />
+                                    <span className="text-xs text-primary">
+                                      {chapter.downloadableResource.type} Resource
                                     </span>
                                   </div>
                                 )}
                               </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                              {chapter.isLocked && (
+                                <div className="flex-shrink-0">
+                                  <span className="text-xs bg-primary bg-opacity-20 text-primary px-2 py-1 rounded">
+                                    Premium
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
