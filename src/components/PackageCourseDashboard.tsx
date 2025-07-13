@@ -29,6 +29,13 @@ const PackageCourseDashboard: React.FC = () => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [earningsData, setEarningsData] = useState<EarningsData | null>(null);
   const [earningsLoading, setEarningsLoading] = useState(true);
+  const [showCreateAffiliateForm, setShowCreateAffiliateForm] = useState(false);
+  const [newAffiliateCode, setNewAffiliateCode] = useState('');
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [createLoading, setCreateLoading] = useState(false);
+
+  // Default payment link for new affiliates
+  const DEFAULT_PAYMENT_LINK = 'https://rzp.io/rzp/skillras-prabhat30';
 
   useEffect(() => {
     const fetchAffiliateCode = async () => {
@@ -81,6 +88,72 @@ const PackageCourseDashboard: React.FC = () => {
 
     fetchEarningsData();
   }, [user?.email, affiliateCode]);
+
+  // Show form if no affiliate code after fetch
+  useEffect(() => {
+    if (user && user.email && affiliateCode === null) {
+      setShowCreateAffiliateForm(true);
+    } else {
+      setShowCreateAffiliateForm(false);
+    }
+  }, [user, affiliateCode]);
+
+  const handleCreateAffiliateCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreateError(null);
+    setCreateLoading(true);
+    const code = newAffiliateCode.trim().toUpperCase();
+    if (code.length < 3) {
+      setCreateError('Code must be at least 3 characters.');
+      setCreateLoading(false);
+      return;
+    }
+    if (!user || !user.email) {
+      setCreateError('User not found. Please log in again.');
+      setCreateLoading(false);
+      return;
+    }
+    try {
+      // Check if code already exists
+      const { data: existing, error: checkError } = await supabase
+        .from('referral_codes')
+        .select('id')
+        .eq('code', code)
+        .single();
+      if (existing) {
+        setCreateError('This code is already taken. Please choose another.');
+        setCreateLoading(false);
+        return;
+      }
+      // Insert new affiliate code
+      const { error: insertError } = await supabase
+        .from('referral_codes')
+        .insert([
+          {
+            code,
+            code_type: 'affiliate',
+            referrer_name: user.user_metadata?.name || '',
+            referrer_email: user.email,
+            discount_percentage: 20,
+            is_active: true,
+            created_by: 'admin',
+            payment_link: DEFAULT_PAYMENT_LINK,
+          },
+        ]);
+      if (insertError) {
+        setCreateError('Failed to create code. Please try again.');
+        setCreateLoading(false);
+        return;
+      }
+      setAffiliateCode(code);
+      setShowCreateAffiliateForm(false);
+      setNewAffiliateCode('');
+    } catch (err: any) {
+      setCreateError(err.message || 'Failed to create code.');
+    } finally {
+      setCreateLoading(false);
+    }
+  };
 
   const shareUrl = affiliateCode
     ? `${window.location.origin}/enroll?ref=${affiliateCode}`
@@ -223,7 +296,25 @@ const PackageCourseDashboard: React.FC = () => {
         <div className="mb-8 bg-dark-light border border-primary/20 rounded-xl p-6 flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="text-lg font-bold text-white mb-1">Your Affiliate Code</h2>
-            {affiliateCode ? (
+            {showCreateAffiliateForm ? (
+              <form onSubmit={handleCreateAffiliateCode} className="space-y-2">
+                <label className="block text-gray-300 text-sm mb-1">Create your custom code (min 3 chars, A-Z, 0-9):</label>
+                <input
+                  type="text"
+                  value={newAffiliateCode}
+                  onChange={e => setNewAffiliateCode(e.target.value.replace(/[^A-Z0-9]/gi, '').toUpperCase())}
+                  className="w-full md:w-64 px-3 py-2 rounded bg-dark border border-gray-600 text-white text-lg font-mono mb-1"
+                  maxLength={16}
+                  minLength={3}
+                  required
+                  style={{ textTransform: 'uppercase' }}
+                />
+                {createError && <div className="text-red-500 text-sm mb-1">{createError}</div>}
+                <Button type="submit" className="w-full md:w-auto" disabled={createLoading}>
+                  {createLoading ? 'Creating...' : 'Create Affiliate Code'}
+                </Button>
+              </form>
+            ) : affiliateCode ? (
               <div className="text-primary font-mono text-xl mb-2">{affiliateCode}</div>
             ) : (
               <div className="text-gray-400">No affiliate code found for your account.</div>
