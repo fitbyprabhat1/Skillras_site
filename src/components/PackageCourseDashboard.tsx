@@ -113,6 +113,25 @@ const PackageCourseDashboard: React.FC = () => {
     <div className="min-h-screen bg-dark">
       <div className="container mx-auto px-4 py-8">
         {/* Affiliate Code Section */}
+        
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center mb-4">
+            <Crown className="text-primary mr-3" size={32} />
+            <h1 className="text-4xl font-bold text-white">
+              Welcome, {userPackage.name}!
+            </h1>
+          </div>
+          <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 inline-block">
+            <div className="flex items-center space-x-2">
+              <Star className="text-primary" size={20} />
+              <span className="text-white font-semibold">
+                {packageNames[userPackage.package_selected as keyof typeof packageNames]} Package
+              </span>
+            </div>
+          </div>
+        </div>
+
         <div className="mb-8 bg-dark-light border border-primary/20 rounded-xl p-6 flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="text-lg font-bold text-white mb-1">Your Affiliate Code</h2>
@@ -150,23 +169,6 @@ const PackageCourseDashboard: React.FC = () => {
                 View Earnings
               </Button>
             </Link>
-          </div>
-        </div>
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <Crown className="text-primary mr-3" size={32} />
-            <h1 className="text-4xl font-bold text-white">
-              Welcome, {userPackage.name}!
-            </h1>
-          </div>
-          <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 inline-block">
-            <div className="flex items-center space-x-2">
-              <Star className="text-primary" size={20} />
-              <span className="text-white font-semibold">
-                {packageNames[userPackage.package_selected as keyof typeof packageNames]} Package
-              </span>
-            </div>
           </div>
         </div>
 
