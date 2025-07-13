@@ -14,6 +14,7 @@ import EnrollmentPage from './pages/EnrollmentPage';
 import LoginPage from './pages/LoginPage';
 import TermsAndConditionsPage from './pages/TermsAndConditionsPage';
 import DashboardPage from './pages/DashboardPage';
+import EarningsPage from './pages/EarningsPage';
 import PremiereProCoursePage from './pages/PremiereProCoursePage';
 import AfterEffectsCoursePage from './pages/AfterEffectsCoursePage';
 import ExcelCoursePage from './pages/ExcelCoursePage';
@@ -39,6 +40,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/earnings" 
+            element={
+              <ProtectedRoute>
+                <EarningsPage />
               </ProtectedRoute>
             } 
           />
