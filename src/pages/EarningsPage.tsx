@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 import NavBarWithPackages from '../components/NavBarWithPackages';
+import { Link } from 'react-router-dom';
 import { TrendingUp, Users, DollarSign, Calendar, Package, MapPin, Mail, Phone, User, Edit, Camera } from 'lucide-react';
 import Button from '../components/Button';
 import { useCountUp } from '../hooks/useCountUp';
@@ -300,6 +301,26 @@ const EarningsPage: React.FC = () => {
                     <span className="text-primary font-medium capitalize">
                       {earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected || 'User'}
                     </span>
+                  </div>
+                  
+                  {/* Commission Notice */}
+                  <div className="mt-2 p-2 bg-primary/10 border border-primary/20 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <TrendingUp className="text-primary" size={14} />
+                        <span className="text-primary text-xs font-medium">
+                          {earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected === 'starter' ? '30%' :
+                           earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected === 'professional' ? '50%' :
+                           earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected === 'enterprise' ? '70%' : '30%'} Commission
+                        </span>
+                      </div>
+                      {(earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected === 'starter' || 
+                        earningsData?.referredUsers.find(u => u.email === user?.email)?.package_selected === 'professional') && (
+                        <Link to="/packages" className="text-xs text-primary hover:text-primary-light transition-colors underline">
+                          _Upgrade for 70%
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
