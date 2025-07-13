@@ -50,28 +50,6 @@ const PackageCourseDashboard: React.FC = () => {
     }
   };
 
-  const handleShare = (platform: string) => {
-    if (!shareUrl) return;
-
-    const message = `🎓 Check out this amazing course! I'm learning and earning with SkillRas. Join me and get started: ${shareUrl}`;
-    
-    switch (platform) {
-      case 'whatsapp':
-        window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
-        break;
-      case 'facebook':
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent('🎓 Learn and earn with SkillRas!')}`, '_blank');
-        break;
-      case 'instagram':
-        // Instagram doesn't support direct URL sharing, so we copy to clipboard
-        navigator.clipboard.writeText(shareUrl);
-        alert('Link copied! You can now paste it in your Instagram story or bio.');
-        break;
-      default:
-        break;
-    }
-  };
-
   const allCourses: Course[] = [
     {
       id: 'premiere-pro',
@@ -134,7 +112,46 @@ const PackageCourseDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-dark">
       <div className="container mx-auto px-4 py-8">
-        
+        {/* Affiliate Code Section */}
+        <div className="mb-8 bg-dark-light border border-primary/20 rounded-xl p-6 flex flex-col md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-white mb-1">Your Affiliate Code</h2>
+            {affiliateCode ? (
+              <div className="text-primary font-mono text-xl mb-2">{affiliateCode}</div>
+            ) : (
+              <div className="text-gray-400">No affiliate code found for your account.</div>
+            )}
+            <div className="text-gray-300 text-sm">Share this link to invite friends and earn rewards:</div>
+            {affiliateCode && (
+              <div className="flex items-center mt-2">
+                <input
+                  type="text"
+                  value={shareUrl}
+                  readOnly
+                  className="w-full md:w-96 px-3 py-2 rounded-l bg-dark border border-gray-600 text-white text-sm font-mono"
+                  style={{ minWidth: '0' }}
+                />
+                <Button
+                  onClick={handleCopy}
+                  className="rounded-l-none rounded-r flex items-center px-3 py-2"
+                  variant="primary"
+                  type="button"
+                >
+                  <Copy size={16} className="mr-1" />
+                  {copySuccess ? 'Copied!' : 'Copy'}
+                </Button>
+              </div>
+            )}
+          </div>
+          <div className="mt-4 md:mt-0">
+            <Link to="/earnings">
+              <Button variant="outline" className="flex items-center">
+                <TrendingUp size={16} className="mr-2" />
+                View Earnings
+              </Button>
+            </Link>
+          </div>
+        </div>
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center mb-4">
@@ -151,91 +168,6 @@ const PackageCourseDashboard: React.FC = () => {
               </span>
             </div>
           </div>
-        </div>
-
-        {/* Affiliate Code Section */}
-        <div className="mb-8 bg-dark-light border border-primary/20 rounded-xl p-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-            <div>
-              <h2 className="text-lg font-bold text-white mb-1">Your Affiliate Code</h2>
-              {affiliateCode ? (
-                <div className="text-primary font-mono text-xl mb-2">{affiliateCode}</div>
-              ) : (
-                <div className="text-gray-400">No affiliate code found for your account.</div>
-              )}
-              <div className="text-gray-300 text-sm">Share this link to invite friends and earn rewards:</div>
-              {affiliateCode && (
-                <div className="flex items-center mt-2">
-                  <input
-                    type="text"
-                    value={shareUrl}
-                    readOnly
-                    className="w-full md:w-96 px-3 py-2 rounded-l bg-dark border border-gray-600 text-white text-sm font-mono"
-                    style={{ minWidth: '0' }}
-                  />
-                  <Button
-                    onClick={handleCopy}
-                    className="rounded-l-none rounded-r flex items-center px-3 py-2"
-                    variant="primary"
-                    type="button"
-                  >
-                    <Copy size={16} className="mr-1" />
-                    {copySuccess ? 'Copied!' : 'Copy'}
-                  </Button>
-                </div>
-              )}
-            </div>
-            <div className="mt-4 md:mt-0">
-              <Link to="/earnings">
-                <Button variant="outline" className="flex items-center">
-                  <TrendingUp size={16} className="mr-2" />
-                  View Earnings
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Social Media Sharing */}
-          {affiliateCode && (
-            <div className="border-t border-gray-600 pt-4">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-white font-medium flex items-center">
-                  <Share2 size={16} className="mr-2 text-primary" />
-                  Share on Social Media
-                </h3>
-                <span className="text-gray-400 text-sm">Earn more by sharing!</span>
-              </div>
-              <div className="flex space-x-3">
-                <Button
-                  onClick={() => handleShare('whatsapp')}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center bg-green-600/20 border-green-500/30 text-green-400 hover:bg-green-600/30"
-                >
-                  <MessageCircle size={16} className="mr-2" />
-                  WhatsApp
-                </Button>
-                <Button
-                  onClick={() => handleShare('facebook')}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center bg-blue-600/20 border-blue-500/30 text-blue-400 hover:bg-blue-600/30"
-                >
-                  <Facebook size={16} className="mr-2" />
-                  Facebook
-                </Button>
-                <Button
-                  onClick={() => handleShare('instagram')}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center bg-pink-600/20 border-pink-500/30 text-pink-400 hover:bg-pink-600/30"
-                >
-                  <Instagram size={16} className="mr-2" />
-                  Instagram
-                </Button>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Course Grid */}
