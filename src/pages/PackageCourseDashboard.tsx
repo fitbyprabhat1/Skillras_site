@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useUserPackage } from '../hooks/useUserPackage';
-import { Video, TrendingUp, Palette, Lock, Crown, Star, CheckCircle, Copy } from 'lucide-react';
+import { Video, TrendingUp, Palette, Lock, Crown, Star, CheckCircle, Copy, DollarSign } from 'lucide-react';
 import Button from './Button';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -17,11 +17,25 @@ interface Course {
   isAvailable: boolean;
 }
 
+interface EarningsData {
+  totalUsers: number;
+  allTimeEarnings: number;
+}
+
 const PackageCourseDashboard: React.FC = () => {
   const { userPackage, getAvailableCourses, hasAccessToPackage } = useUserPackage();
   const { user } = useAuth();
   const [affiliateCode, setAffiliateCode] = useState<string | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [earningsData, setEarningsData] = useState<EarningsData | null>(null);
+  const [earningsLoading, setEarningsLoading] = useState(true);
+  const [showCreateAffiliateForm, setShowCreateAffiliateForm] = useState(false);
+  const [newAffiliateCode, setNewAffiliateCode] = useState('');
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [createLoading, setCreateLoading] = useState(false);
+
+  // Default payment link for new affiliates
+  const DEFAULT_PAYMENT_LINK = 'https://rzp.io/rzp/skillras-prabhat30';
 
   useEffect(() => {
     const fetchAffiliateCode = async () => {
@@ -38,6 +52,109 @@ const PackageCourseDashboard: React.FC = () => {
     fetchAffiliateCode();
   }, [user?.email]);
 
+  useEffect(() => {
+    const fetchEarningsData = async () => {
+      if (!user?.email || !affiliateCode) return;
+
+      try {
+        setEarningsLoading(true);
+        
+        // Get all users who used this referral code (only completed payments for earnings)
+        const { data: referredUsers, error: usersError } = await supabase
+          .from('paid_users')
+          .select('*')
+          .eq('referral_code', affiliateCode)
+          .eq('payment_status', 'completed')
+          .order('created_at', { ascending: false });
+
+        if (usersError) {
+          console.error('Failed to fetch referred users:', usersError);
+          return;
+        }
+
+        // Calculate total earnings
+        const allTimeEarnings = referredUsers?.reduce((sum, user) => sum + (user.final_price || 0), 0) || 0;
+
+        setEarningsData({
+          totalUsers: referredUsers?.length || 0,
+          allTimeEarnings
+        });
+      } catch (err) {
+        console.error('Error fetching earnings data:', err);
+      } finally {
+        setEarningsLoading(false);
+      }
+    };
+
+    fetchEarningsData();
+  }, [user?.email, affiliateCode]);
+
+  // Show form if no affiliate code after fetch
+  useEffect(() => {
+    if (user && user.email && affiliateCode === null) {
+      setShowCreateAffiliateForm(true);
+    } else {
+      setShowCreateAffiliateForm(false);
+    }
+  }, [user, affiliateCode]);
+
+  const handleCreateAffiliateCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreateError(null);
+    setCreateLoading(true);
+    const code = newAffiliateCode.trim().toUpperCase();
+    if (code.length < 3) {
+      setCreateError('Code must be at least 3 characters.');
+      setCreateLoading(false);
+      return;
+    }
+    if (!user || !user.email) {
+      setCreateError('User not found. Please log in again.');
+      setCreateLoading(false);
+      return;
+    }
+    try {
+      // Check if code already exists
+      const { data: existing, error: checkError } = await supabase
+        .from('referral_codes')
+        .select('id')
+        .eq('code', code)
+        .single();
+      if (existing) {
+        setCreateError('This code is already taken. Please choose another.');
+        setCreateLoading(false);
+        return;
+      }
+      // Insert new affiliate code
+      const { error: insertError } = await supabase
+        .from('referral_codes')
+        .insert([
+          {
+            code,
+            code_type: 'affiliate',
+            referrer_name: user.user_metadata?.name || '',
+            referrer_email: user.email,
+            discount_percentage: 20,
+            is_active: true,
+            created_by: 'admin',
+            payment_link: DEFAULT_PAYMENT_LINK,
+          },
+        ]);
+      if (insertError) {
+        setCreateError('Failed to create code. Please try again.');
+        setCreateLoading(false);
+        return;
+      }
+      setAffiliateCode(code);
+      setShowCreateAffiliateForm(false);
+      setNewAffiliateCode('');
+    } catch (err: any) {
+      setCreateError(err.message || 'Failed to create code.');
+    } finally {
+      setCreateLoading(false);
+    }
+  };
+
   const shareUrl = affiliateCode
     ? `${window.location.origin}/enroll?ref=${affiliateCode}`
     : '';
@@ -48,6 +165,15 @@ const PackageCourseDashboard: React.FC = () => {
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 1500);
     }
+  };
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount);
   };
 
   const allCourses: Course[] = [
@@ -112,16 +238,96 @@ const PackageCourseDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-dark">
       <div className="container mx-auto px-4 py-8">
-        {/* Affiliate Code Section */}
+        
+        {/* Header */}
+        <div className="text-center mb-8 md:mb-12">
+          <div className="flex items-center justify-center mb-3 md:mb-4">
+            <Crown className="text-primary mr-2 md:mr-3" size={24} />
+            <h1 className="text-2xl md:text-4xl font-bold text-white">
+              Welcome, {userPackage.name}!
+            </h1>
+          </div>
+          <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 md:p-4 inline-block">
+            <div className="flex items-center space-x-2">
+              <Star className="text-primary" size={16} />
+              <span className="text-white font-semibold text-sm md:text-base">
+                {packageNames[userPackage.package_selected as keyof typeof packageNames]} Package
+              </span>
+            </div>
+          </div>
+        </div>
+
+      {/* Total Lifetime Earnings Display */}
+      {affiliateCode && (
+          <div className="mb-6 md:mb-8 bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 rounded-xl p-4 md:p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3 md:space-x-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                  <DollarSign className="text-green-500" size={20} />
+                </div>
+                <div>
+                  <h3 className="text-base md:text-lg font-bold text-white mb-1">Total Lifetime Earnings</h3>
+                  {earningsLoading ? (
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-gray-300 text-xs md:text-sm">Loading earnings...</span>
+                    </div>
+                  ) : (
+                    <div className="text-lg md:text-2xl font-bold text-green-400">
+                      {earningsData ? formatCurrency(earningsData.allTimeEarnings) : '₹0'}
+                    </div>
+                  )}
+                  <p className="text-gray-300 text-xs md:text-sm">
+                    {earningsData ? `${earningsData.totalUsers} user${earningsData.totalUsers !== 1 ? 's' : ''} referred` : 'No users referred yet'}
+                  </p>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-green-400 font-semibold text-xs md:text-sm mb-2">Lifetime Total</div>
+                <div className="text-gray-400 text-xs mb-3">From completed payments</div>
+                <Link to="/earnings">
+                  <Button variant="outline" className="flex items-center border-green-500 text-green-400 hover:bg-green-500 hover:text-white">
+                    <TrendingUp size={16} className="mr-2" />
+                    View Earnings
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+      
+
+      {/* Affiliate Code Section */}
         <div className="mb-8 bg-dark-light border border-primary/20 rounded-xl p-6 flex flex-col md:flex-row md:items-center md:justify-between">
           <div>
             <h2 className="text-lg font-bold text-white mb-1">Your Affiliate Code</h2>
-            {affiliateCode ? (
+            {showCreateAffiliateForm ? (
+              <form onSubmit={handleCreateAffiliateCode} className="space-y-2">
+                <label className="block text-gray-300 text-sm mb-1">Create your custom code (min 3 chars, A-Z, 0-9):</label>
+                <input
+                  type="text"
+                  value={newAffiliateCode}
+                  onChange={e => setNewAffiliateCode(e.target.value.replace(/[^A-Z0-9]/gi, '').toUpperCase())}
+                  className="w-full md:w-64 px-3 py-2 rounded bg-dark border border-gray-600 text-white text-lg font-mono mb-1"
+                  maxLength={16}
+                  minLength={3}
+                  required
+                  style={{ textTransform: 'uppercase' }}
+                />
+                {createError && <div className="text-red-500 text-sm mb-1">{createError}</div>}
+                <Button type="submit" className="w-full md:w-auto" disabled={createLoading}>
+                  {createLoading ? 'Creating...' : 'Create Affiliate Code'}
+                </Button>
+              </form>
+            ) : affiliateCode ? (
               <div className="text-primary font-mono text-xl mb-2">{affiliateCode}</div>
             ) : (
               <div className="text-gray-400">No affiliate code found for your account.</div>
             )}
             <div className="text-gray-300 text-sm">Share this link to invite friends and earn rewards:</div>
+            
+
             {affiliateCode && (
               <div className="flex items-center mt-2">
                 <input
@@ -142,34 +348,52 @@ const PackageCourseDashboard: React.FC = () => {
                 </Button>
               </div>
             )}
-          </div>
-          <div className="mt-4 md:mt-0">
-            <Link to="/earnings">
-              <Button variant="outline" className="flex items-center">
-                <TrendingUp size={16} className="mr-2" />
-                View Earnings
-              </Button>
-            </Link>
-          </div>
-        </div>
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="flex items-center justify-center mb-4">
-            <Crown className="text-primary mr-3" size={32} />
-            <h1 className="text-4xl font-bold text-white">
-              Welcome, {userPackage.name}!
-            </h1>
-          </div>
-          <div className="bg-primary/10 border border-primary/20 rounded-lg p-4 inline-block">
-            <div className="flex items-center space-x-2">
-              <Star className="text-primary" size={20} />
-              <span className="text-white font-semibold">
-                {packageNames[userPackage.package_selected as keyof typeof packageNames]} Package
-              </span>
-            </div>
+            {/* Social Media Share Buttons */}
+            {affiliateCode && (
+              <div className="flex flex-wrap items-center gap-2 mt-4 w-full">
+                {/* WhatsApp Share */}
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent('Learn and earn more than lakhs a month. Join skillras.com today! ' + shareUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs font-medium transition-colors"
+                  style={{ textDecoration: 'none' }}
+                >
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M20.52 3.48A12 12 0 0 0 12 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.22-1.63A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12 0-3.2-1.25-6.21-3.48-8.52zM12 22c-1.85 0-3.67-.5-5.25-1.44l-.38-.22-3.69.97.99-3.59-.25-.37A9.94 9.94 0 0 1 2 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.2-7.8c-.28-.14-1.65-.81-1.9-.9-.25-.09-.43-.14-.61.14-.18.28-.7.9-.86 1.08-.16.18-.32.2-.6.07-.28-.14-1.18-.44-2.25-1.4-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.57.13-.13.28-.34.42-.51.14-.17.18-.29.28-.48.09-.19.05-.36-.02-.5-.07-.14-.61-1.47-.84-2.01-.22-.53-.45-.46-.61-.47-.16-.01-.35-.01-.54-.01-.19 0-.5.07-.76.34-.26.27-1 1-.99 2.43.01 1.43 1.03 2.81 1.18 3.01.15.2 2.03 3.1 4.93 4.22.69.3 1.23.48 1.65.61.69.22 1.32.19 1.82.12.56-.08 1.65-.67 1.88-1.32.23-.65.23-1.2.16-1.32-.07-.12-.25-.19-.53-.33z"/></svg>
+                  WhatsApp
+                </a>
+                {/* Facebook Share */}
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent('Learn and earn more than lakhs a month. Join skillras.com today!')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-xs font-medium transition-colors"
+                  style={{ textDecoration: 'none' }}
+                >
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.595 0 0 .592 0 1.326v21.348C0 23.408.595 24 1.325 24h11.495v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.797.143v3.24l-1.918.001c-1.504 0-1.797.715-1.797 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116C23.406 24 24 23.408 24 22.674V1.326C24 .592 23.406 0 22.675 0"/></svg>
+                  Facebook
+                </a>
+                {/* Instagram Share (copy to clipboard) */}
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(`Learn and earn more than lakhs a month. Join skillras.com today! ${shareUrl}`);
+                    setCopySuccess(true);
+                    setTimeout(() => setCopySuccess(false), 1500);
+                  }}
+                  className="flex items-center bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 hover:opacity-90 text-white px-2 py-1 rounded text-xs"
+                  variant="outline"
+                  type="button"
+                >
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zm4.25 2.25a6.25 6.25 0 1 1 0 12.5 6.25 6.25 0 0 1 0-12.5zm0 1.5a4.75 4.75 0 1 0 0 9.5 4.75 4.75 0 0 0 0-9.5zm6.5 1.25a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/></svg>
+                  Instagram
+                </Button>
+                {/* Optionally add more platforms here */}
+              </div>
+            )}
           </div>
         </div>
 
+        
         {/* Course Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {allCourses.map((course) => (
