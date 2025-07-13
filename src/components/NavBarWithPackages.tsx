@@ -170,7 +170,7 @@ const NavBarWithPackages: React.FC = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <Link to="/" className="text-white font-bold text-xl md:text-2xl flex items-center">
-            <GraduationCap className="mr-2 text-primary" size={28} />
+            <img src="/android-chrome-192x192.png" alt="Logo" style={{ height: 32, width: 32, marginRight: 8, borderRadius: '8px' }} />
             SkillRas
           </Link>
 
