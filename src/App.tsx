@@ -18,8 +18,37 @@ import EarningsPage from './pages/EarningsPage';
 import PremiereProCoursePage from './pages/PremiereProCoursePage';
 import AfterEffectsCoursePage from './pages/AfterEffectsCoursePage';
 import ExcelCoursePage from './pages/ExcelCoursePage';
+import { useEffect } from 'react';
 
 function App() {
+  useEffect(() => {
+    // Disable right-click
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+    document.addEventListener('contextmenu', handleContextMenu);
+
+    // Block common dev tools shortcuts
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // F12
+      if (e.key === 'F12') {
+        e.preventDefault();
+      }
+      // Ctrl+Shift+I, Ctrl+Shift+C, Ctrl+Shift+J, Ctrl+U
+      if (
+        (e.ctrlKey && e.shiftKey && ['I', 'C', 'J'].includes(e.key.toUpperCase())) ||
+        (e.ctrlKey && e.key.toUpperCase() === 'U')
+      ) {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
   return (
     <AuthProvider>
       <Router>
