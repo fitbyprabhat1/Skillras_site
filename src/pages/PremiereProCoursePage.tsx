@@ -403,9 +403,9 @@ const PremiereProCoursePage: React.FC = () => {
                 `lg:col-span-1 ` +
                 `sm:static sm:translate-x-0 sm:relative ` +
                 `sm:block ` +
-                `fixed top-0 left-0 h-full z-50 w-4/5 max-w-xs bg-dark-light rounded-r-xl p-6 transition-transform duration-300 ` +
+                `fixed top-0 left-0 h-full z-20 w-4/5 max-w-xs bg-dark-light rounded-r-xl p-6 transition-transform duration-300 ` +
                 `${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} ` +
-                `sm:rounded-xl sm:p-6 sm:sticky sm:top-8 sm:h-auto sm:w-auto sm:max-w-none ` +
+                `sm:rounded-xl sm:p-6 sm:sticky sm:top-20 sm:h-auto sm:w-auto sm:max-w-none ` +
                 `sm:shadow-none shadow-lg` +
                 ` flex flex-col h-full`
               }
