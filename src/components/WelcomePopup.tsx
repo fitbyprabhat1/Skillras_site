@@ -31,7 +31,7 @@ const WelcomePopup: React.FC<WelcomePopupProps> = ({ onSubmit }) => {
     try {
       // Insert popup user data into Supabase
       const { data, error: supabaseError } = await supabase
-        .from('Popup_userdata')
+        .from('leads')
         .insert([
           {
             name: formData.name,
