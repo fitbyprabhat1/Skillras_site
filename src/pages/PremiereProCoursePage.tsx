@@ -21,11 +21,11 @@ interface CourseChapter {
   videoId: string | null;
   isLocked: boolean;
   isCompleted: boolean;
-  downloadableResource?: {
+  downloadableResources?: {
     title: string;
     url: string;
     type: string;
-  };
+  }[];
 }
 
 const courseModules: CourseModule[] = [
@@ -42,11 +42,18 @@ const courseModules: CourseModule[] = [
         videoId: "8i34DE0Efec",
         isLocked: false,
         isCompleted: false,
-        downloadableResource: {
-          title: "Course Welcome Guide",
-          url: "https://drive.google.com/file/d/1example/view",
-          type: "PDF"
-        }
+        downloadableResources: [
+          {
+            title: "Course Welcome Guide",
+            url: "https://drive.google.com/file/d/1example/view",
+            type: "PDF"
+          },
+          {
+            title: "Sample Project Files",
+            url: "https://drive.google.com/file/d/1example4/view",
+            type: "ZIP"
+          }
+        ]
       },
       {
         id: 2,
@@ -56,11 +63,13 @@ const courseModules: CourseModule[] = [
         videoId: "Ul45Ze-xgSU",
         isLocked: false,
         isCompleted: false,
-        downloadableResource: {
-          title: "30-Day Skills Guide",
-          url: "https://drive.google.com/file/d/1example2/view",
-          type: "PDF"
-        }
+        downloadableResources: [
+          {
+            title: "30-Day Skills Guide",
+            url: "https://drive.google.com/file/d/1example2/view",
+            type: "PDF"
+          }
+        ],
       },
       {
         id: 3,
@@ -70,11 +79,29 @@ const courseModules: CourseModule[] = [
         videoId: "Ul45Ze-xgSU",
         isLocked: false,
         isCompleted: false,
-        downloadableResource: {
-          title: "Setup & Download Guide",
-          url: "https://drive.google.com/file/d/1example3/view",
-          type: "PDF"
-        }
+        downloadableResources: [
+          {
+            title: "Setup & Download Guide",
+            url: "https://drive.google.com/file/d/1example3/view",
+            type: "PDF"
+          }
+        ]
+      },
+      {
+        id: 4,
+        title: "Software + Setup + Download Links",
+        description: "By the end of this video, you'll know exactly how to set up Premiere Pro like a pro and hit the ground running.",
+        duration: "5 minutes",
+        videoId: "C1bviaervb4",
+        isLocked: false,
+        isCompleted: false,
+        downloadableResources: [
+          {
+            title: "Setup & Download Guide",
+            url: "https://drive.google.com/file/d/1example3/view",
+            type: "PDF"
+          }
+        ]
       }
     ]
   },
@@ -84,7 +111,7 @@ const courseModules: CourseModule[] = [
     description: "Learn the essential editing techniques that professionals use",
     chapters: [
       {
-        id: 4,
+        id: 5,
         title: "Timeline Basics and Navigation",
         description: "Master the timeline interface and learn efficient navigation techniques.",
         duration: "8 minutes",
@@ -97,7 +124,7 @@ const courseModules: CourseModule[] = [
         title: "Importing and Organizing Footage",
         description: "Learn professional workflows for importing and organizing your media.",
         duration: "10 minutes",
-        videoId: "njUO84_ygo0",
+        videoId: "VO4ZLwpXYxU",
         isLocked: false,
         isCompleted: false
       },
@@ -106,7 +133,34 @@ const courseModules: CourseModule[] = [
         title: "Basic Cutting and Trimming",
         description: "Master the fundamental cutting and trimming techniques.",
         duration: "12 minutes",
-        videoId: "jpqETZQZ-mg",
+        videoId: "njUO84_ygo0",
+        isLocked: false,
+        isCompleted: false
+      },
+      {
+        id: 7,
+        title: "Basic Cutting and Trimming",
+        description: "Master the fundamental cutting and trimming techniques.",
+        duration: "12 minutes",
+        videoId: "T_KQlCOIKss",
+        isLocked: false,
+        isCompleted: false
+      },
+      {
+        id: 8,
+        title: "Basic Cutting and Trimming",
+        description: "Master the fundamental cutting and trimming techniques.",
+        duration: "12 minutes",
+        videoId: "6FazlYStgAY",
+        isLocked: false,
+        isCompleted: false
+      },
+      {
+        id: 9,
+        title: "Basic Cutting and Trimming",
+        description: "Master the fundamental cutting and trimming techniques.",
+        duration: "12 minutes",
+        videoId: "BtIVKxBSFVM",
         isLocked: false,
         isCompleted: false
       }
@@ -268,25 +322,27 @@ const PremiereProCoursePage: React.FC = () => {
                 <p className="text-gray-300 mb-4">{selectedChapter.description}</p>
                 
                 {/* Downloadable Resource */}
-                {selectedChapter.downloadableResource && (
-                  <div className="bg-dark-light rounded-lg p-4 mb-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <FileText className="text-primary" size={20} />
-                        <div>
-                          <h4 className="text-white font-medium">{selectedChapter.downloadableResource.title}</h4>
-                          <p className="text-gray-400 text-sm">{selectedChapter.downloadableResource.type}</p>
+                {selectedChapter.downloadableResources && selectedChapter.downloadableResources.length > 0 && (
+                  <div className="bg-dark-light rounded-lg p-4 mb-4 space-y-2">
+                    {selectedChapter.downloadableResources.map((resource, idx) => (
+                      <div key={idx} className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <FileText className="text-primary" size={20} />
+                          <div>
+                            <h4 className="text-white font-medium">{resource.title}</h4>
+                            <p className="text-gray-400 text-sm">{resource.type}</p>
+                          </div>
                         </div>
+                        <Button 
+                          onClick={() => handleDownload(resource.url, resource.title)}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <Download size={16} className="mr-2" />
+                          Download
+                        </Button>
                       </div>
-                      <Button 
-                        onClick={() => handleDownload(selectedChapter.downloadableResource!.url, selectedChapter.downloadableResource!.title)}
-                        variant="outline"
-                        size="sm"
-                      >
-                        <Download size={16} className="mr-2" />
-                        Download
-                      </Button>
-                    </div>
+                    ))}
                   </div>
                 )}
                 {/* Mark as Complete Button */}
@@ -350,7 +406,8 @@ const PremiereProCoursePage: React.FC = () => {
                 `fixed top-0 left-0 h-full z-50 w-4/5 max-w-xs bg-dark-light rounded-r-xl p-6 transition-transform duration-300 ` +
                 `${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} ` +
                 `sm:rounded-xl sm:p-6 sm:sticky sm:top-8 sm:h-auto sm:w-auto sm:max-w-none ` +
-                `sm:shadow-none shadow-lg`
+                `sm:shadow-none shadow-lg` +
+                ` flex flex-col h-full`
               }
               style={{ boxShadow: sidebarOpen ? '0 0 0 100vmax rgba(0,0,0,0.4)' : undefined }}
             >
@@ -361,7 +418,7 @@ const PremiereProCoursePage: React.FC = () => {
                 </Button>
               </div>
               <h3 className="text-white font-bold text-lg mb-4">Course Content</h3>
-              <div className="space-y-4">
+              <div className="flex-1 space-y-4 overflow-y-auto pr-2 sm:max-h-none sm:overflow-y-visible">
                 {courseModules.map((module) => (
                   <div key={module.id} className="border border-gray-700 rounded-lg overflow-hidden">
                     <button
@@ -413,11 +470,11 @@ const PremiereProCoursePage: React.FC = () => {
                                 <p className="text-xs text-gray-400 mt-1">
                                   {chapter.duration}
                                 </p>
-                                {chapter.downloadableResource && (
+                                {chapter.downloadableResources && chapter.downloadableResources.length > 0 && (
                                   <div className="flex items-center mt-2">
                                     <FileText size={14} className="text-primary mr-1" />
                                     <span className="text-xs text-primary">
-                                      {chapter.downloadableResource.type} Resource
+                                      {chapter.downloadableResources.length} Resources
                                     </span>
                                   </div>
                                 )}
