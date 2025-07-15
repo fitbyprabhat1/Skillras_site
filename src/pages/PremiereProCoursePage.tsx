@@ -120,7 +120,7 @@ const courseModules: CourseModule[] = [
         isCompleted: false
       },
       {
-        id: 5,
+        id: 6,
         title: "Importing and Organizing Footage",
         description: "Learn professional workflows for importing and organizing your media.",
         duration: "10 minutes",
@@ -129,7 +129,7 @@ const courseModules: CourseModule[] = [
         isCompleted: false
       },
       {
-        id: 6,
+        id: 7,
         title: "Basic Cutting and Trimming",
         description: "Master the fundamental cutting and trimming techniques.",
         duration: "12 minutes",
@@ -138,27 +138,27 @@ const courseModules: CourseModule[] = [
         isCompleted: false
       },
       {
-        id: 7,
-        title: "Basic Cutting and Trimming",
-        description: "Master the fundamental cutting and trimming techniques.",
+        id: 8,
+        title: "Advanced Cutting Techniques",
+        description: "Learn advanced cutting and trimming techniques for professional editing.",
         duration: "12 minutes",
         videoId: "T_KQlCOIKss",
         isLocked: false,
         isCompleted: false
       },
       {
-        id: 8,
-        title: "Basic Cutting and Trimming",
-        description: "Master the fundamental cutting and trimming techniques.",
+        id: 9,
+        title: "Precision Editing",
+        description: "Master precision editing techniques for frame-perfect cuts.",
         duration: "12 minutes",
         videoId: "6FazlYStgAY",
         isLocked: false,
         isCompleted: false
       },
       {
-        id: 9,
-        title: "Basic Cutting and Trimming",
-        description: "Master the fundamental cutting and trimming techniques.",
+        id: 10,
+        title: "Multi-Camera Editing",
+        description: "Learn to edit multi-camera footage efficiently.",
         duration: "12 minutes",
         videoId: "BtIVKxBSFVM",
         isLocked: false,
@@ -172,7 +172,7 @@ const courseModules: CourseModule[] = [
     description: "Take your editing to the next level with advanced techniques",
     chapters: [
       {
-        id: 7,
+        id: 11,
         title: "Color Grading Fundamentals",
         description: "Learn the basics of color correction and grading.",
         duration: "15 minutes",
@@ -181,7 +181,7 @@ const courseModules: CourseModule[] = [
         isCompleted: false
       },
       {
-        id: 8,
+        id: 12,
         title: "Audio Enhancement",
         description: "Clean and enhance your audio for professional results.",
         duration: "12 minutes",
@@ -190,7 +190,7 @@ const courseModules: CourseModule[] = [
         isCompleted: false
       },
       {
-        id: 9,
+        id: 13,
         title: "Transitions and Effects",
         description: "Create smooth transitions and apply professional effects.",
         duration: "18 minutes",
@@ -206,7 +206,7 @@ const courseModules: CourseModule[] = [
     description: "Learn industry-standard workflows and best practices",
     chapters: [
       {
-        id: 10,
+        id: 14,
         title: "Project Organization",
         description: "Organize your projects like a professional editor.",
         duration: "10 minutes",
@@ -215,7 +215,7 @@ const courseModules: CourseModule[] = [
         isCompleted: false
       },
       {
-        id: 11,
+        id: 15,
         title: "Export Settings for Different Platforms",
         description: "Optimize your exports for various platforms and use cases.",
         duration: "15 minutes",
@@ -224,7 +224,7 @@ const courseModules: CourseModule[] = [
         isCompleted: false
       },
       {
-        id: 12,
+        id: 16,
         title: "Collaboration and Sharing",
         description: "Learn how to collaborate with team members and share projects.",
         duration: "12 minutes",
@@ -252,9 +252,23 @@ const PremiereProCoursePage: React.FC = () => {
     localStorage.setItem('premierepro_completed_chapters', JSON.stringify(completedChapters));
   }, [completedChapters]);
 
+  // Prevent body scroll when sidebar is open
+  React.useEffect(() => {
+    if (sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [sidebarOpen]);
+
   const handleChapterSelect = (chapter: CourseChapter) => {
     if (!chapter.isLocked) {
       setSelectedChapter(chapter);
+      setSidebarOpen(false); // Close sidebar when chapter is selected
     }
   };
 
@@ -293,13 +307,18 @@ const PremiereProCoursePage: React.FC = () => {
       <NavBarWithPackages />
       <div className="pt-20">
         {/* Mobile: Course Content Button */}
-        <div className="sm:hidden flex justify-between items-center mb-4 px-4">
-          <Button onClick={() => setSidebarOpen(true)} variant="outline" size="sm" className="flex items-center gap-2">
+        <div className="lg:hidden flex justify-between items-center mb-4 px-4">
+          <Button 
+            onClick={() => setSidebarOpen(true)} 
+            variant="outline" 
+            size="sm" 
+            className="flex items-center gap-2"
+          >
             <Menu size={20} />
             <span>Course Content</span>
           </Button>
-          {/* Removed chapter title from here */}
         </div>
+        
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Video Player Section */}
@@ -345,22 +364,30 @@ const PremiereProCoursePage: React.FC = () => {
                     ))}
                   </div>
                 )}
+                
                 {/* Mark as Complete Button */}
                 {!selectedChapter.isLocked && !completedChapters.includes(selectedChapter.id) && (
                   <Button onClick={handleMarkAsComplete} className="w-full">
                     Mark as Complete
                   </Button>
                 )}
+                
                 {/* Completed message */}
                 {!selectedChapter.isLocked && completedChapters.includes(selectedChapter.id) && (
                   <div className="w-full flex flex-col sm:flex-row items-center justify-center gap-2 text-green-500 text-center font-semibold py-2">
                     <span>Chapter Completed!</span>
-                    <Button onClick={handleMarkIncomplete} variant="outline" size="sm" className="text-red-500 border-red-500 hover:bg-red-100">
+                    <Button 
+                      onClick={handleMarkIncomplete} 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-red-500 border-red-500 hover:bg-red-100"
+                    >
                       Mark Incomplete
                     </Button>
                   </div>
                 )}
-                {/* Next/Previous Chapter Buttons - now below mark as complete area */}
+                
+                {/* Next/Previous Chapter Buttons */}
                 <div className="flex flex-row gap-2 mt-4 justify-between">
                   <Button
                     onClick={() => prevChapter && handleChapterSelect(prevChapter)}
@@ -381,6 +408,7 @@ const PremiereProCoursePage: React.FC = () => {
                     Next
                   </Button>
                 </div>
+                
                 {/* Get Certificate Button */}
                 {allCompleted && (
                   <Link to="/getcertificate">
@@ -392,33 +420,119 @@ const PremiereProCoursePage: React.FC = () => {
               </div>
             </div>
 
-            {/* Course Navigation Sidebar */}
-            {/* Desktop: static sidebar, Mobile: drawer */}
-            {/* Mobile Drawer Overlay */}
-            {sidebarOpen && (
-              <div className="fixed inset-0 z-40 bg-black bg-opacity-40 sm:hidden" onClick={() => setSidebarOpen(false)}></div>
-            )}
-            <div
-              className={
-                `lg:col-span-1 ` +
-                `sm:static sm:translate-x-0 sm:relative ` +
-                `sm:block ` +
-                `fixed top-0 left-0 h-full z-20 w-4/5 max-w-xs bg-dark-light rounded-r-xl p-6 transition-transform duration-300 ` +
-                `${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} ` +
-                `sm:rounded-xl sm:p-6 sm:sticky sm:top-20 sm:h-auto sm:w-auto sm:max-w-none ` +
-                `sm:shadow-none shadow-lg` +
-                ` flex flex-col h-full`
-              }
-              style={{ boxShadow: sidebarOpen ? '0 0 0 100vmax rgba(0,0,0,0.4)' : undefined }}
-            >
-              {/* Close button for mobile */}
-              <div className="sm:hidden flex justify-end mb-4">
-                <Button onClick={() => setSidebarOpen(false)} variant="outline" size="sm">
-                  <X size={24} />
-                </Button>
+            {/* Course Navigation Sidebar - Desktop */}
+            <div className="hidden lg:block lg:col-span-1">
+              <div className="bg-dark-light rounded-xl p-6 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
+                <h3 className="text-white font-bold text-lg mb-4">Course Content</h3>
+                <div className="space-y-4">
+                  {courseModules.map((module) => (
+                    <div key={module.id} className="border border-gray-700 rounded-lg overflow-hidden">
+                      <button
+                        onClick={() => toggleModule(module.id)}
+                        className="w-full p-4 text-left bg-dark-lighter hover:bg-dark-lightest transition-colors"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="text-white font-medium">{module.title}</h4>
+                            <p className="text-gray-400 text-sm">{module.description}</p>
+                          </div>
+                          <div className="text-gray-400 text-xl">
+                            {expandedModule === module.id ? '−' : '+'}
+                          </div>
+                        </div>
+                      </button>
+                      {expandedModule === module.id && (
+                        <div className="p-4 bg-dark-light space-y-2">
+                          {module.chapters.map((chapter) => {
+                            const isCompleted = completedChapters.includes(chapter.id);
+                            return (
+                              <div
+                                key={chapter.id}
+                                onClick={() => handleChapterSelect(chapter)}
+                                className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                                  isCompleted
+                                    ? 'bg-green-900/40 border border-green-500/30'
+                                    : selectedChapter.id === chapter.id
+                                    ? 'bg-primary/20 border border-primary/30'
+                                    : 'hover:bg-dark-lighter'
+                                }`}
+                              >
+                                <div className="flex-shrink-0">
+                                  {isCompleted ? (
+                                    <CheckCircle size={16} className="text-green-500" />
+                                  ) : chapter.isLocked ? (
+                                    <Lock size={16} className="text-gray-500" />
+                                  ) : (
+                                    <Play size={16} className="text-primary" />
+                                  )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <h4 className="text-white font-medium text-sm leading-tight">
+                                    {chapter.title}
+                                  </h4>
+                                  <p className="text-xs text-gray-400 mt-1">
+                                    {chapter.duration}
+                                  </p>
+                                  {chapter.downloadableResources && chapter.downloadableResources.length > 0 && (
+                                    <div className="flex items-center mt-2">
+                                      <FileText size={14} className="text-primary mr-1" />
+                                      <span className="text-xs text-primary">
+                                        {chapter.downloadableResources.length} Resources
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                                {chapter.isLocked && (
+                                  <div className="flex-shrink-0">
+                                    <span className="text-xs bg-primary bg-opacity-20 text-primary px-2 py-1 rounded">
+                                      Premium
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <h3 className="text-white font-bold text-lg mb-4">Course Content</h3>
-              <div className="flex-1 space-y-4 overflow-y-auto pr-2 sm:max-h-none sm:overflow-y-visible">
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* Mobile Sidebar */}
+        <div
+          className={`fixed top-0 left-0 h-full w-80 max-w-[80vw] bg-dark-light z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
+            sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <div className="flex flex-col h-full">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-700">
+              <h3 className="text-white font-bold text-lg">Course Content</h3>
+              <Button 
+                onClick={() => setSidebarOpen(false)} 
+                variant="outline" 
+                size="sm"
+                className="p-2"
+              >
+                <X size={20} />
+              </Button>
+            </div>
+            
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto p-4">
+              <div className="space-y-4">
                 {courseModules.map((module) => (
                   <div key={module.id} className="border border-gray-700 rounded-lg overflow-hidden">
                     <button
@@ -430,22 +544,19 @@ const PremiereProCoursePage: React.FC = () => {
                           <h4 className="text-white font-medium">{module.title}</h4>
                           <p className="text-gray-400 text-sm">{module.description}</p>
                         </div>
-                        <div className="text-gray-400">
+                        <div className="text-gray-400 text-xl">
                           {expandedModule === module.id ? '−' : '+'}
                         </div>
                       </div>
                     </button>
                     {expandedModule === module.id && (
-                      <div className="p-4 bg-dark-light">
+                      <div className="p-4 bg-dark-light space-y-2">
                         {module.chapters.map((chapter) => {
                           const isCompleted = completedChapters.includes(chapter.id);
                           return (
                             <div
                               key={chapter.id}
-                              onClick={() => {
-                                handleChapterSelect(chapter);
-                                setSidebarOpen(false); // close sidebar on mobile when chapter selected
-                              }}
+                              onClick={() => handleChapterSelect(chapter)}
                               className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
                                 isCompleted
                                   ? 'bg-green-900/40 border border-green-500/30'
@@ -502,4 +613,4 @@ const PremiereProCoursePage: React.FC = () => {
   );
 };
 
-export default PremiereProCoursePage; 
+export default PremiereProCoursePage;
