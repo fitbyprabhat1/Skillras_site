@@ -6,11 +6,35 @@ import Button from '../components/Button';
 import packageCourses from '../data/packageCourses';
 import courses from '../data/courses';
 import NavBarWithPackages from '../components/NavBarWithPackages';
+import { useEffect, useState } from 'react';
 
 const packageNames = {
   'starter': 'Starter',
   'professional': 'Professional',
   'enterprise': 'Enterprise',
+};
+
+// Helper to get the lowest package for a course and its color
+const getCoursePackage = (courseId: string): { label: string; color: string } => {
+  if (packageCourses['starter'].includes(courseId)) return { label: 'Starter', color: 'bg-red-600' };
+  if (packageCourses['professional'].includes(courseId)) return { label: 'Professional', color: 'bg-green-600' };
+  if (packageCourses['enterprise'].includes(courseId)) return { label: 'Enterprise', color: 'bg-blue-600' };
+  return { label: '', color: '' };
+};
+
+// Helper to check if all chapters are completed for a course
+const isCourseCompleted = (course: any): boolean => {
+  const progressKey = `course_progress_${course.id}`;
+  const completedChapters = (() => {
+    try {
+      const stored = localStorage.getItem(progressKey);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  })();
+  const allChapters = course.modules.flatMap((m: any) => m.chapters);
+  return allChapters.length > 0 && allChapters.every((ch: any) => completedChapters.includes(ch.id));
 };
 
 const MyCoursePage: React.FC = () => {
@@ -43,6 +67,10 @@ const MyCoursePage: React.FC = () => {
   // Get course data for those ids
   const availableCourses = availableCourseIds.map((id) => courses[id]).filter(Boolean);
 
+  // In the course card, update the image rendering:
+  // Use the provided image URL for all course thumbnails for now.
+  const demoImage = "https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp";
+
   return (
     <div className="min-h-screen bg-dark flex flex-col">
       <NavBarWithPackages />
@@ -66,26 +94,39 @@ const MyCoursePage: React.FC = () => {
         </div>
 
         {/* Course Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {availableCourses.map(course => (
-            <div
-              key={course.id}
-              className={
-                'bg-dark-light rounded-xl p-6 border border-primary/30 hover:border-primary/60 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 flex flex-col items-center'
-              }
-            >
-              <div className="w-24 h-24 rounded-2xl bg-gradient-to-tr from-primary to-pink-400 flex items-center justify-center mb-4 shadow-md overflow-hidden">
-                <img src={course.thumbnail} alt={course.name} className="w-20 h-20 object-cover rounded-xl" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 mx-2 sm:mx-0">
+          {availableCourses.map(course => {
+            const pkg = getCoursePackage(course.id);
+            const completed = isCourseCompleted(course);
+            return (
+              <div key={course.id}>
+                <Link
+                  to={`/course/${course.id}`}
+                  className="block rounded-xl overflow-hidden group transition-transform duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
+                >
+                  {/* 16:9 aspect ratio image */}
+                  <div className="w-full aspect-[16/9] bg-gray-200 overflow-hidden relative">
+                    <img src={course.thumbnail} alt={course.name} className={`w-full h-full object-cover${completed ? ' grayscale' : ''}`} />
+                    {/* Package badge */}
+                    <span className={`absolute top-3 right-3 text-white text-xs font-bold rounded-full px-3 py-1 shadow-lg z-10 ${pkg.color}`}>
+                      {pkg.label}
+                    </span>
+                    {/* Completed overlay */}
+                    {completed && (
+                      <div className="absolute inset-0 flex items-center justify-center z-20">
+                        <span className="bg-black/70 text-white text-base font-bold px-4 py-2 rounded-lg">Completed</span>
+                      </div>
+                    )}
+                  </div>
+                </Link>
+                {/* Title and author below image, left-aligned */}
+                <div className="mt-3">
+                  <h3 className="text-lg font-bold text-white text-left mb-1">{course.name}</h3>
+                  <p className="text-sm text-gray-400 text-left">By {course.author}</p>
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-white mb-2 text-center drop-shadow">{course.name}</h3>
-              <p className="text-gray-300 text-sm mb-4 text-center">{course.description}</p>
-              <Link to={`/course/${course.id}`} className="w-full">
-                <Button className="w-full" variant="primary">
-                  Start Learning
-                </Button>
-              </Link>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Package Benefits */}
