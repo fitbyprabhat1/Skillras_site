@@ -27,6 +27,7 @@ export interface CourseData {
   name: string;
   description: string;
   thumbnail: string; // image url or local asset
+  author: string; // new property for author name
   modules: CourseModule[];
 }
 
@@ -35,7 +36,8 @@ const courses: Record<string, CourseData> = {
     id: 'premiere-pro',
     name: 'Premiere Pro Mastery',
     description: 'Master Adobe Premiere Pro with step-by-step guidance and real-world projects.',
-    thumbnail: '/android-chrome-192x192.png',
+    thumbnail: 'https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp', // update this URL as needed
+    author: 'John Doe',
     modules: [
       {
         id: 'welcome',
@@ -74,7 +76,8 @@ const courses: Record<string, CourseData> = {
     id: 'canva-design',
     name: 'Canva Design Essentials',
     description: 'Create stunning graphics and social media posts with Canva.',
-    thumbnail: 'https://fiverrbox.com/wp-content/uploads/2022/10/YouTube-Thumbnail-f18b0cbf.png',
+    thumbnail: 'https://educate.io/images/Web-Design-Fast-Track-Website_1.avif',
+    author: 'Jane Smith',
     modules: [
       {
         id: 'intro',
@@ -120,7 +123,8 @@ const courses: Record<string, CourseData> = {
     id: 'after-effects',
     name: 'After Effects Mastery',
     description: 'Create stunning motion graphics and visual effects.',
-    thumbnail: '/android-chrome-192x192.png',
+    thumbnail: 'https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp',
+    author: 'Alex Lee',
     modules: [
       {
         id: 'ae-intro',
@@ -156,7 +160,8 @@ const courses: Record<string, CourseData> = {
     id: 'youtube-growth',
     name: 'YouTube Growth Hacking',
     description: 'Grow your YouTube channel with proven strategies.',
-    thumbnail: '/android-chrome-192x192.png',
+    thumbnail: 'https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp',
+    author: 'Priya Patel',
     modules: [
       {
         id: 'yt-intro',
@@ -192,7 +197,8 @@ const courses: Record<string, CourseData> = {
     id: 'excel',
     name: 'MS Excel Mastery',
     description: 'Master Microsoft Excel for data analysis and business intelligence.',
-    thumbnail: '/android-chrome-192x192.png',
+    thumbnail: 'https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp',
+    author: 'Michael Chen',
     modules: [
       {
         id: 'excel-intro',
