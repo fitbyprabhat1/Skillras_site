@@ -15,9 +15,7 @@ import LoginPage from './pages/LoginPage';
 import TermsAndConditionsPage from './pages/TermsAndConditionsPage';
 import DashboardPage from './pages/DashboardPage';
 import EarningsPage from './pages/EarningsPage';
-import PremiereProCoursePage from './pages/PremiereProCoursePage';
-import AfterEffectsCoursePage from './pages/AfterEffectsCoursePage';
-import ExcelCoursePage from './pages/ExcelCoursePage';
+import MyCoursePage from './pages/MyCoursePage';
 import { useEffect } from 'react';
 
 function App() {
@@ -73,6 +71,14 @@ function App() {
             } 
           />
           <Route 
+            path="/my-courses" 
+            element={
+              <ProtectedRoute>
+                <MyCoursePage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
             path="/earnings" 
             element={
               <ProtectedRoute>
@@ -81,30 +87,13 @@ function App() {
             } 
           />
           <Route 
-            path="/course/premiere-pro" 
+            path="/course/:courseId" 
             element={
               <PackageProtectedRoute requiredPackage="starter">
-                <PremiereProCoursePage />
+                <CoursePage />
               </PackageProtectedRoute>
             } 
           />
-          <Route 
-            path="/course/after-effects" 
-            element={
-              <PackageProtectedRoute requiredPackage="professional">
-                <AfterEffectsCoursePage />
-              </PackageProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/course/excel" 
-            element={
-              <PackageProtectedRoute requiredPackage="enterprise">
-                <ExcelCoursePage />
-              </PackageProtectedRoute>
-            } 
-          />
-          <Route path="/course/:courseId" element={<CoursePage />} />
           <Route path="/download" element={<DownloadPage />} />
           <Route path="/courses" element={<AllCoursesPage />} />
           <Route path="/packages" element={<PackagesPage />} />
