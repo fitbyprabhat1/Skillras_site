@@ -310,6 +310,14 @@ const NavBarWithPackages: React.FC = () => {
                       {userPackage ? (
                         <>
                           <Link
+                            to="/my-courses"
+                            onClick={() => setUserDropdownOpen(false)}
+                            className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
+                          >
+                            <GraduationCap size={16} className="mr-2 inline" />
+                            My Courses
+                          </Link>
+                          <Link
                             to="/dashboard"
                             onClick={() => setUserDropdownOpen(false)}
                             className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
@@ -486,6 +494,14 @@ const NavBarWithPackages: React.FC = () => {
                   <div className="space-y-2">
                     {userPackage ? (
                       <>
+                        <Link 
+                          to="/my-courses"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="block text-white hover:text-primary-light transition-colors py-2 flex items-center"
+                        >
+                          <GraduationCap size={16} className="mr-2" />
+                          My Courses
+                        </Link>
                         <Link 
                           to="/dashboard"
                           onClick={() => setMobileMenuOpen(false)}
