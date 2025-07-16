@@ -5,6 +5,8 @@ import { useUserPackage } from '../hooks/useUserPackage';
 import Button from './Button';
 import { supabase } from '../lib/supabase';
 import { Menu, X, GraduationCap, Download, ChevronDown, Package, Star, Check, User, LogOut, Crown, Video, TrendingUp, Palette } from 'lucide-react';
+import packageCourses from '../data/packageCourses';
+import courses from '../data/courses';
 
 interface PackageData {
   id: string;
@@ -79,6 +81,9 @@ const packages: PackageData[] = [
     color: 'from-purple-500 to-purple-600'
   },
 ];
+
+// Helper to get package order
+const packageOrder = ['starter', 'professional', 'enterprise'];
 
 const NavBarWithPackages: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -161,6 +166,13 @@ const NavBarWithPackages: React.FC = () => {
     }
   };
 
+  // In the Packages dropdown, filter packages to only show those above the user's current package
+  const userPackageIndex = userPackage ? packageOrder.indexOf(userPackage.package_selected) : -1;
+  const upgradePackages = userPackageIndex >= 0 ? packages.filter(pkg => packageOrder.indexOf(pkg.id) > userPackageIndex) : packages;
+
+  // In the mobile menu, filter packages the same way
+  const upgradePackagesMobile = userPackageIndex >= 0 ? packages.filter(pkg => packageOrder.indexOf(pkg.id) > userPackageIndex) : packages;
+
   return (
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
@@ -181,9 +193,6 @@ const NavBarWithPackages: React.FC = () => {
                 Home
               </Link>
             )}
-            <Link to="/courses" className="text-white hover:text-primary-light transition-colors">
-              All Courses
-            </Link>
             
             {/* Packages Dropdown */}
             <div className="relative packages-dropdown">
@@ -203,7 +212,7 @@ const NavBarWithPackages: React.FC = () => {
                   </div>
                   
                   <div className="max-h-96 overflow-y-auto">
-                    {packages.map((pkg) => (
+                    {upgradePackages.map((pkg) => (
                       <Link
                         key={pkg.id}
                         to="/packages"
@@ -326,35 +335,6 @@ const NavBarWithPackages: React.FC = () => {
                             My Dashboard
                           </Link>
                           <div className="border-t border-gray-600 my-2"></div>
-                          <div className="text-gray-400 text-xs px-3 py-1">Your Courses:</div>
-                          <Link
-                            to="/course/premiere-pro"
-                            onClick={() => setUserDropdownOpen(false)}
-                            className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
-                          >
-                            <Video size={16} className="mr-2 inline" />
-                            Premiere Pro
-                          </Link>
-                          {userPackage.package_selected !== 'starter' && (
-                            <Link
-                              to="/course/after-effects"
-                              onClick={() => setUserDropdownOpen(false)}
-                              className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
-                            >
-                              <TrendingUp size={16} className="mr-2 inline" />
-                              After Effects
-                            </Link>
-                          )}
-                          {userPackage.package_selected === 'enterprise' && (
-                            <Link
-                              to="/course/excel"
-                              onClick={() => setUserDropdownOpen(false)}
-                              className="block w-full text-left px-3 py-2 text-white hover:bg-dark-lighter rounded-lg transition-colors"
-                            >
-                              <Palette size={16} className="mr-2 inline" />
-                              MS Excel
-                            </Link>
-                          )}
                         </>
                       ) : (
                         <>
@@ -420,13 +400,6 @@ const NavBarWithPackages: React.FC = () => {
                   Home
                 </Link>
               )}
-              <Link 
-                to="/courses" 
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-white hover:text-primary-light transition-colors py-2"
-              >
-                All Courses
-              </Link>
               
               {/* Mobile Packages */}
               <div className="py-2">
@@ -435,7 +408,7 @@ const NavBarWithPackages: React.FC = () => {
                   Packages
                 </div>
                 <div className="space-y-3 ml-6">
-                  {packages.map((pkg) => (
+                  {upgradePackagesMobile.map((pkg) => (
                     <Link
                       key={pkg.id}
                       to="/packages"
@@ -510,35 +483,7 @@ const NavBarWithPackages: React.FC = () => {
                           <Crown size={16} className="mr-2" />
                           My Dashboard
                         </Link>
-                        <div className="text-gray-400 text-xs py-1">Your Courses:</div>
-                        <Link 
-                          to="/course/premiere-pro"
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="block text-white hover:text-primary-light transition-colors py-2 flex items-center"
-                        >
-                          <Video size={16} className="mr-2" />
-                          Premiere Pro
-                        </Link>
-                        {userPackage.package_selected !== 'starter' && (
-                          <Link 
-                            to="/course/after-effects"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="block text-white hover:text-primary-light transition-colors py-2 flex items-center"
-                          >
-                            <TrendingUp size={16} className="mr-2" />
-                            After Effects
-                          </Link>
-                        )}
-                        {userPackage.package_selected === 'enterprise' && (
-                          <Link 
-                            to="/course/excel"
-                            onClick={() => setMobileMenuOpen(false)}
-                            className="block text-white hover:text-primary-light transition-colors py-2 flex items-center"
-                          >
-                            <Palette size={16} className="mr-2" />
-                            MS Excel
-                          </Link>
-                        )}
+                        <div className="border-t border-gray-600 my-2"></div>
                       </>
                     ) : (
                       <>
