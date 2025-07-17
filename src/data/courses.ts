@@ -76,7 +76,7 @@ const courses: Record<string, CourseData> = {
     id: 'canva-design',
     name: 'Canva Design Essentials',
     description: 'Create stunning graphics and social media posts with Canva.',
-    thumbnail: 'https://educate.io/images/Web-Design-Fast-Track-Website_1.avif',
+    thumbnail: 'https://www.imghippo.com/i/JcGw2401TWg.png',
     author: 'Jane Smith',
     modules: [
       {
