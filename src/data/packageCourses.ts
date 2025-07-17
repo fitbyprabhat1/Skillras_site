@@ -4,22 +4,37 @@
 const packageCourses: Record<string, string[]> = {
   starter: [
     'premiere-pro',
-    'canva-design',
   ],
   professional: [
     'premiere-pro',
-    'canva-design',
-    'after-effects',
-    'youtube-growth',
-    'excel',
+    'mythpat',
+    'think-school',
+    'magnates-media',
+    'ashutosh',
+    'vox',
+    'nitesh',
+    'techno-gamer',
+    'johnny-harris',
+    'iman',
+    'fern',
+    'ali',
+    'alex-hormozi',
   ],
   enterprise: [
     'premiere-pro',
-    'canva-design',
-    'after-effects',
-    'youtube-growth',
-    'excel',
+    'mythpat',
+    'think-school',
+    'magnates-media',
+    'ashutosh',
+    'vox',
+    'nitesh',
+    'techno-gamer',
+    'johnny-harris',
+    'iman',
+    'fern',
+    'ali',
+    'alex-hormozi',
   ],
 };
 
-export default packageCourses; 
+export default packageCourses;
