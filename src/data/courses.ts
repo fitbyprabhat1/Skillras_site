@@ -36,7 +36,7 @@ const courses: Record<string, CourseData> = {
     id: 'premiere-pro',
     name: 'Premiere Pro Mastery',
     description: 'Master Adobe Premiere Pro with step-by-step guidance and real-world projects.',
-    thumbnail: 'https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp', // update this URL as needed
+    thumbnail: 'https://i.imghippo.com/files/JcGw2401TWg.png', // update this URL as needed
     author: 'John Doe',
     modules: [
       {
