@@ -34,10 +34,10 @@ export interface CourseData {
 const courses: Record<string, CourseData> = {
   'premiere-pro': {
     id: 'premiere-pro',
-    name: 'Premiere Pro Mastery',
+    name: 'Dhruv Rathee Youtube MasterClass',
     description: 'Master Adobe Premiere Pro with step-by-step guidance and real-world projects.',
     thumbnail: 'https://i.imghippo.com/files/JcGw2401TWg.png', // update this URL as needed
-    author: 'John Doe',
+    author: 'Prabhat Mahto',
     modules: [
       {
         id: 'welcome',
