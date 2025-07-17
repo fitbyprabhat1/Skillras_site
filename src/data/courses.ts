@@ -29,6 +29,7 @@ export interface CourseData {
   thumbnail: string; // image url or local asset
   author: string; // new property for author name
   modules: CourseModule[];
+  category: string;
 }
 
 const courses: Record<string, CourseData> = {
@@ -38,6 +39,7 @@ const courses: Record<string, CourseData> = {
     description: 'Master Adobe Premiere Pro with step-by-step guidance and real-world projects.',
     thumbnail: 'https://i.imghippo.com/files/JcGw2401TWg.png', // update this URL as needed
     author: 'Prabhat Mahto',
+    category: 'Video Editing',
     modules: [
       {
         id: 'welcome',
@@ -78,6 +80,7 @@ const courses: Record<string, CourseData> = {
     description: 'Create stunning graphics and social media posts with Canva.',
     thumbnail: 'https://www.imghippo.com/i/JcGw2401TWg.png',
     author: 'Jane Smith',
+    category: 'Design',
     modules: [
       {
         id: 'intro',
@@ -125,6 +128,7 @@ const courses: Record<string, CourseData> = {
     description: 'Create stunning motion graphics and visual effects.',
     thumbnail: 'https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp',
     author: 'Alex Lee',
+    category: 'Video Editing',
     modules: [
       {
         id: 'ae-intro',
@@ -162,6 +166,7 @@ const courses: Record<string, CourseData> = {
     description: 'Grow your YouTube channel with proven strategies.',
     thumbnail: 'https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp',
     author: 'Priya Patel',
+    category: 'Productivity',
     modules: [
       {
         id: 'yt-intro',
@@ -199,6 +204,7 @@ const courses: Record<string, CourseData> = {
     description: 'Master Microsoft Excel for data analysis and business intelligence.',
     thumbnail: 'https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp',
     author: 'Michael Chen',
+    category: 'Productivity',
     modules: [
       {
         id: 'excel-intro',
