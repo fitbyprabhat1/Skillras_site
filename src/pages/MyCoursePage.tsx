@@ -174,6 +174,16 @@ const MyCoursePage: React.FC = () => {
                 {availableCourses.filter(course => isAnyChapterCompleted(course)).map(course => {
                   const pkg = getCoursePackage(course.id);
                   const completed = isCourseCompleted(course);
+                  const allChapters = course.modules.flatMap((m: any) => m.chapters);
+                  const progressKey = `course_progress_${course.id}`;
+                  let completedChapters: string[] = [];
+                  try {
+                    const stored = localStorage.getItem(progressKey);
+                    completedChapters = stored ? JSON.parse(stored) : [];
+                  } catch {
+                    completedChapters = [];
+                  }
+                  const percentComplete = allChapters.length > 0 ? Math.round((completedChapters.length / allChapters.length) * 100) : 0;
                   return (
                     <Link
                       to={`/course/${course.id}`}
@@ -182,6 +192,10 @@ const MyCoursePage: React.FC = () => {
                     >
                       <div className="w-full aspect-[16/9] bg-gray-200 overflow-hidden rounded-xl relative">
                         <img src={course.thumbnail} alt={course.name} className={`w-full h-full object-cover${completed ? ' grayscale' : ''}`} />
+                        {/* Progress badge */}
+                        <span className="absolute bottom-3 left-3 bg-primary/90 text-white text-xs font-bold rounded-full px-3 py-1 shadow-lg z-10">
+                          {percentComplete}%
+                        </span>
                         <span className={`absolute top-3 right-3 text-white text-xs font-bold rounded-full px-3 py-1 shadow-lg z-10 ${pkg.color}`}>
                           {pkg.label}
                         </span>
