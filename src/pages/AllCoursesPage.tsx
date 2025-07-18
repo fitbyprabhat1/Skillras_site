@@ -6,6 +6,14 @@ import { useInView } from '../hooks/useInView';
 import courses from '../data/courses';
 import packageCourses from '../data/packageCourses';
 
+// Helper to get the lowest package for a course and its color
+const getCoursePackage = (courseId: string): { label: string; color: string } => {
+  if (packageCourses['starter'].includes(courseId)) return { label: 'Starter', color: 'bg-red-600' };
+  if (packageCourses['professional'].includes(courseId)) return { label: 'Professional', color: 'bg-green-600' };
+  if (packageCourses['enterprise'].includes(courseId)) return { label: 'Enterprise', color: 'bg-blue-600' };
+  return { label: '', color: '' };
+};
+
 const packageOptions = [
   { label: 'All', value: 'all' },
   { label: 'Starter', value: 'starter' },
@@ -86,22 +94,30 @@ const AllCoursesPage: React.FC = () => {
           ref={ref as React.LegacyRef<HTMLDivElement>}
           className="container mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {courseList.map((course, idx) => (
-            <Link
-              to={`/course/${course.id}`}
-              key={course.id}
-              className={`rounded-xl overflow-hidden group transition-transform duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer bg-dark ${inView ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}
-              style={{ transitionDelay: `${idx * 100}ms` }}
-            >
-              <div className="w-full aspect-[16/9] bg-gray-200 overflow-hidden relative">
-                <img src={course.thumbnail} alt={course.name} className="w-full h-full object-cover" />
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-bold text-white text-left mb-1">{course.name}</h3>
-                <p className="text-sm text-gray-400 text-left">By {course.author}</p>
-              </div>
-            </Link>
-          ))}
+          {courseList.map((course, idx) => {
+            const pkg = getCoursePackage(course.id);
+            return (
+              <Link
+                to={`/broucher/${course.id}`}
+                key={course.id}
+                className="rounded-xl overflow-hidden group transition-transform duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer bg-dark"
+              >
+                <div className="w-full aspect-[16/9] bg-gray-200 overflow-hidden relative">
+                  <img src={course.thumbnail} alt={course.name} className="w-full h-full object-cover" />
+                  {/* Package badge */}
+                  {pkg.label && (
+                    <span className={`absolute top-3 right-3 text-white text-xs font-bold rounded-full px-3 py-1 shadow-lg z-10 ${pkg.color}`}>
+                      {pkg.label}
+                    </span>
+                  )}
+                </div>
+                <div className="p-4">
+                  <h3 className="text-lg font-bold text-white text-left mb-1">{course.name}</h3>
+                  <p className="text-sm text-gray-400 text-left">By {course.author}</p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
     </div>
