@@ -37,8 +37,29 @@ const isCourseCompleted = (course: any): boolean => {
   return allChapters.length > 0 && allChapters.every((ch: any) => completedChapters.includes(ch.id));
 };
 
+// Helper to check if any chapter is completed for a course
+const isAnyChapterCompleted = (course: any): boolean => {
+  const progressKey = `course_progress_${course.id}`;
+  const completedChapters = (() => {
+    try {
+      const stored = localStorage.getItem(progressKey);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  })();
+  return completedChapters.length > 0;
+};
+
+// Tab labels
+const TABS = [
+  { key: 'notStarted', label: 'Not Started' },
+  { key: 'started', label: 'Enrolled & Started' },
+];
+
 const MyCoursePage: React.FC = () => {
   const { userPackage } = useUserPackage();
+  const [activeTab, setActiveTab] = useState<'notStarted' | 'started'>('notStarted');
 
   if (!userPackage) {
     return (
@@ -69,10 +90,9 @@ const MyCoursePage: React.FC = () => {
 
   // In the course card, update the image rendering:
   // Use the provided image URL for all course thumbnails for now.
-  const demoImage = "https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp";
 
   return (
-    <div className="min-h-screen bg-dark flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#0a0a0a] via-[#18181b] to-red-500/30 bg-no-repeat bg-left-bottom">
       <NavBarWithPackages />
       <div className="container mx-auto px-2 sm:px-4 py-8 flex-1 mt-16 sm:mt-20">
         {/* Header */}
@@ -93,40 +113,97 @@ const MyCoursePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Course Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 mx-2 sm:mx-0">
-          {availableCourses.map(course => {
-            const pkg = getCoursePackage(course.id);
-            const completed = isCourseCompleted(course);
-            return (
-              <div key={course.id}>
-                <Link
-                  to={`/course/${course.id}`}
-                  className="block rounded-xl overflow-hidden group transition-transform duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
-                >
-                  {/* 16:9 aspect ratio image */}
-                  <div className="w-full aspect-[16/9] bg-gray-200 overflow-hidden relative">
-                    <img src={course.thumbnail} alt={course.name} className={`w-full h-full object-cover${completed ? ' grayscale' : ''}`} />
-                    {/* Package badge */}
-                    <span className={`absolute top-3 right-3 text-white text-xs font-bold rounded-full px-3 py-1 shadow-lg z-10 ${pkg.color}`}>
-                      {pkg.label}
-                    </span>
-                    {/* Completed overlay */}
-                    {completed && (
-                      <div className="absolute inset-0 flex items-center justify-center z-20">
-                        <span className="bg-black/70 text-white text-base font-bold px-4 py-2 rounded-lg">Completed</span>
+        {/* Tabbed Course View */}
+        <div className="mb-12 mx-2 sm:mx-0">
+          <div className="flex justify-center mb-6 gap-4">
+            {TABS.map(tab => (
+              <button
+                key={tab.key}
+                className={`px-6 py-2 rounded-full font-semibold transition-all border-2 focus:outline-none ${
+                  activeTab === tab.key
+                    ? 'bg-primary text-white border-primary shadow-lg'
+                    : 'bg-dark-light text-gray-300 border-gray-600 hover:bg-primary/10'
+                }`}
+                onClick={() => setActiveTab(tab.key as 'notStarted' | 'started')}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          {activeTab === 'notStarted' && (
+            <div>
+              <h2 className="text-xl font-bold text-white mb-4 text-center">Not Started / Not Completed Any Chapter</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {availableCourses.filter(course => !isAnyChapterCompleted(course)).map(course => {
+                  const pkg = getCoursePackage(course.id);
+                  const completed = isCourseCompleted(course);
+                  return (
+                    <Link
+                      to={`/broucher/${course.id}`}
+                      key={course.id}
+                      className="group transition-transform duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
+                    >
+                      <div className="w-full aspect-[16/9] bg-gray-200 overflow-hidden rounded-xl relative">
+                        <img src={course.thumbnail} alt={course.name} className={`w-full h-full object-cover${completed ? ' grayscale' : ''}`} />
+                        <span className={`absolute top-3 right-3 text-white text-xs font-bold rounded-full px-3 py-1 shadow-lg z-10 ${pkg.color}`}>
+                          {pkg.label}
+                        </span>
+                        {completed && (
+                          <div className="absolute inset-0 flex items-center justify-center z-20">
+                            <span className="bg-black/70 text-white text-base font-bold px-4 py-2 rounded-lg">Completed</span>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </Link>
-                {/* Title and author below image, left-aligned */}
-                <div className="mt-3">
-                  <h3 className="text-lg font-bold text-white text-left mb-1">{course.name}</h3>
-                  <p className="text-sm text-gray-400 text-left">By {course.author}</p>
-                </div>
+                      <div className="p-4">
+                        <h3 className="text-lg font-bold text-white text-left mb-1">{course.name}</h3>
+                        <p className="text-sm text-gray-400 text-left">By {course.author}</p>
+                      </div>
+                    </Link>
+                  );
+                })}
+                {availableCourses.filter(course => !isAnyChapterCompleted(course)).length === 0 && (
+                  <div className="text-gray-400 text-center">No courses in this category.</div>
+                )}
               </div>
-            );
-          })}
+            </div>
+          )}
+          {activeTab === 'started' && (
+            <div>
+              <h2 className="text-xl font-bold text-white mb-4 text-center">Enrolled & Started Courses</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {availableCourses.filter(course => isAnyChapterCompleted(course)).map(course => {
+                  const pkg = getCoursePackage(course.id);
+                  const completed = isCourseCompleted(course);
+                  return (
+                    <Link
+                      to={`/course/${course.id}`}
+                      key={course.id}
+                      className="group transition-transform duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
+                    >
+                      <div className="w-full aspect-[16/9] bg-gray-200 overflow-hidden rounded-xl relative">
+                        <img src={course.thumbnail} alt={course.name} className={`w-full h-full object-cover${completed ? ' grayscale' : ''}`} />
+                        <span className={`absolute top-3 right-3 text-white text-xs font-bold rounded-full px-3 py-1 shadow-lg z-10 ${pkg.color}`}>
+                          {pkg.label}
+                        </span>
+                        {completed && (
+                          <div className="absolute inset-0 flex items-center justify-center z-20">
+                            <span className="bg-black/70 text-white text-base font-bold px-4 py-2 rounded-lg">Completed</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-4">
+                        <h3 className="text-lg font-bold text-white text-left mb-1">{course.name}</h3>
+                        <p className="text-sm text-gray-400 text-left">By {course.author}</p>
+                      </div>
+                    </Link>
+                  );
+                })}
+                {availableCourses.filter(course => isAnyChapterCompleted(course)).length === 0 && (
+                  <div className="text-gray-400 text-center">No courses in this category.</div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Package Benefits */}
