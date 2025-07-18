@@ -307,8 +307,8 @@ const CoursePage: React.FC = () => {
       {/* Mobile Sidebar */}
       {sidebarOpen && (
         <div
-          className="fixed top-0 left-0 h-full w-80 max-w-[80vw] bg-dark-light z-50 transform transition-transform duration-300 ease-in-out lg:hidden"
-          style={{ boxShadow: '2px 0 16px 0 rgba(0,0,0,0.25)' }}
+          className="fixed top-0 left-0 h-full w-80 max-w-[80vw] bg-dark/60 backdrop-blur border-r border-white/10 z-50 transform transition-transform duration-300 ease-in-out lg:hidden"
+          style={{ boxShadow: '2px 0 16px 0 rgba(0,0,0,0.25)', WebkitBackdropFilter: 'blur(12px)', backdropFilter: 'blur(12px)' }}
         >
           <div className="flex flex-col h-full">
             {/* Header */}
