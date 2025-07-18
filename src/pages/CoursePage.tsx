@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import YouTubeEmbed from '../components/YouTubeEmbed';
 import { FileText, CheckCircle, Lock, Play, Download, Menu, X } from 'lucide-react';
@@ -91,19 +91,24 @@ const CoursePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-dark">
+    <div className="min-h-screen bg-gradient-to-br from-dark via-dark to-red-500/30 bg-no-repeat bg-right-bottom">
       <NavBarWithPackages />
       {/* Mobile: Course Content Button */}
       <div className="lg:hidden flex justify-between items-center mb-4 px-4 mt-16">
-        <Button 
-          onClick={() => setSidebarOpen(true)} 
-          variant="outline" 
-          size="sm" 
-          className="flex items-center gap-2"
-        >
-          <Menu size={20} />
-          <span>Course Content</span>
-        </Button>
+        <div className="flex gap-2 w-full">
+          <Button 
+            onClick={() => setSidebarOpen(true)} 
+            variant="outline" 
+            size="sm" 
+            className="flex items-center gap-2 flex-1"
+          >
+            <Menu size={20} />
+            <span>Course Content</span>
+          </Button>
+          <Link to={`/broucher/${courseId}`} className="flex-1">
+            <Button size="sm" variant="outline" className="w-full whitespace-nowrap">About this Course</Button>
+          </Link>
+        </div>
       </div>
       <div className="container mx-auto px-2 sm:px-4 py-8 pt-0 sm:pt-24">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -205,7 +210,12 @@ const CoursePage: React.FC = () => {
           {/* Course Navigation Sidebar - Desktop */}
           <div className="hidden lg:block lg:col-span-1">
             <div className="bg-dark-light rounded-xl p-6 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
-              <h3 className="text-white font-bold text-lg mb-4">Course Content</h3>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-white font-bold text-lg">Course Content</h3>
+                <Link to={`/broucher/${courseId}`}> 
+                  <Button size="sm" variant="outline" className="ml-2 whitespace-nowrap">About this Course</Button>
+                </Link>
+              </div>
               <div className="space-y-4">
                 {course.modules.map((module) => (
                   <div key={module.id} className="border border-gray-700 rounded-lg overflow-hidden">
@@ -274,7 +284,6 @@ const CoursePage: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
@@ -282,93 +291,94 @@ const CoursePage: React.FC = () => {
         />
       )}
       {/* Mobile Sidebar */}
-      <div
-        className={`fixed top-0 left-0 h-full w-80 max-w-[80vw] bg-dark-light z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-700">
-            <h3 className="text-white font-bold text-lg">Course Content</h3>
-            <Button 
-              onClick={() => setSidebarOpen(false)} 
-              variant="outline" 
-              size="sm"
-              className="p-2"
-            >
-              <X size={20} />
-            </Button>
-          </div>
-          {/* Content */}
-          <div className="flex-1 overflow-y-auto p-4">
-            <div className="space-y-4">
-              {course.modules.map((module) => (
-                <div key={module.id} className="border border-gray-700 rounded-lg overflow-hidden">
-                  <button
-                    onClick={() => handleToggleModule(module.id)}
-                    className="w-full p-4 text-left bg-dark-lighter hover:bg-dark-lightest transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="text-white font-medium">{module.title}</h4>
-                        <p className="text-gray-400 text-sm">{module.description}</p>
+      {sidebarOpen && (
+        <div
+          className="fixed top-0 left-0 h-full w-80 max-w-[80vw] bg-dark-light z-50 transform transition-transform duration-300 ease-in-out lg:hidden"
+          style={{ boxShadow: '2px 0 16px 0 rgba(0,0,0,0.25)' }}
+        >
+          <div className="flex flex-col h-full">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-700">
+              <h3 className="text-white font-bold text-lg">Course Content</h3>
+              <Button 
+                onClick={() => setSidebarOpen(false)} 
+                variant="outline" 
+                size="sm"
+                className="p-2"
+              >
+                <X size={20} />
+              </Button>
+            </div>
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto p-4">
+              <div className="space-y-4">
+                {course.modules.map((module) => (
+                  <div key={module.id} className="border border-gray-700 rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => handleToggleModule(module.id)}
+                      className="w-full p-4 text-left bg-dark-lighter hover:bg-dark-lightest transition-colors"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h4 className="text-white font-medium">{module.title}</h4>
+                          <p className="text-gray-400 text-sm">{module.description}</p>
+                        </div>
+                        <div className="text-gray-400 text-xl">
+                          {expandedModule === module.id ? '−' : '+'}
+                        </div>
                       </div>
-                      <div className="text-gray-400 text-xl">
-                        {expandedModule === module.id ? '−' : '+'}
+                    </button>
+                    {expandedModule === module.id && (
+                      <div className="p-4 bg-dark-light space-y-2">
+                        {module.chapters.map((chapter) => {
+                          const isCompleted = completedChapters.includes(chapter.id);
+                          return (
+                            <div
+                              key={chapter.id}
+                              onClick={() => handleChapterSelect(chapter)}
+                              className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
+                                isCompleted
+                                  ? 'bg-green-900/40 border border-green-500/30'
+                                  : selectedChapter && selectedChapter.id === chapter.id
+                                  ? 'bg-primary/20 border border-primary/30'
+                                  : 'hover:bg-dark-lighter'
+                              }`}
+                            >
+                              <div className="flex-shrink-0">
+                                {isCompleted ? (
+                                  <CheckCircle size={16} className="text-green-500" />
+                                ) : (
+                                  <Play size={16} className="text-primary" />
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-white font-medium text-sm leading-tight">
+                                  {chapter.title}
+                                </h4>
+                                <p className="text-xs text-gray-400 mt-1">
+                                  {chapter.duration}
+                                </p>
+                                {chapter.downloadableResources && chapter.downloadableResources.length > 0 && (
+                                  <div className="flex items-center mt-2">
+                                    <FileText size={14} className="text-primary mr-1" />
+                                    <span className="text-xs text-primary">
+                                      {chapter.downloadableResources.length} Resources
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
-                    </div>
-                  </button>
-                  {expandedModule === module.id && (
-                    <div className="p-4 bg-dark-light space-y-2">
-                      {module.chapters.map((chapter) => {
-                        const isCompleted = completedChapters.includes(chapter.id);
-                        return (
-                          <div
-                            key={chapter.id}
-                            onClick={() => handleChapterSelect(chapter)}
-                            className={`flex items-center space-x-3 p-3 rounded-lg cursor-pointer transition-colors ${
-                              isCompleted
-                                ? 'bg-green-900/40 border border-green-500/30'
-                                : selectedChapter && selectedChapter.id === chapter.id
-                                ? 'bg-primary/20 border border-primary/30'
-                                : 'hover:bg-dark-lighter'
-                            }`}
-                          >
-                            <div className="flex-shrink-0">
-                              {isCompleted ? (
-                                <CheckCircle size={16} className="text-green-500" />
-                              ) : (
-                                <Play size={16} className="text-primary" />
-                              )}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h4 className="text-white font-medium text-sm leading-tight">
-                                {chapter.title}
-                              </h4>
-                              <p className="text-xs text-gray-400 mt-1">
-                                {chapter.duration}
-                              </p>
-                              {chapter.downloadableResources && chapter.downloadableResources.length > 0 && (
-                                <div className="flex items-center mt-2">
-                                  <FileText size={14} className="text-primary mr-1" />
-                                  <span className="text-xs text-primary">
-                                    {chapter.downloadableResources.length} Resources
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              ))}
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
