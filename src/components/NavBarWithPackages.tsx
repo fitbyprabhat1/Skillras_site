@@ -175,9 +175,13 @@ const NavBarWithPackages: React.FC = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-dark shadow-lg' : 'bg-transparent'
-      }`}
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 
+        ${isScrolled ? 'bg-dark/60 backdrop-blur border-b border-white/10 shadow-lg' : 'bg-transparent backdrop-blur'}
+      `}
+      style={{
+        WebkitBackdropFilter: 'blur(12px)',
+        backdropFilter: 'blur(12px)',
+      }}
     >
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
@@ -188,6 +192,9 @@ const NavBarWithPackages: React.FC = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
+            <Link to="/courses" className="text-white hover:text-primary-light transition-colors">
+              Courses
+            </Link>
             {!user && (
               <Link to="/" className="text-white hover:text-primary-light transition-colors">
                 Home
@@ -391,6 +398,13 @@ const NavBarWithPackages: React.FC = () => {
         {mobileMenuOpen && (
           <div className="md:hidden bg-dark-light mt-4 rounded-lg py-4 px-2 animate-fadeIn">
             <div className="flex flex-col space-y-4">
+              <Link 
+                to="/courses" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-white hover:text-primary-light transition-colors py-2"
+              >
+                Courses
+              </Link>
               {!user && (
                 <Link 
                   to="/" 
