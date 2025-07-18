@@ -16,6 +16,7 @@ import TermsAndConditionsPage from './pages/TermsAndConditionsPage';
 import DashboardPage from './pages/DashboardPage';
 import EarningsPage from './pages/EarningsPage';
 import MyCoursePage from './pages/MyCoursePage';
+import Broucherpage from './pages/Broucherpage';
 import { useEffect } from 'react';
 
 function App() {
@@ -94,6 +95,7 @@ function App() {
               </PackageProtectedRoute>
             } 
           />
+          <Route path="/broucher/:courseId" element={<Broucherpage />} />
           <Route path="/download" element={<DownloadPage />} />
           <Route path="/courses" element={<AllCoursesPage />} />
           <Route path="/packages" element={<PackagesPage />} />
