@@ -25,6 +25,10 @@ const CoursePage: React.FC = () => {
   const allChapters: CourseChapter[] = course
     ? course.modules.flatMap((m: CourseModule) => m.chapters)
     : [];
+  // Calculate completion percentage
+  const completedCount = completedChapters.length;
+  const totalCount = allChapters.length;
+  const percentComplete = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
   const [selectedChapter, setSelectedChapter] = useState<CourseChapter | null>(
     allChapters[0] || null
   );
@@ -111,6 +115,16 @@ const CoursePage: React.FC = () => {
         </div>
       </div>
       <div className="container mx-auto px-2 sm:px-4 py-8 pt-0 sm:pt-24">
+        {/* Progress Bar / Percentage */}
+        <div className="mb-6 flex items-center gap-4">
+          <div className="flex-1 h-3 bg-gray-700 rounded-full overflow-hidden">
+            <div
+              className="h-3 bg-primary rounded-full transition-all duration-500"
+              style={{ width: `${percentComplete}%` }}
+            />
+          </div>
+          <span className="text-white font-semibold text-sm min-w-[60px] text-right">{percentComplete}% Complete</span>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Video Player and Content Section */}
           <div className="lg:col-span-2">
