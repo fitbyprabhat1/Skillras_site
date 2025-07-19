@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import Button from '../components/Button';
 import { supabase } from '../lib/supabase';
+import { useSEO } from '../hooks/useSEO';
 import { 
   Mail, 
   Lock, 
@@ -18,6 +19,13 @@ import {
 } from 'lucide-react';
 
 const LoginPage: React.FC = () => {
+  useSEO({
+    title: 'Login - Access Your Courses | SkillRas',
+    description: 'Sign in to your SkillRas account to access your courses, track your progress, and continue learning.',
+    keywords: 'login, sign in, skillras login, course access, student portal',
+    noIndex: true // Login pages should not be indexed
+  });
+
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
