@@ -95,7 +95,7 @@ function App() {
               </PackageProtectedRoute>
             } 
           />
-          <Route path="/broucher/:courseId" element={<Broucherpage />} />
+          <Route path="/course-info/:courseId" element={<Broucherpage />} />
           <Route path="/download" element={<DownloadPage />} />
           <Route path="/courses" element={<AllCoursesPage />} />
           <Route path="/packages" element={<PackagesPage />} />
