@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useUserPackage } from '../hooks/useUserPackage';
 import { checkCourseAccess, getRequiredPackageForCourse } from '../utils/courseAccess';
-// import { useSEO } from '../hooks/useSEO';
+import { useSEO } from '../hooks/useSEO';
 import courses from '../data/courses';
 
 const Broucherpage: React.FC = () => {
@@ -16,14 +16,14 @@ const Broucherpage: React.FC = () => {
   const { user } = useAuth();
   const { userPackage, loading: userPackageLoading } = useUserPackage();
   
-  // SEO for course brochure page - temporarily disabled
-  // useSEO({
-  //   title: course ? `${course.name} - Course Details & Curriculum | SkillRas` : 'Course Details | SkillRas',
-  //   description: course ? (course.description || `Learn ${course.name} with our comprehensive online course. Master the skills you need to succeed in your career.`) : 'Course details and curriculum information.',
-  //   keywords: course ? `${course.name.toLowerCase()}, course details, curriculum, ${course.author}, online course, skill development, ${course.category?.toLowerCase()}, ${course.author.toLowerCase()}` : 'course details, curriculum, online course, skill development',
-  //   canonical: `https://skillras.com/broucher/${courseId}`,
-  //   ogImage: course?.thumbnail
-  // });
+  // SEO for course brochure page
+  useSEO({
+    title: course ? `${course.name} - Course Details & Curriculum | SkillRas` : 'Course Details | SkillRas',
+    description: course ? (course.description || `Learn ${course.name} with our comprehensive online course. Master the skills you need to succeed in your career.`) : 'Course details and curriculum information.',
+    keywords: course ? `${course.name.toLowerCase()}, course details, curriculum, ${course.author}, online course, skill development, ${course.category?.toLowerCase()}, ${course.author.toLowerCase()}` : 'course details, curriculum, online course, skill development',
+    canonical: `https://skillras.com/course-info/${courseId}`,
+    ogImage: course?.thumbnail
+  });
 
   const handleAccordion = (idx: number) => {
     setOpenIndex(openIndex === idx ? null : idx);
