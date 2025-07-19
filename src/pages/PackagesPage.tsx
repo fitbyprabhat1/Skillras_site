@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import Button from '../components/Button';
+import { useSEO } from '../hooks/useSEO';
 import { 
   Package, 
   Star, 
@@ -151,6 +152,13 @@ const packages: PackageData[] = [
 ];
 
 const PackagesPage: React.FC = () => {
+  useSEO({
+    title: 'Course Packages - Choose Your Learning Path | SkillRas',
+    description: 'Save big with our comprehensive course packages. Get multiple courses at a fraction of the individual price and accelerate your career transformation.',
+    keywords: 'course packages, learning path, skillras packages, online course bundles, career transformation',
+    canonical: 'https://skillras.com/packages'
+  });
+
   const [, setSelectedPackage] = useState<string | null>(null);
   const [showComparison, setShowComparison] = useState(false);
   const { ref, inView } = useInView({ threshold: 0.1 });
