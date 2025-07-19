@@ -10,8 +10,15 @@ import FAQSection from '../sections/FAQSection';
 import FooterSection from '../sections/FooterSection';
 import FloatingCTA from '../components/FloatingCTA';
 import ScrollToTop from '../components/ScrollToTop';
+import { useSEO } from '../hooks/useSEO';
 
 const LandingPage: React.FC = () => {
+  useSEO({
+    title: 'Learn Adobe Premiere Pro - Complete Video Editing Course | SkillRas',
+    description: 'Master Adobe Premiere Pro with our comprehensive video editing course. Learn professional video editing techniques, color grading, and post-production workflows.',
+    keywords: 'adobe premiere pro, video editing, video editing course, premiere pro tutorial, video editing software, post production',
+    canonical: 'https://skillras.com/premiere-pro'
+  });
 
   return (
     <div className="min-h-screen bg-dark text-white">
