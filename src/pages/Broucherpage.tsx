@@ -1,27 +1,87 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import Button from '../components/Button';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useUserPackage } from '../hooks/useUserPackage';
-import packageCourses from '../data/packageCourses';
+import { checkCourseAccess, getRequiredPackageForCourse } from '../utils/courseAccess';
+// import { useSEO } from '../hooks/useSEO';
 import courses from '../data/courses';
 
-const MyCoursePage: React.FC = () => {
+const Broucherpage: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const navigate = useNavigate();
   const { courseId } = useParams<{ courseId: string }>();
   const course = courseId ? courses[courseId] : undefined;
   const { user } = useAuth();
-  const { userPackage } = useUserPackage();
-  let hasAccess = false;
-  if (user && userPackage && userPackage.package_selected) {
-    const allowedIds = new Set(packageCourses[userPackage.package_selected]);
-    hasAccess = allowedIds.has(courseId || '');
-  }
+  const { userPackage, loading: userPackageLoading } = useUserPackage();
+  
+  // SEO for course brochure page - temporarily disabled
+  // useSEO({
+  //   title: course ? `${course.name} - Course Details & Curriculum | SkillRas` : 'Course Details | SkillRas',
+  //   description: course ? (course.description || `Learn ${course.name} with our comprehensive online course. Master the skills you need to succeed in your career.`) : 'Course details and curriculum information.',
+  //   keywords: course ? `${course.name.toLowerCase()}, course details, curriculum, ${course.author}, online course, skill development, ${course.category?.toLowerCase()}, ${course.author.toLowerCase()}` : 'course details, curriculum, online course, skill development',
+  //   canonical: `https://skillras.com/broucher/${courseId}`,
+  //   ogImage: course?.thumbnail
+  // });
 
   const handleAccordion = (idx: number) => {
     setOpenIndex(openIndex === idx ? null : idx);
+  };
+
+  // Check if user has access to this course
+  const hasAccessToCourse = (): boolean => {
+    if (!user || !userPackage || !courseId) return false;
+    
+    const accessInfo = checkCourseAccess(courseId, userPackage);
+    console.log('Access check:', {
+      user: !!user,
+      userPackage: userPackage?.package_selected,
+      courseId,
+      accessInfo,
+      hasAccess: accessInfo.hasAccess
+    });
+    return accessInfo.hasAccess;
+  };
+
+  // Mark first chapter as complete
+  const markFirstChapterComplete = () => {
+    if (!course || !courseId) return;
+    
+    const firstChapter = course.modules[0]?.chapters[0];
+    if (firstChapter) {
+      const progressKey = `course_progress_${courseId}`;
+      const existingProgress = localStorage.getItem(progressKey);
+      const completedChapters = existingProgress ? JSON.parse(existingProgress) : [];
+      
+      if (!completedChapters.includes(firstChapter.id)) {
+        completedChapters.push(firstChapter.id);
+        localStorage.setItem(progressKey, JSON.stringify(completedChapters));
+        console.log('First chapter marked as complete:', firstChapter.id);
+      }
+    }
+  };
+
+  const handleEnrollClick = () => {
+    console.log('Enroll button clicked:', {
+      user: !!user,
+      courseId,
+      hasAccess: hasAccessToCourse()
+    });
+    
+    if (!user) {
+      console.log('No user, navigating to login');
+      navigate('/login');
+    } else if (hasAccessToCourse()) {
+      // User has access, redirect to course player
+      console.log('User has access, navigating to course player');
+      markFirstChapterComplete();
+      navigate(`/course/${courseId}`);
+    } else {
+      // User doesn't have access, redirect to enrollment
+      console.log('User no access, navigating to enrollment');
+      navigate(`/enroll?course=${courseId}`);
+    }
   };
 
   if (!course) {
@@ -29,9 +89,26 @@ const MyCoursePage: React.FC = () => {
       <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center text-white">
         <NavBarWithPackages />
         <h2 className="text-2xl font-bold">Course not found</h2>
+        <p className="text-gray-400 mt-2">Course ID: {courseId}</p>
       </div>
     );
   }
+
+  // Show loading state while checking user package
+  if (userPackageLoading) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center text-white">
+        <NavBarWithPackages />
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Checking your access...</p>
+        </div>
+      </div>
+    );
+  }
+
+  const hasAccess = hasAccessToCourse();
+  const isLoggedIn = !!user;
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col mt-10">
@@ -46,20 +123,40 @@ const MyCoursePage: React.FC = () => {
         {/* Course Title and Enroll Button */}
         <div className="w-full max-w-5xl flex flex-col items-center mt-4 mb-6">
           <h2 className="text-3xl font-bold text-white mb-3 text-center">{course.name}</h2>
+          
+          {/* Access Status Badge */}
+          {isLoggedIn && (
+            <div className="mb-4">
+              {hasAccess ? (
+                <span className="bg-green-500/20 border border-green-500 text-green-400 px-4 py-2 rounded-full text-sm font-medium">
+                  ✓ You have access to this course
+                </span>
+              ) : (
+                <div className="flex flex-col items-center gap-2">
+                  <span className="bg-yellow-500/20 border border-yellow-500 text-yellow-400 px-4 py-2 rounded-full text-sm font-medium">
+                    ⚠ Upgrade your package to access this course
+                  </span>
+                  {userPackage && (
+                    <span className="text-gray-400 text-xs">
+                      Your current package: {userPackage.package_selected}
+                      {getRequiredPackageForCourse(courseId || '') && (
+                        <span className="ml-2">
+                          • Required: {getRequiredPackageForCourse(courseId || '')}
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+          
           <Button
             variant="primary"
             className="px-8 py-2 text-lg font-semibold rounded-full shadow-md"
-            onClick={() => {
-              if (!user) {
-                navigate('/login');
-              } else if (hasAccess) {
-                navigate(`/course/${courseId || ''}`);
-              } else {
-                navigate(`/enroll?course=${courseId || ''}`);
-              }
-            }}
+            onClick={handleEnrollClick}
           >
-            Enroll in this Course
+            {!isLoggedIn ? 'Login to Access' : hasAccess ? 'Enroll in this Course' : 'Buy Package to get access to this Course'}
           </Button>
         </div>
       </div>
@@ -159,9 +256,23 @@ const MyCoursePage: React.FC = () => {
             <Button
               variant="primary"
               className="px-8 py-3 text-lg font-semibold rounded-full shadow-md"
-              onClick={() => navigate(`/course/${courseId}`)}
+              onClick={() => {
+                console.log('CTA button clicked:', {
+                  hasAccess,
+                  courseId
+                });
+                
+                if (hasAccess) {
+                  console.log('CTA: User has access, navigating to course player');
+                  markFirstChapterComplete();
+                  navigate(`/course/${courseId}`);
+                } else {
+                  console.log('CTA: User no access, navigating to enrollment');
+                  navigate(`/enroll?course=${courseId}`);
+                }
+              }}
             >
-              Go to Course
+              {hasAccess ? 'Continue Learning' : 'Get Started'}
             </Button>
           </div>
           <div className="flex flex-wrap gap-4 justify-center md:justify-end">
@@ -209,4 +320,4 @@ const MyCoursePage: React.FC = () => {
   );
 };
 
-export default MyCoursePage; 
+export default Broucherpage; 
