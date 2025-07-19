@@ -11,6 +11,7 @@
 /trial/    /trial    301
 /download/    /download    301
 /enroll/    /enroll    301
+/course-info/    /course-info    301
 
 # Optional: Handle old URLs or common misspellings
 /premier-pro    /premiere-pro    301
@@ -18,6 +19,7 @@
 /course    /courses    301
 /downloads    /download    301
 /enroll   /enroll    301
+/broucher/:courseId    /course-info/:courseId    301
 
 
 # API redirects (if you add backend later)
