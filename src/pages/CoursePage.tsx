@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import NavBarWithPackages from '../components/NavBarWithPackages';
 import YouTubeEmbed from '../components/YouTubeEmbed';
-import { FileText, CheckCircle, Lock, Play, Download, Menu, X } from 'lucide-react';
+import { FileText, CheckCircle, Lock, Play, Download, Menu, X, BookOpen } from 'lucide-react';
 import courses, { CourseModule, CourseChapter } from '../data/courses';
 import Button from '../components/Button';
+// import { useSEO } from '../hooks/useSEO';
 
 const CoursePage: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -57,6 +58,18 @@ const CoursePage: React.FC = () => {
     }
   }, [courseId]);
 
+  // SEO for course page - temporarily disabled to fix rendering
+  // useEffect(() => {
+  //   if (course) {
+  //     useSEO({
+  //       title: `${course.name} - Online Course | SkillRas`,
+  //       description: course.description || `Learn ${course.name} with our comprehensive online course. Master the skills you need to succeed in your career.`,
+  //       keywords: `${course.name.toLowerCase()}, online course, skill development, ${course.name.toLowerCase()} tutorial, learn ${course.name.toLowerCase()}`,
+  //       canonical: `https://skillras.com/course/${courseId}`
+  //     });
+  //   }
+  // }, [course, courseId]);
+
   if (!course) {
     return (
       <div className="min-h-screen bg-dark flex items-center justify-center">
@@ -95,26 +108,38 @@ const CoursePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-dark via-dark to-red-500/30 bg-no-repeat bg-right-bottom">
+    <div>
+  {/* Animated Background Elements */}
+  <div className="absolute inset-0 overflow-hidden z-0">
+    <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+    <div className="absolute bottom-20 right-10 w-96 h-96 bg-red-600/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-primary/5 to-red-600/5 rounded-full blur-3xl animate-spin" style={{ animationDuration: '20s' }}></div>
+  </div>
+      
       <NavBarWithPackages />
       {/* Mobile: Course Content Button */}
-      <div className="lg:hidden flex justify-between items-center mb-4 px-4 mt-16">
-        <div className="flex gap-2 w-full">
+      <div className="lg:hidden flex justify-between items-center mb-4 px-4 mt-16 relative z-10">
+        <Button 
+          onClick={() => setSidebarOpen(true)} 
+          variant="outline" 
+          size="sm" 
+          className="flex items-center justify-center w-12 h-12 p-0"
+          title="Course Content"
+        >
+          <Menu size={20} />
+        </Button>
+        <Link to={`/broucher/${courseId}`}>
           <Button 
-            onClick={() => setSidebarOpen(true)} 
-            variant="outline" 
             size="sm" 
-            className="flex items-center gap-2 flex-1"
+            variant="outline" 
+            className="w-12 h-12 p-0 flex items-center justify-center"
+            title="About this Course"
           >
-            <Menu size={20} />
-            <span>Course Content</span>
+            <BookOpen size={20} />
           </Button>
-          <Link to={`/broucher/${courseId}`} className="flex-1">
-            <Button size="sm" variant="outline" className="w-full whitespace-nowrap">About this Course</Button>
-          </Link>
-        </div>
+        </Link>
       </div>
-      <div className="container mx-auto px-2 sm:px-4 py-8 pt-0 sm:pt-24">
+      <div className="container mx-auto px-2 sm:px-4 py-8 pt-0 sm:pt-24 relative z-10">
         {/* Progress Bar / Percentage */}
         <div className="mb-6 flex items-center gap-4">
           <div className="flex-1 h-3 bg-gray-700 rounded-full overflow-hidden">
@@ -125,7 +150,7 @@ const CoursePage: React.FC = () => {
           </div>
           <span className="text-white font-semibold text-sm min-w-[60px] text-right">{percentComplete}% Complete</span>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10">
           {/* Video Player and Content Section */}
           <div className="lg:col-span-2">
             {selectedChapter && (
@@ -222,7 +247,7 @@ const CoursePage: React.FC = () => {
             )}
           </div>
           {/* Course Navigation Sidebar - Desktop */}
-          <div className="hidden lg:block lg:col-span-1">
+          <div className="hidden lg:block lg:col-span-1 relative z-10">
             <div className="bg-dark-light rounded-xl p-6 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-white font-bold text-lg">Course Content</h3>
@@ -231,22 +256,40 @@ const CoursePage: React.FC = () => {
                 </Link>
               </div>
               <div className="space-y-4">
-                {course.modules.map((module) => (
-                  <div key={module.id} className="border border-gray-700 rounded-lg overflow-hidden">
-                    <button
-                      onClick={() => handleToggleModule(module.id)}
-                      className="w-full p-4 text-left bg-dark-lighter hover:bg-dark-lightest transition-colors"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="text-white font-medium">{module.title}</h4>
-                          <p className="text-gray-400 text-sm">{module.description}</p>
+                {course.modules.map((module) => {
+                  // Check if all chapters in this module are completed
+                  const moduleChapters = module.chapters;
+                  const completedChaptersInModule = moduleChapters.filter(chapter => 
+                    completedChapters.includes(chapter.id)
+                  );
+                  const isModuleCompleted = completedChaptersInModule.length === moduleChapters.length;
+                  
+                  return (
+                    <div key={module.id} className="border border-gray-700 rounded-lg overflow-hidden">
+                      <button
+                        onClick={() => handleToggleModule(module.id)}
+                        className={`w-full p-4 text-left transition-colors ${
+                          isModuleCompleted 
+                            ? 'bg-green-900/40 hover:bg-green-800/50 border-l-4 border-l-green-500' 
+                            : 'bg-dark-lighter hover:bg-dark-lightest'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="text-white font-medium">{module.title}</h4>
+                            <p className="text-gray-400 text-sm">{module.description}</p>
+                            {isModuleCompleted && (
+                              <div className="flex items-center mt-1">
+                                <CheckCircle size={14} className="text-green-500 mr-1" />
+                                <span className="text-xs text-green-400">Module Complete</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className={`text-xl ${isModuleCompleted ? 'text-green-400' : 'text-gray-400'}`}>
+                            {expandedModule === module.id ? '−' : '+'}
+                          </div>
                         </div>
-                        <div className="text-gray-400 text-xl">
-                          {expandedModule === module.id ? '−' : '+'}
-                        </div>
-                      </div>
-                    </button>
+                      </button>
                     {expandedModule === module.id && (
                       <div className="p-4 bg-dark-light space-y-2">
                         {module.chapters.map((chapter) => {
@@ -292,7 +335,8 @@ const CoursePage: React.FC = () => {
                       </div>
                     )}
                   </div>
-                ))}
+                );
+              })}
               </div>
             </div>
           </div>
@@ -326,22 +370,40 @@ const CoursePage: React.FC = () => {
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-4">
               <div className="space-y-4">
-                {course.modules.map((module) => (
-                  <div key={module.id} className="border border-gray-700 rounded-lg overflow-hidden">
-                    <button
-                      onClick={() => handleToggleModule(module.id)}
-                      className="w-full p-4 text-left bg-dark-lighter hover:bg-dark-lightest transition-colors"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="text-white font-medium">{module.title}</h4>
-                          <p className="text-gray-400 text-sm">{module.description}</p>
+                {course.modules.map((module) => {
+                  // Check if all chapters in this module are completed
+                  const moduleChapters = module.chapters;
+                  const completedChaptersInModule = moduleChapters.filter(chapter => 
+                    completedChapters.includes(chapter.id)
+                  );
+                  const isModuleCompleted = completedChaptersInModule.length === moduleChapters.length;
+                  
+                  return (
+                    <div key={module.id} className="border border-gray-700 rounded-lg overflow-hidden">
+                      <button
+                        onClick={() => handleToggleModule(module.id)}
+                        className={`w-full p-4 text-left transition-colors ${
+                          isModuleCompleted 
+                            ? 'bg-green-900/40 hover:bg-green-800/50 border-l-4 border-l-green-500' 
+                            : 'bg-dark-lighter hover:bg-dark-lightest'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="text-white font-medium">{module.title}</h4>
+                            <p className="text-gray-400 text-sm">{module.description}</p>
+                            {isModuleCompleted && (
+                              <div className="flex items-center mt-1">
+                                <CheckCircle size={14} className="text-green-500 mr-1" />
+                                <span className="text-xs text-green-400">Module Complete</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className={`text-xl ${isModuleCompleted ? 'text-green-400' : 'text-gray-400'}`}>
+                            {expandedModule === module.id ? '−' : '+'}
+                          </div>
                         </div>
-                        <div className="text-gray-400 text-xl">
-                          {expandedModule === module.id ? '−' : '+'}
-                        </div>
-                      </div>
-                    </button>
+                      </button>
                     {expandedModule === module.id && (
                       <div className="p-4 bg-dark-light space-y-2">
                         {module.chapters.map((chapter) => {
@@ -387,7 +449,8 @@ const CoursePage: React.FC = () => {
                       </div>
                     )}
                   </div>
-                ))}
+                );
+              })}
               </div>
             </div>
           </div>
