@@ -16,6 +16,8 @@ import DashboardPage from './pages/DashboardPage';
 import EarningsPage from './pages/EarningsPage';
 import MyCoursePage from './pages/MyCoursePage';
 import Broucherpage from './pages/Broucherpage';
+import BlogListPage from './pages/BlogListPage';
+import BlogPostPage from './pages/BlogPostPage';
 import { useEffect } from 'react';
 
 function App() {
@@ -94,6 +96,9 @@ function App() {
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/enroll" element={<EnrollmentPage />} />
           <Route path="/terms" element={<TermsAndConditionsPage />} />
+          {/* Blog routes */}
+          <Route path="/blog" element={<BlogListPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
         </Routes>
       </Router>
     </AuthProvider>
