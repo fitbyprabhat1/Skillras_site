@@ -1,8 +1,16 @@
 import React from 'react';
 import NavBar from '../components/NavBar';
+import { useSEO } from '../hooks/useSEO';
 import { Shield, FileText, Clock, User, Lock, AlertTriangle, Mail, Phone, MapPin } from 'lucide-react';
 
 const TermsAndConditionsPage: React.FC = () => {
+  useSEO({
+    title: 'Terms and Conditions - Legal Information | SkillRas',
+    description: 'Read our terms and conditions for using SkillRas services. Learn about our policies, refund terms, and user agreements.',
+    keywords: 'terms and conditions, legal information, user agreement, refund policy, skillras terms',
+    canonical: 'https://skillras.com/terms'
+  });
+
   return (
     <div className="min-h-screen bg-dark text-white">
       <NavBar />
