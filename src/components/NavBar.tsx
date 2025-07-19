@@ -116,11 +116,7 @@ const NavBar: React.FC = () => {
               </>
             ) : (
               <>
-                {!user && (
-                  <Link to="/" className="text-white hover:text-primary-light transition-colors">
-                    Home
-                  </Link>
-                )}
+                
                 <Link to="/download" className="text-white hover:text-primary-light transition-colors flex items-center">
                   <Download size={16} className="mr-1" />
                   Downloads
