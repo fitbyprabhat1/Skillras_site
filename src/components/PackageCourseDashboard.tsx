@@ -6,6 +6,7 @@ import Button from './Button';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { useCountUp } from '../hooks/useCountUp';
+import CertificateGenerator from '../components/CertificateGenerator';
 
 interface Course {
   id: string;
@@ -526,6 +527,9 @@ const PackageCourseDashboard: React.FC = () => {
               </Button>
             </div>
           )}
+        </div>
+        <div className="mt-12">
+        <CertificateGenerator />
         </div>
       </div>
     </div>
