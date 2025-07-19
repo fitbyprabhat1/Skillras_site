@@ -195,6 +195,7 @@ const NavBarWithPackages: React.FC = () => {
             <Link to="/courses" className="text-white hover:text-primary-light transition-colors">
               Courses
             </Link>
+            <Link to="/blog" className="px-4 py-2 text-base font-medium hover:text-blue-600">Blog</Link>
             {!user && (
               <Link to="/" className="text-white hover:text-primary-light transition-colors">
                 Home
@@ -404,6 +405,13 @@ const NavBarWithPackages: React.FC = () => {
                 className="text-white hover:text-primary-light transition-colors py-2"
               >
                 Courses
+              </Link>
+              <Link 
+                to="/blog" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-white hover:text-primary-light transition-colors py-2"
+              >
+                Blog
               </Link>
               {!user && (
                 <Link 
