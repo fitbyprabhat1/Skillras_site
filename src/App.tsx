@@ -4,7 +4,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 import PackageProtectedRoute from './components/PackageProtectedRoute';
 import MainLandingPage from './pages/MainLandingPage';
 import LandingPage from './pages/LandingPage';
-import TrialPage from './pages/TrialPage';
 import CoursePage from './pages/CoursePage';
 import DownloadPage from './pages/DownloadPage';
 import AllCoursesPage from './pages/AllCoursesPage';
@@ -55,14 +54,7 @@ function App() {
           <Route path="/" element={<MainLandingPage />} />
           <Route path="/premiere-pro" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route 
-            path="/trial" 
-            element={
-              <ProtectedRoute>
-                <TrialPage />
-              </ProtectedRoute>
-            } 
-          />
+          
           <Route 
             path="/dashboard" 
             element={
