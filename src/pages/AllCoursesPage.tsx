@@ -3,6 +3,7 @@ import NavBarWithPackages from '../components/NavBarWithPackages';
 import Button from '../components/Button';
 import { Link } from 'react-router-dom';
 import { useInView } from '../hooks/useInView';
+import { useSEO } from '../hooks/useSEO';
 import courses from '../data/courses';
 import packageCourses from '../data/packageCourses';
 
@@ -25,6 +26,13 @@ const packageOptions = [
 const allCategories = ['All', ...Array.from(new Set(Object.values(courses).map(c => c.category)))];
 
 const AllCoursesPage: React.FC = () => {
+  useSEO({
+    title: 'All Courses - Learn Digital Skills | SkillRas',
+    description: 'Browse our complete collection of digital skills courses. Learn video editing, design, marketing, and more with expert-led courses.',
+    keywords: 'online courses, digital skills, video editing, design courses, marketing courses, skill development',
+    canonical: 'https://skillras.com/courses'
+  });
+
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedPackage, setSelectedPackage] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
