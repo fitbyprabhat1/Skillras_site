@@ -106,7 +106,7 @@ const AllCoursesPage: React.FC = () => {
             const pkg = getCoursePackage(course.id);
             return (
               <Link
-                to={`/broucher/${course.id}`}
+                to={`/course-info/${course.id}`}
                 key={course.id}
                 className="rounded-xl overflow-hidden group transition-transform duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer bg-dark"
               >
