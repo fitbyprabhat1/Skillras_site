@@ -139,7 +139,7 @@ const MyCoursePage: React.FC = () => {
                   const completed = isCourseCompleted(course);
                   return (
                     <Link
-                      to={`/broucher/${course.id}`}
+                      to={`/course-info/${course.id}`}
                       key={course.id}
                       className="group transition-transform duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
                     >
