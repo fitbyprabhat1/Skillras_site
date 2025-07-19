@@ -128,7 +128,7 @@ const CoursePage: React.FC = () => {
         >
           <Menu size={20} />
         </Button>
-        <Link to={`/broucher/${courseId}`}>
+        <Link to={`/course-info/${courseId}`}>
           <Button 
             size="sm" 
             variant="outline" 
@@ -251,7 +251,7 @@ const CoursePage: React.FC = () => {
             <div className="bg-dark-light rounded-xl p-6 sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-white font-bold text-lg">Course Content</h3>
-                <Link to={`/broucher/${courseId}`}> 
+                <Link to={`/course-info/${courseId}`}> 
                   <Button size="sm" variant="outline" className="ml-2 whitespace-nowrap">About this Course</Button>
                 </Link>
               </div>
