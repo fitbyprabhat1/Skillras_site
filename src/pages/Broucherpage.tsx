@@ -7,6 +7,8 @@ import { useUserPackage } from '../hooks/useUserPackage';
 import { checkCourseAccess, getRequiredPackageForCourse } from '../utils/courseAccess';
 import { useSEO } from '../hooks/useSEO';
 import courses from '../data/courses';
+import FooterSection from '../sections/FooterSection';
+import { useInView } from '../hooks/useInView';
 
 const Broucherpage: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -166,9 +168,11 @@ const Broucherpage: React.FC = () => {
           <h4 className="text-xl font-bold text-white mb-4">Summary</h4>
           <div className="text-gray-300 space-y-4">
             <p>{course.description}</p>
-            <blockquote className="border-l-4 border-primary pl-4 text-primary italic">
-              Digital Don, led by Mike Thurston, equips you with strategies for personal growth, elite health, effective networking, and impactful branding to maximize your potential and lead a fulfilling life.
-            </blockquote>
+            {course.courseQuote && (
+              <blockquote className="border-l-4 border-primary pl-4 text-primary italic">
+                {course.courseQuote}
+              </blockquote>
+            )}
           </div>
         </section>
         <div className="border-t border-gray-700 my-8" />
@@ -244,46 +248,83 @@ const Broucherpage: React.FC = () => {
           </div>
         </section>
         <div className="border-t border-gray-700 my-8" />
-        {/* CTA Section */}
-        <section className="mb-10 flex flex-col md:flex-row items-center justify-between bg-gradient-to-r from-primary/20 to-primary/5 rounded-xl p-8 shadow-lg">
-          <div className="mb-6 md:mb-0">
-            <img
-              src="https://educate.io/images/DL-FULL-LOGO-min.png"
-              alt="Digital Launchpad Logo"
-              className="w-40 mb-4"
-            />
-            <h3 className="text-2xl font-bold text-white mb-2">Ready to start your journey?</h3>
-            <Button
-              variant="primary"
-              className="px-8 py-3 text-lg font-semibold rounded-full shadow-md"
-              onClick={() => {
-                console.log('CTA button clicked:', {
-                  hasAccess,
-                  courseId
-                });
-                
-                if (hasAccess) {
-                  console.log('CTA: User has access, navigating to course player');
-                  markFirstChapterComplete();
-                  navigate(`/course/${courseId}`);
-                } else {
-                  console.log('CTA: User no access, navigating to enrollment');
-                  navigate(`/enroll?course=${courseId}`);
-                }
-              }}
-            >
-              {hasAccess ? 'Continue Learning' : 'Get Started'}
-            </Button>
+        {/* Related Courses Section */}
+        <section className="mb-10 relative">
+          {/* Animated Background Elements */}
+          <div className="absolute inset-0 overflow-hidden z-0">
+            <div className="absolute top-10 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute bottom-10 right-10 w-96 h-96 bg-red-600/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
           </div>
-          <div className="flex flex-wrap gap-4 justify-center md:justify-end">
-            <img src="https://educate.io/images/Ad-Architect-Card-min.webp" alt="Ad Architect" className="w-32 rounded-lg shadow-md" />
-            <img src="https://educate.io/images/The-Winning-Store-Card-min_1.webp" alt="The Winning Store" className="w-32 rounded-lg shadow-md" />
-            <img src="https://educate.io/images/Digital-DOn-Card-min_1.webp" alt="Digital Don Card" className="w-32 rounded-lg shadow-md" />
-            <img src="https://educate.io/images/Six-Figure-Sales-Rep-Card-min_1.webp" alt="Six Figure Sales Rep" className="w-32 rounded-lg shadow-md" />
-            <img src="https://educate.io/images/Digital-Launchpad-Card-min_1.webp" alt="Digital Launchpad" className="w-32 rounded-lg shadow-md" />
-            <img src="https://educate.io/images/Detox101-Card-min_1.webp" alt="Detox101" className="w-32 rounded-lg shadow-md" />
-            <img src="https://educate.io/images/Pathway-To-Profits-Card-min_1.webp" alt="Pathway To Profits" className="w-32 rounded-lg shadow-md" />
-            <img src="https://educate.io/images/The-Winning-Store-Card-1-min_1.webp" alt="The Winning Store 1" className="w-32 rounded-lg shadow-md" />
+          
+          <div className="relative z-10">
+            <div className="text-center mb-8">
+              <h4 className="text-3xl font-bold text-white mb-4">Related Courses</h4>
+              <p className="text-gray-400 max-w-2xl mx-auto">
+                Explore courses related to {course.categories ? course.categories.join(', ').toLowerCase() : course.category.toLowerCase()} to expand your skills
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Object.values(courses)
+                .filter(courseItem => {
+                  // Get all categories for the current course
+                  const currentCourseCategories = course.categories || [course.category];
+                  // Get all categories for the course item
+                  const itemCategories = courseItem.categories || [courseItem.category];
+                  
+                  // Check if there's any overlap between categories
+                  const hasMatchingCategory = currentCourseCategories.some(cat => 
+                    itemCategories.includes(cat)
+                  );
+                  
+                  return hasMatchingCategory && courseItem.id !== course.id;
+                })
+                .map((courseItem, index) => (
+                  <div
+                    key={courseItem.id}
+                    className={`transform transition-all duration-700 delay-${index * 100} animate-fadeIn`}
+                  >
+                      <Link 
+                        to={`/course-info/${courseItem.id}`}
+                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                        className="group block bg-gradient-to-br from-[#18181b] to-[#0a0a0a] rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-500 hover:scale-105 border border-gray-700/50 hover:border-primary/30"
+                      >
+                        <div className="relative overflow-hidden">
+                          <img
+                            src={courseItem.thumbnail}
+                            alt={courseItem.name}
+                            className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          <div className="absolute top-3 right-3 bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
+                            {courseItem.category}
+                          </div>
+                          {courseItem.categories && courseItem.categories.length > 1 && (
+                            <div className="absolute top-3 left-3 bg-gray-800/80 text-white px-2 py-1 rounded-full text-xs font-medium">
+                              +{courseItem.categories.length - 1} more
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-6">
+                          <h5 className="text-lg font-bold text-white mb-3 group-hover:text-primary transition-colors duration-300">
+                            {courseItem.name}
+                          </h5>
+                          <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                            {courseItem.description}
+                          </p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-primary text-sm font-semibold">
+                              By {courseItem.author}
+                            </span>
+                            <span className="text-gray-500 text-xs bg-gray-800 px-2 py-1 rounded">
+                              {courseItem.modules.length} modules
+                            </span>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
+            </div>
           </div>
         </section>
         {/* Dashboard Button */}
@@ -295,27 +336,7 @@ const Broucherpage: React.FC = () => {
           </Link>
         </div>
       </div>
-      {/* Footer */}
-      <footer className="w-full bg-[#18181b] py-6 mt-10 border-t border-gray-800">
-        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-gray-400 text-sm px-4">
-          <div className="mb-2 md:mb-0">
-            <a href="#" className="hover:underline">©2025 Educate</a>
-            <span className="mx-2">|</span>
-            <span>Legal business name: IAG SERVICES - FZCO</span>
-            <span className="mx-2">|</span>
-            <span>DSO-IFZA-20424, IFZA Properties, Dubai Silicon Oasis, Dubai, United Arab Emirates</span>
-            <span className="mx-2">|</span>
-            <span>Business phone: 058 535 0301</span>
-            <span className="mx-2">|</span>
-            <span>All rights reserved</span>
-          </div>
-          <div>
-            <a href="https://educate-io.typeform.com/to/FsYgXwhD" className="hover:underline mr-4">Contact</a>
-            <a href="https://educate.io/terms-conditions" className="hover:underline mr-4">Terms</a>
-            <a href="https://educate.io/privacy-policy" className="hover:underline">Privacy</a>
-          </div>
-        </div>
-      </footer>
+      <FooterSection />
     </div>
   );
 };
