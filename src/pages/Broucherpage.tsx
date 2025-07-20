@@ -125,9 +125,14 @@ const Broucherpage: React.FC = () => {
         {/* Course Title and Enroll Button */}
         <div className="w-full max-w-5xl flex flex-col items-center mt-4 mb-6">
           <h2 className="text-3xl font-bold text-white mb-3 text-center">{course.name}</h2>
-          
+          {/* Coming Soon Badge */}
+          {course.comingSoon && (
+            <span className="bg-yellow-500/20 border border-yellow-500 text-yellow-400 px-4 py-2 rounded-full text-sm font-medium mb-4">
+              🚧 Coming Soon
+            </span>
+          )}
           {/* Access Status Badge */}
-          {isLoggedIn && (
+          {isLoggedIn && !course.comingSoon && (
             <div className="mb-4">
               {hasAccess ? (
                 <span className="bg-green-500/20 border border-green-500 text-green-400 px-4 py-2 rounded-full text-sm font-medium">
@@ -152,14 +157,16 @@ const Broucherpage: React.FC = () => {
               )}
             </div>
           )}
-          
-          <Button
-            variant="primary"
-            className="px-8 py-2 text-lg font-semibold rounded-full shadow-md"
-            onClick={handleEnrollClick}
-          >
-            {!isLoggedIn ? 'Login to Access' : hasAccess ? 'Enroll in this Course' : 'Buy Package to get access to this Course'}
-          </Button>
+          {/* Enroll Button or Coming Soon */}
+          {!course.comingSoon && (
+            <Button
+              variant="primary"
+              className="px-8 py-2 text-lg font-semibold rounded-full shadow-md"
+              onClick={handleEnrollClick}
+            >
+              {!isLoggedIn ? 'Login to Access' : hasAccess ? 'Enroll in this Course' : 'Buy Package to get access to this Course'}
+            </Button>
+          )}
         </div>
       </div>
       <div className="container mx-auto px-4 py-10 max-w-4xl flex-1">
@@ -271,12 +278,10 @@ const Broucherpage: React.FC = () => {
                   const currentCourseCategories = course.categories || [course.category];
                   // Get all categories for the course item
                   const itemCategories = courseItem.categories || [courseItem.category];
-                  
                   // Check if there's any overlap between categories
                   const hasMatchingCategory = currentCourseCategories.some(cat => 
                     itemCategories.includes(cat)
                   );
-                  
                   return hasMatchingCategory && courseItem.id !== course.id;
                 })
                 .map((courseItem, index) => (
@@ -302,6 +307,12 @@ const Broucherpage: React.FC = () => {
                           {courseItem.categories && courseItem.categories.length > 1 && (
                             <div className="absolute top-3 left-3 bg-gray-800/80 text-white px-2 py-1 rounded-full text-xs font-medium">
                               +{courseItem.categories.length - 1} more
+                            </div>
+                          )}
+                          {/* Coming Soon Badge for Related Courses */}
+                          {courseItem.comingSoon && (
+                            <div className="absolute bottom-3 left-3 bg-yellow-500/90 text-black px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                              Coming Soon
                             </div>
                           )}
                         </div>
