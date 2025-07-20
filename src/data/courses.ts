@@ -28,59 +28,293 @@ export interface CourseData {
   description: string;
   thumbnail: string; // image url or local asset
   author: string; // new property for author name
+  instructorBio?: string; // instructor biography
+  instructorImage?: string; // instructor profile image
+  skills?: string[]; // array of skills covered in the course
+  courseQuote?: string; // inspirational quote or tagline for the course
   modules: CourseModule[];
-  category: string;
+  category: string; // primary category
+  categories?: string[]; // multiple categories for related courses
 }
 
 const courses: Record<string, CourseData> = {
   'premiere-pro': {
     id: 'premiere-pro',
-    name: 'Dhruv Rathee Youtube MasterClass',
-    description: 'Master Adobe Premiere Pro with step-by-step guidance and real-world projects.',
+    name: 'Dhruv Rathee YouTube MasterClass',
+    description: 'Decode Dhruv Rathee’s complete video strategy—from camera work to editing, sound, templates, and algorithm secrets.',
     thumbnail: 'https://i.imghippo.com/files/JcGw2401TWg.png',
     author: 'Prabhat Mahto',
+    instructorBio: 'Prabhat Mahto is a renowned video editing expert with over 8 years of experience in content creation. He has helped thousands of creators master video editing and grow their YouTube channels.',
+    instructorImage: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=300',
+    skills: ['Video Editing', 'YouTube Strategy', 'Content Creation', 'Camera Work', 'Sound Design', 'Motion Graphics', 'SEO Optimization'],
+    courseQuote: 'Digital Don, led by Mike Thurston, equips you with strategies for personal growth, elite health, effective networking, and impactful branding to maximize your potential and lead a fulfilling life.',
     category: 'Video Editing',
+    categories: ['Video Editing', 'Content Creation', 'YouTube Strategy'],
     modules: [
       {
-        id: 'welcome',
-        title: 'Welcome & Roadmap',
-        description: 'Get started and set yourself up for success.',
+        id: 'creator-blueprint',
+        title: 'The Creator Blueprint',
+        description: 'Understand Dhruv Rathee’s content style, niche, and branding approach.',
         chapters: [
           {
-            id: 'pp-welcome',
-            title: 'Welcome to Premiere Pro',
-            description: 'Introduction to the course and what you will learn.',
-            duration: '3 minutes',
-            videoId: '8i34DE0Efec',
-            downloadableResources: [
-              { title: 'Course Guide', url: 'https://drive.google.com/file/d/1example/view', type: 'PDF' },
-            ],
+            id: 'dr-style-overview',
+            title: 'Dhruv’s Style & Structure',
+            description: 'How Dhruv structures his videos and positions his content.',
+            duration: '6 minutes',
+            videoId: 'dhr123a1',
+          },
+          {
+            id: 'dr-content-types',
+            title: 'Content Types & Strategy',
+            description: 'Explore the formats he uses: documentaries, news, vlogs, explainers.',
+            duration: '5 minutes',
+            videoId: 'dhr123a2',
+          },
+          {
+            id: 'dr-tone-branding',
+            title: 'Tone, Voice & Branding',
+            description: 'How he maintains trust, neutrality, and visual consistency.',
+            duration: '6 minutes',
+            videoId: 'dhr123a3',
+          },
+          {
+            id: 'dr-platform-presence',
+            title: 'Cross-Platform Presence',
+            description: 'How Dhruv extends his brand across multiple platforms.',
+            duration: '4 minutes',
+            videoId: 'dhr123a4',
           },
         ],
       },
       {
-        id: 'editing',
-        title: 'Core Editing Skills',
-        description: 'Learn the essential editing techniques.',
+        id: 'camera-and-setup',
+        title: 'Camera & Setup Deconstructed',
+        description: 'Break down his camera angles, lighting, and gear.',
         chapters: [
           {
-            id: 'pp-timeline',
-            title: 'Timeline Basics',
-            description: 'Master the timeline interface.',
+            id: 'dr-camera-gear',
+            title: 'Camera Setup & Gear',
+            description: 'What camera and lighting setups he uses and budget alternatives.',
+            duration: '7 minutes',
+            videoId: 'dhr123b1',
+          },
+          {
+            id: 'dr-framing',
+            title: 'Framing & Angles',
+            description: 'Analyze how he composes shots and uses zooms/pans.',
+            duration: '5 minutes',
+            videoId: 'dhr123b2',
+          },
+          {
+            id: 'dr-lighting',
+            title: 'Lighting Techniques',
+            description: 'How he uses lighting to emphasize mood and focus.',
+            duration: '5 minutes',
+            videoId: 'dhr123b3',
+          },
+          {
+            id: 'dr-on-location',
+            title: 'Studio vs On-location',
+            description: 'How he adapts setup for vlogs, travel, and interviews.',
+            duration: '6 minutes',
+            videoId: 'dhr123b4',
+          },
+        ],
+      },
+      {
+        id: 'editing-style',
+        title: 'Editing Like Dhruv (Premiere Pro & After Effects)',
+        description: 'Master Dhruv’s edit pacing, animations, maps, and transitions.',
+        chapters: [
+          {
+            id: 'dr-jump-cuts',
+            title: 'Jump Cuts & Zooms',
+            description: 'How Dhruv keeps attention with fast-paced cuts.',
+            duration: '6 minutes',
+            videoId: 'dhr123c1',
+          },
+          {
+            id: 'dr-motion-graphics',
+            title: 'Motion Graphics & Maps',
+            description: 'How he uses After Effects and animated maps.',
             duration: '8 minutes',
-            videoId: 'O0-fVgbijkY',
+            videoId: 'dhr123c2',
+          },
+          {
+            id: 'dr-text-transitions',
+            title: 'Text Overlays & Transitions',
+            description: 'Use of titles, lower thirds, smooth transitions.',
+            duration: '5 minutes',
+            videoId: 'dhr123c3',
+          },
+          {
+            id: 'dr-timeline-efficiency',
+            title: 'Timeline & Efficiency Tips',
+            description: 'How to edit faster like Dhruv with keyboard shortcuts & nesting.',
+            duration: '6 minutes',
+            videoId: 'dhr123c4',
+          },
+        ],
+      },
+      {
+        id: 'sound-and-sfx',
+        title: 'Sound Design & SFX',
+        description: 'Explore his use of background music, sound effects, and voice tone.',
+        chapters: [
+          {
+            id: 'dr-soundtrack',
+            title: 'Background Music & Tone',
+            description: 'What kind of music he uses and how it sets the tone.',
+            duration: '5 minutes',
+            videoId: 'dhr123d1',
+          },
+          {
+            id: 'dr-sfx',
+            title: 'SFX & Voice Processing',
+            description: 'Use of effects for transitions and vocal clarity.',
+            duration: '5 minutes',
+            videoId: 'dhr123d2',
+          },
+          {
+            id: 'dr-music-sync',
+            title: 'Syncing Audio to Edits',
+            description: 'Matching beats and cuts to music for better rhythm.',
+            duration: '6 minutes',
+            videoId: 'dhr123d3',
+          },
+          {
+            id: 'dr-sound-resources',
+            title: 'Free & Paid Sound Resources',
+            description: 'Where to find music and sound effects like Dhruv’s.',
+            duration: '4 minutes',
+            videoId: 'dhr123d4',
+          },
+        ],
+      },
+      {
+        id: 'templates-and-assets',
+        title: 'Templates & Design Assets',
+        description: 'Get insights on the graphic assets and overlays used in his videos.',
+        chapters: [
+          {
+            id: 'dr-lower-thirds',
+            title: 'Text, Titles & Lower Thirds',
+            description: 'Fonts, animations, and visual identity breakdown.',
+            duration: '6 minutes',
+            videoId: 'dhr123e1',
+          },
+          {
+            id: 'dr-asset-resources',
+            title: 'Templates & Sources',
+            description: 'Where he might get his assets and how to use them.',
+            duration: '6 minutes',
+            videoId: 'dhr123e2',
+          },
+          {
+            id: 'dr-style-kit',
+            title: 'Branding Asset Kit',
+            description: 'Recreate his style using provided color codes, fonts, logos.',
+            duration: '5 minutes',
+            videoId: 'dhr123e3',
+          },
+          {
+            id: 'dr-custom-templates',
+            title: 'Creating Your Own Templates',
+            description: 'How to design reusable templates for your channel.',
+            duration: '7 minutes',
+            videoId: 'dhr123e4',
+          },
+        ],
+      },
+      {
+        id: 'yt-optimization',
+        title: 'YouTube Optimization Secrets',
+        description: 'Understand the algorithm, upload times, and title/tag strategies.',
+        chapters: [
+          {
+            id: 'dr-upload-schedule',
+            title: 'Upload Timing & Frequency',
+            description: 'When and how often Dhruv uploads and why it matters.',
+            duration: '4 minutes',
+            videoId: 'dhr123f1',
+          },
+          {
+            id: 'dr-tags-thumbnails',
+            title: 'Tags, Titles & Thumbnails',
+            description: 'Breakdown of his metadata, SEO, and thumbnail style.',
+            duration: '6 minutes',
+            videoId: 'dhr123f2',
+          },
+          {
+            id: 'dr-algorithm-signals',
+            title: 'Click-through & Watch Time',
+            description: 'How he likely optimizes content for retention and CTR.',
+            duration: '6 minutes',
+            videoId: 'dhr123f3',
+          },
+          {
+            id: 'dr-analytics-review',
+            title: 'Reviewing Video Analytics',
+            description: 'How you can study your analytics like Dhruv to improve.',
+            duration: '6 minutes',
+            videoId: 'dhr123f4',
+          },
+        ],
+      },
+      {
+        id: 'implementation',
+        title: 'Recreate & Practice',
+        description: 'Apply what you’ve learned by recreating a sample Dhruv-style video.',
+        chapters: [
+          {
+            id: 'dr-recreation',
+            title: 'Your Dhruv-Style Project',
+            description: 'Step-by-step guide to make a Dhruv-style video from scratch.',
+            duration: '12 minutes',
+            videoId: 'dhr123g1',
+            downloadableResources: [
+              { title: 'Sample Template Pack', url: 'https://drive.google.com/file/d/1example/view', type: 'ZIP' },
+              { title: 'Video Planning Sheet', url: 'https://drive.google.com/file/d/2example/view', type: 'PDF' },
+            ],
+          },
+          {
+            id: 'dr-upload-checklist',
+            title: 'Upload Checklist',
+            description: 'Ensure you follow Dhruv’s strategy while uploading.',
+            duration: '4 minutes',
+            videoId: 'dhr123g2',
+          },
+          {
+            id: 'dr-feedback-loop',
+            title: 'Getting Feedback & Iterating',
+            description: 'How to improve your video using viewer feedback.',
+            duration: '5 minutes',
+            videoId: 'dhr123g3',
+          },
+          {
+            id: 'dr-bonus-tools',
+            title: 'Bonus Tools & Scripts',
+            description: 'Extra tools to automate or enhance your workflow.',
+            duration: '5 minutes',
+            videoId: 'dhr123g4',
           },
         ],
       },
     ],
   },
+
   'canva-design': {
     id: 'canva-design',
     name: 'Canva Design Essentials',
     description: 'Create stunning graphics and social media posts with Canva.',
     thumbnail: 'https://www.imghippo.com/i/JcGw2401TWg.png',
     author: 'Jane Smith',
+    instructorBio: 'Jane Smith is a professional graphic designer with 10+ years of experience in digital design. She specializes in social media graphics, branding, and user interface design.',
+    instructorImage: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=300',
+    skills: ['Graphic Design', 'Social Media Design', 'Branding', 'Typography', 'Color Theory', 'Layout Design', 'Digital Marketing'],
+    courseQuote: 'Transform your creative vision into stunning visual content that captivates audiences and drives engagement across all digital platforms.',
     category: 'Design',
+    categories: ['Design', 'Content Creation', 'Social Media'],
     modules: [
       {
         id: 'intro',
@@ -128,7 +362,12 @@ const courses: Record<string, CourseData> = {
     description: 'Create stunning motion graphics and visual effects.',
     thumbnail: 'https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp',
     author: 'Alex Lee',
+    instructorBio: 'Alex Lee is a motion graphics specialist with expertise in After Effects, Cinema 4D, and visual effects. He has worked on projects for major brands and film studios.',
+    instructorImage: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=300',
+    skills: ['Motion Graphics', 'Visual Effects', 'Animation', '3D Design', 'Compositing', 'Keyframe Animation', 'After Effects'],
+    courseQuote: 'Master the art of motion graphics and bring your creative ideas to life with professional-grade animations and visual effects.',
     category: 'Video Editing',
+    categories: ['Video Editing', 'Motion Graphics', 'Visual Effects'],
     modules: [
       {
         id: 'ae-intro',
@@ -166,7 +405,12 @@ const courses: Record<string, CourseData> = {
     description: 'Grow your YouTube channel with proven strategies.',
     thumbnail: 'https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp',
     author: 'Priya Patel',
+    instructorBio: 'Priya Patel is a YouTube growth expert who has helped hundreds of creators scale their channels from zero to millions of subscribers.',
+    instructorImage: 'https://images.pexels.com/photos/1181686/pexels-photo-1181686.jpeg?auto=compress&cs=tinysrgb&w=300',
+    skills: ['YouTube Growth', 'Content Strategy', 'SEO Optimization', 'Analytics', 'Audience Building', 'Monetization'],
+    courseQuote: 'Build a thriving YouTube channel that generates consistent income and creates lasting impact in your niche.',
     category: 'Productivity',
+    categories: ['Productivity', 'Content Creation', 'YouTube Strategy', 'Social Media'],
     modules: [
       {
         id: 'yt-intro',
@@ -204,6 +448,10 @@ const courses: Record<string, CourseData> = {
     description: 'Master Microsoft Excel for data analysis and business intelligence.',
     thumbnail: 'https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp',
     author: 'Michael Chen',
+    instructorBio: 'Michael Chen is a data analytics expert with 15+ years of experience in business intelligence and Excel automation.',
+    instructorImage: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=300',
+    skills: ['Excel Mastery', 'Data Analysis', 'Business Intelligence', 'Automation', 'Pivot Tables', 'VBA Programming'],
+    courseQuote: 'Transform raw data into actionable insights and automate your workflow to become an Excel power user.',
     category: 'Productivity',
     modules: [
       {
