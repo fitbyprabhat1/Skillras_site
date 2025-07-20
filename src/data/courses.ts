@@ -35,6 +35,7 @@ export interface CourseData {
   modules: CourseModule[];
   category: string; // primary category
   categories?: string[]; // multiple categories for related courses
+  comingSoon?: boolean; // Add this line
 }
 
 const courses: Record<string, CourseData> = {
@@ -50,6 +51,7 @@ const courses: Record<string, CourseData> = {
     courseQuote: 'Digital Don, led by Mike Thurston, equips you with strategies for personal growth, elite health, effective networking, and impactful branding to maximize your potential and lead a fulfilling life.',
     category: 'Video Editing',
     categories: ['Video Editing', 'Content Creation', 'YouTube Strategy'],
+    comingSoon: true,
     modules: [
       {
         id: 'creator-blueprint',
@@ -942,6 +944,21 @@ const courses: Record<string, CourseData> = {
         ],
       },
     ],
+  },
+  'new-course': {
+    id: 'new-course',
+    name: 'New Course Title',
+    description: 'New course description.',
+    thumbnail: 'https://via.placeholder.com/150',
+    author: 'New Author',
+    instructorBio: 'New instructor bio.',
+    instructorImage: 'https://via.placeholder.com/150',
+    skills: ['New Skill 1', 'New Skill 2'],
+    courseQuote: 'New course quote.',
+    modules: [],
+    category: 'New Category',
+    categories: ['New Category'],
+    comingSoon: true, // This course is coming soon
   },
 };
 
