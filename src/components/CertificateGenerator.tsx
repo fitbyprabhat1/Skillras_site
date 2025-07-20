@@ -4,6 +4,22 @@ import html2canvas from 'html2canvas';
 import { useAuth } from '../contexts/AuthContext';
 import { CheckCircle } from 'lucide-react';
 
+// Helper function to check if a course is 100% completed
+const isCourseCompleted = (course: any): boolean => {
+  const progressKey = `course_progress_${course.id}`;
+  const completedChapters = (() => {
+    try {
+      const stored = localStorage.getItem(progressKey);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  })();
+  
+  const allChapters = course.modules.flatMap((m: any) => m.chapters);
+  return allChapters.length > 0 && allChapters.every((ch: any) => completedChapters.includes(ch.id));
+};
+
 const NAME_TOP = '38.0%';
 const NAME_LEFT = '24.7%';
 const NAME_WIDTH = '50.5%';
@@ -98,6 +114,14 @@ const CertificateGenerator: React.FC = () => {
       </div>
       {!user ? (
         <div className="bg-yellow-100 text-yellow-800 px-4 py-3 rounded mb-8">You must be logged in to generate a certificate.</div>
+      ) : Object.values(coursesData).filter((c: any) => isCourseCompleted(c)).length === 0 ? (
+        <div className="bg-blue-100 text-blue-800 px-4 py-3 rounded mb-8">
+          <div className="flex items-center">
+            <CheckCircle className="mr-2" size={20} />
+            <span>Complete a course to generate your certificate!</span>
+          </div>
+          <p className="text-sm mt-2">You need to finish 100% of a course to download its certificate.</p>
+        </div>
       ) : (
         <form onSubmit={handleGenerate} className="space-y-4">
           <div>
@@ -108,10 +132,12 @@ const CertificateGenerator: React.FC = () => {
               onChange={e => setCourse(e.target.value)}
               required
             >
-              <option value="">Select a course</option>
-              {Object.values(coursesData).map((c: any) => (
-                <option key={c.id} value={c.name}>{c.name}</option>
-              ))}
+              <option value="">Select a completed course</option>
+              {Object.values(coursesData)
+                .filter((c: any) => isCourseCompleted(c))
+                .map((c: any) => (
+                  <option key={c.id} value={c.name}>{c.name}</option>
+                ))}
             </select>
           </div>
           <button type="submit" className="w-full bg-primary text-white px-4 py-2 rounded hover:bg-primary/80 transition" disabled={downloading}>
