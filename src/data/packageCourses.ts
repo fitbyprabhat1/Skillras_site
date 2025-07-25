@@ -3,10 +3,10 @@
 
 const packageCourses: Record<string, string[]> = {
   starter: [
-    'premiere-pro',
+    'Dhruv-Rathee',
   ],
   professional: [
-    'premiere-pro',
+    'Dhruv-Rathee',
     'mythpat',
     'think-school',
     'magnates-media',
@@ -21,7 +21,7 @@ const packageCourses: Record<string, string[]> = {
     'alex-hormozi',
   ],
   enterprise: [
-    'premiere-pro',
+    'Dhruv-Rathee',
     'mythpat',
     'think-school',
     'magnates-media',
