@@ -152,26 +152,31 @@ const EarningsPage: React.FC = () => {
 
   // Fetch user's profile photo
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      if (!user?.email) return;
+  const fetchUserProfile = async () => {
+    if (!user?.email) return;
 
-      try {
-        const { data, error } = await supabase
-          .from('paid_users')
-          .select('photo_link, name, package_selected')
-          .eq('email', user.email.toLowerCase().trim())
-          .single();
+    try {
+      const { data, error } = await supabase
+        .from('paid_users')
+        .select('photo_link, name, package_selected')
+        .eq('email', user.email.toLowerCase().trim())
+        .limit(1); // Get only the first row
 
-        if (data && data.photo_link) {
-          setPhotoLink(data.photo_link);
-        }
-      } catch (err) {
-        console.log('No profile photo found');
+      if (error) {
+        console.log('Error fetching profile:', error);
+        return;
       }
-    };
 
-    fetchUserProfile();
-  }, [user?.email]);
+      if (data && data.length > 0 && data[0].photo_link) {
+        setPhotoLink(data[0].photo_link);
+      }
+    } catch (err) {
+      console.log('No profile photo found');
+    }
+  };
+
+  fetchUserProfile();
+}, [user?.email]);
 
   const handlePhotoUpdate = async () => {
     if (!user?.email) return;
