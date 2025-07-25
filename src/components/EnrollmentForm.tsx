@@ -80,9 +80,9 @@ const packages: PackageData[] = [
     discount: 50,
     color: 'from-blue-500 to-blue-600',
     badge: 'Best for Beginners',
-    payment_link: 'https://rzp.io/rzp/skillras-starter',
-    payment_link2: 'https://rzp.io/rzp/skillras-starter',
-    payment_link3: 'https://rzp.io/rzp/skillras-starter'
+    payment_link: 'https://rzp.io/rzp/7I9cGSMe',
+    payment_link2: 'https://rzp.io/rzp/7I9cGSMe',
+    payment_link3: 'https://rzp.io/rzp/7I9cGSMe'
   },
   {
     id: 'professional',
