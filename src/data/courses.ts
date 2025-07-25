@@ -48,7 +48,7 @@ const courses: Record<string, CourseData> = {
     instructorBio: 'Prabhat Mahto is a renowned video editing expert with over 8 years of experience in content creation. He has helped thousands of creators master video editing and grow their YouTube channels.',
     instructorImage: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=300',
     skills: ['Video Editing', 'YouTube Strategy', 'Content Creation', 'Camera Work', 'Sound Design', 'Motion Graphics', 'SEO Optimization'],
-    courseQuote: 'Digital Don, led by Mike Thurston, equips you with strategies for personal growth, elite health, effective networking, and impactful branding to maximize your potential and lead a fulfilling life.',
+    courseQuote: "Dhruv Rathee, born on October 8, 1994, in Rohtak, Haryana, is a prominent Indian YouTuber with over 34 million subscribers across his channels and approximately 6 billion total views. With a bachelor's degree in Mechanical Engineering and a master's in Renewable Energy from Karlsruhe Institute of Technology, Germany, Rathee has built his reputation through fact-based analyses of political, social, and environmental issues.",
     category: 'Video Editing',
     categories: ['Video Editing', 'Content Creation', 'YouTube Strategy'],
     comingSoon: true,
