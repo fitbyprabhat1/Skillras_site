@@ -106,9 +106,9 @@ const packages: PackageData[] = [
     discount: 55,
     color: 'from-purple-500 to-purple-600',
     badge: 'Best Value',
-    payment_link: 'https://rzp.io/rzp/skillras-enterprise',
-    payment_link2: 'https://rzp.io/rzp/skillras-enterprise',
-    payment_link3: 'https://rzp.io/rzp/skillras-enterprise'
+    payment_link: 'https://rzp.io/rzp/EosrbVdo',
+    payment_link2: 'https://rzp.io/rzp/EosrbVdo',
+    payment_link3: 'https://rzp.io/rzp/EosrbVdo'
   }
 ];
 
