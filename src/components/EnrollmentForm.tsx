@@ -93,9 +93,9 @@ const packages: PackageData[] = [
     discount: 36,
     color: 'from-primary to-red-600',
     badge: 'Most Popular',
-    payment_link: 'https://rzp.io/rzp/skillras-professional',
-    payment_link2: 'https://rzp.io/rzp/skillras-professional',
-    payment_link3: 'https://rzp.io/rzp/skillras-professional'
+    payment_link: 'https://rzp.io/rzp/QHOh9PY',
+    payment_link2: 'https://rzp.io/rzp/QHOh9PY',
+    payment_link3: 'https://rzp.io/rzp/QHOh9PY'
   },
   {
     id: 'enterprise',
