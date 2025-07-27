@@ -403,7 +403,7 @@ const courses: Record<string, CourseData> = {
   },
   'video-editing-masterclass': {
     id: 'video-editing-masterclass',
-    name: 'Video Editing Masterclass',
+    name: 'Premiere Pro Masterclass',
     description: 'Learn professional video editing techniques to create engaging content for platforms like Instagram and YouTube.',
     thumbnail: 'https://educate.io/images/video-editing-masterclass-placeholder.webp',
     author: 'Jane Doe',
