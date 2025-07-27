@@ -4,8 +4,10 @@
 const packageCourses: Record<string, string[]> = {
   starter: [
     'Dhruv-Rathee',
+    'video-editing-masterclass',
   ],
   professional: [
+    'video-editing-masterclass',
     'Dhruv-Rathee',
     'mythpat',
     'think-school',
