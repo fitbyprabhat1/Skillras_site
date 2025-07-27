@@ -406,7 +406,7 @@ const courses: Record<string, CourseData> = {
     name: 'Premiere Pro Masterclass',
     description: 'Learn professional video editing techniques to create engaging content for platforms like Instagram and YouTube.',
     thumbnail: 'https://educate.io/images/video-editing-masterclass-placeholder.webp',
-    author: 'Jane Doe',
+    author: 'Prabhat Mahto',
     instructorBio: 'Jane Doe is a seasoned video editor with over 10 years of experience creating content for social media, brands, and independent films.',
     instructorImage: 'https://images.pexels.com/photos/123456/pexels-photo-123456.jpeg?auto=compress&cs=tinysrgb&w=300',
     skills: ['Video Editing', 'Audio Editing', 'Color Grading', 'Motion Graphics', 'Transitions', 'Speed Ramping'],
