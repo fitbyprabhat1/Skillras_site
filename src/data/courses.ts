@@ -401,6 +401,147 @@ const courses: Record<string, CourseData> = {
       },
     ],
   },
+  'video-editing-masterclass': {
+    id: 'video-editing-masterclass',
+    name: 'Video Editing Masterclass',
+    description: 'Learn professional video editing techniques to create engaging content for platforms like Instagram and YouTube.',
+    thumbnail: 'https://educate.io/images/video-editing-masterclass-placeholder.webp',
+    author: 'Jane Doe',
+    instructorBio: 'Jane Doe is a seasoned video editor with over 10 years of experience creating content for social media, brands, and independent films.',
+    instructorImage: 'https://images.pexels.com/photos/123456/pexels-photo-123456.jpeg?auto=compress&cs=tinysrgb&w=300',
+    skills: ['Video Editing', 'Audio Editing', 'Color Grading', 'Motion Graphics', 'Transitions', 'Speed Ramping'],
+    courseQuote: 'Transform your raw footage into captivating stories with professional video editing skills.',
+    category: 'Video Editing',
+    categories: ['Video Editing', 'Content Creation', 'Post-Production'],
+    modules: [
+      {
+        id: 've-module1',
+        title: 'Welcome to the Masterclass',
+        description: 'Introduction to the course and setup for video editing.',
+        chapters: [
+          {
+            id: 've-welcome1',
+            title: 'What You’ll Be Able to Do After 30 Days',
+            description: 'Overview of skills you’ll gain in this course.',
+            duration: '5 minutes',
+            videoId: 'Ul45Ze-xgSU'
+          },
+          {
+            id: 've-welcome2',
+            title: 'Software + Setup + Download Links',
+            description: 'Setting up your video editing software and tools.',
+            duration: '6 minutes',
+            videoId: 'Ul45Ze-xgSU'
+          },
+          {
+            id: 've-welcome3',
+            title: 'How to Get the Most Out of This Course',
+            description: 'Tips for maximizing your learning experience.',
+            duration: '4 minutes',
+            videoId: 'C1bviaervb4'
+          }
+        ]
+      },
+      {
+        id: 've-module2',
+        title: 'Interface + Workspace Setup',
+        description: 'Learn the essentials of navigating and customizing your editing workspace.',
+        chapters: [
+          {
+            id: 've-interface1',
+            title: 'Interface + Workspace Setup',
+            description: 'Understanding the video editing interface and workspace.',
+            duration: '8 minutes',
+            videoId: 'O0-fVgbijkY'
+          },
+          {
+            id: 've-interface2',
+            title: 'Interface + Workspace Setup (Part 2)',
+            description: 'Advanced workspace customization techniques.',
+            duration: '7 minutes',
+            videoId: 'VO4ZLwpXYxU'
+          },
+          {
+            id: 've-interface3',
+            title: 'Timeline + Tools Deep Dive',
+            description: 'Exploring the timeline and editing tools in depth.',
+            duration: '10 minutes',
+            videoId: 'njUO84_ygo0'
+          },
+          {
+            id: 've-interface4',
+            title: 'First Edit: Trimming, Cutting, Moving Clips',
+            description: 'Performing your first edit with basic techniques.',
+            duration: '12 minutes',
+            videoId: 'T_KQlCOIKss'
+          },
+          {
+            id: 've-interface5',
+            title: 'Adding Music & Voiceovers',
+            description: 'Incorporating audio elements into your edits.',
+            duration: '9 minutes',
+            videoId: '6FazlYStgAY'
+          },
+          {
+            id: 've-interface6',
+            title: 'Export Settings for Instagram & YouTube',
+            description: 'Optimizing export settings for social media platforms.',
+            duration: '6 minutes',
+            videoId: 'BtIVKxBSFVM'
+          }
+        ]
+      },
+      {
+        id: 've-module3',
+        title: 'Advanced Editing Techniques',
+        description: 'Master advanced techniques to enhance your video projects.',
+        chapters: [
+          {
+            id: 've-advanced1',
+            title: 'Cleaning Voice Audio',
+            description: 'Techniques for improving voice audio quality.',
+            duration: '8 minutes',
+            videoId: 'jpqETZQZ-mg'
+          },
+          {
+            id: 've-advanced2',
+            title: 'Adding Background Music + SFX',
+            description: 'Enhancing videos with background music and sound effects.',
+            duration: '7 minutes',
+            videoId: '4jVtcGVhizg'
+          },
+          {
+            id: 've-advanced3',
+            title: 'Essential Graphics (Lower Thirds, Titles)',
+            description: 'Creating professional lower thirds and titles.',
+            duration: '10 minutes',
+            videoId: 'NUgL7l8F3Zc'
+          },
+          {
+            id: 've-advanced4',
+            title: 'Transitions & Presets',
+            description: 'Using transitions and presets to streamline editing.',
+            duration: '9 minutes',
+            videoId: 'zvbET6VPOAo'
+          },
+          {
+            id: 've-advanced5',
+            title: 'Color Correction + LUTs + Grading',
+            description: 'Mastering color correction and grading techniques.',
+            duration: '12 minutes',
+            videoId: 'cHdLBsXogXU'
+          },
+          {
+            id: 've-advanced6',
+            title: 'Speed Ramping + Reverse/Slow-Mo',
+            description: 'Creating dynamic speed effects in your videos.',
+            duration: '8 minutes',
+            videoId: 'EoF1YVB_qRA'
+          }
+        ]
+      }
+    ]
+  },
   'youtube-growth': {
     id: 'youtube-growth',
     name: 'YouTube Growth Hacking',
