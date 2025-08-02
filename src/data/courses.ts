@@ -800,7 +800,7 @@ const courses: Record<string, CourseData> = {
             title: 'Welcome to Explanatory Journalism',
             description: 'Course overview and journalism principles.',
             duration: '7 minutes',
-            videoId: 'dQw4w9WgXcQ',
+            videoId: 'nuiR-lLBpGc',
           },
         ],
       },
