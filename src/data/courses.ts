@@ -1028,7 +1028,7 @@ const courses: Record<string, CourseData> = {
             title: 'Welcome to Productivity',
             description: 'Course overview and productivity principles.',
             duration: '7 minutes',
-            videoId: 'njUO84_ygo0',
+            videoId: '_0fVzZw6uWU',
           },
         ],
       },
