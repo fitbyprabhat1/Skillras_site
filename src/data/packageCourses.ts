@@ -23,7 +23,7 @@ const packageCourses: Record<string, string[]> = {
     'alex-hormozi',
   ],
   enterprise: [
-    'mythpat'
+    'Dhruv-Rathee',
     'Dhruv-Rathee',
     'mythpat',
     'think-school',
