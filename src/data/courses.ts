@@ -876,7 +876,7 @@ const courses: Record<string, CourseData> = {
             title: 'Welcome to Gaming Mastery',
             description: 'Course overview and gaming content strategies.',
             duration: '10 minutes',
-            videoId: 'njUO84_ygo0',
+            videoId: 'IJgtcik61lQ',
           },
         ],
       },
