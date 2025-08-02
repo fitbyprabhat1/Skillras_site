@@ -381,7 +381,7 @@ const courses: Record<string, CourseData> = {
             title: 'Welcome to After Effects',
             description: 'Course overview and setup.',
             duration: '4 minutes',
-            videoId: 'Ul45Ze-xgSU',
+            videoId: 'i8OHxMvNRGk',
           },
         ],
       },
