@@ -762,7 +762,7 @@ const courses: Record<string, CourseData> = {
             title: 'Welcome to Educational Content',
             description: 'Course overview and teaching principles.',
             duration: '9 minutes',
-            videoId: '6FazlYStgAY',
+            videoId: 'hlkqwqqVbH4',
           },
         ],
       },
