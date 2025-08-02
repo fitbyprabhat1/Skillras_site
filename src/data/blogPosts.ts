@@ -57,7 +57,7 @@ export const blogPosts: BlogPost[] = [
   metaDescription: 'Want to rank in 2025? This guide reveals the top content trends, AI strategies, and SEO tips to grow your audience and beat competitors.',
   date: '2025-02-20',
   coverImage: '/public/2025-content-seo.jpg',
-  author: 'Alex Carter',
+  author: 'Prabhat Mahto',
 },
   {
     id: '2',
