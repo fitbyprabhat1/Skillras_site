@@ -56,7 +56,7 @@ export const blogPosts: BlogPost[] = [
   metaTitle: 'Content Creation in 2025: SEO Strategies to Rank #1',
   metaDescription: 'Want to rank in 2025? This guide reveals the top content trends, AI strategies, and SEO tips to grow your audience and beat competitors.',
   date: '2025-02-20',
-  coverImage: '/public/2025-content-seo.jpg',
+  coverImage: 'https://cdn.prod.website-files.com/66afdaeac41636dff4a693b2/66d48c1c72ca18d0c6764918_66171462efa71abbce39575b_628d44a905e3b046dd990e45_How%252520to%252520be%252520a%252520content%252520creator%252520laetro.png',
   author: 'Prabhat Mahto',
 },
   {
