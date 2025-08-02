@@ -55,15 +55,15 @@ const courses: Record<string, CourseData> = {
     modules: [
       {
         id: 'creator-blueprint',
-        title: 'The Creator Blueprint',
+        title: 'Introduction to the Course',
         description: 'Understand Dhruv Rathee’s content style, niche, and branding approach.',
         chapters: [
           {
             id: 'dr-style-overview',
-            title: 'Dhruv’s Style & Structure',
+            title: 'Dhruv’s Introduction',
             description: 'How Dhruv structures his videos and positions his content.',
             duration: '6 minutes',
-            videoId: 'dhr123a1',
+            videoId: 'YdEtZB9M-hQ',
           },
           {
             id: 'dr-content-types',
