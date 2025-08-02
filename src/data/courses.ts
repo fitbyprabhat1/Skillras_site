@@ -838,7 +838,7 @@ const courses: Record<string, CourseData> = {
             title: 'Welcome to Tech Content',
             description: 'Course overview and tech content principles.',
             duration: '8 minutes',
-            videoId: 'O0-fVgbijkY',
+            videoId: 'l_A1dlyRdc8',
           },
         ],
       },
