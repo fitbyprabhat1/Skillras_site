@@ -58,10 +58,6 @@ export const blogPosts: BlogPost[] = [
   date: '2025-02-20',
   coverImage: '/public/2025-content-seo.jpg',
   author: 'Alex Carter',
-  ctaLinks: [
-    { label: 'Download FREE 2025 SEO Checklist', url: '/downloads/seo-2025-checklist.pdf' },
-    { label: 'Book a Content Strategy Call', url: '/consultation' }
-  ]
 },
   {
     id: '2',
