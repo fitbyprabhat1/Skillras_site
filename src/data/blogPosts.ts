@@ -62,7 +62,7 @@ export const blogPosts: BlogPost[] = [
     { label: 'Download FREE 2025 SEO Checklist', url: '/downloads/seo-2025-checklist.pdf' },
     { label: 'Book a Content Strategy Call', url: '/consultation' }
   ]
-}.
+},
   {
     id: '2',
     title: 'How to Create a Successful YouTube Channel in 2025: The Complete Guide',
