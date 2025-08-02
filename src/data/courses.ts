@@ -952,7 +952,7 @@ const courses: Record<string, CourseData> = {
             title: 'Welcome to Business Motivation',
             description: 'Course overview and business principles.',
             duration: '8 minutes',
-            videoId: 'dQw4w9WgXcQ',
+            videoId: 'KpyHj6whwaI',
           },
         ],
       },
