@@ -333,7 +333,7 @@ const courses: Record<string, CourseData> = {
       },
       {
         id: 'ae-basics',
-        title: 'Animation Basics',
+        title: 'After Effects Basics: Color, Workspaces, Timeline, Work Area & Essential Switches',
         description: 'Learn the basics of animation.',
         chapters: [
           {
@@ -341,7 +341,7 @@ const courses: Record<string, CourseData> = {
             title: 'Keyframes & Motion',
             description: 'Understanding keyframes.',
             duration: '12 minutes',
-            videoId: 'O0-fVgbijkY',
+            videoId: 'xj4A8GsAkjM',
           },
         ],
       },
