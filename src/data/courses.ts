@@ -304,60 +304,6 @@ const courses: Record<string, CourseData> = {
       },
     ],
   },
-
-  'canva-design': {
-    id: 'canva-design',
-    name: 'Canva Design Essentials',
-    description: 'Create stunning graphics and social media posts with Canva.',
-    thumbnail: 'https://www.imghippo.com/i/JcGw2401TWg.png',
-    author: 'Jane Smith',
-    instructorBio: 'Jane Smith is a professional graphic designer with 10+ years of experience in digital design. She specializes in social media graphics, branding, and user interface design.',
-    instructorImage: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=300',
-    skills: ['Graphic Design', 'Social Media Design', 'Branding', 'Typography', 'Color Theory', 'Layout Design', 'Digital Marketing'],
-    courseQuote: 'Transform your creative vision into stunning visual content that captivates audiences and drives engagement across all digital platforms.',
-    category: 'Design',
-    categories: ['Design', 'Content Creation', 'Social Media'],
-    modules: [
-      {
-        id: 'intro',
-        title: 'Getting Started',
-        description: 'Introduction to Canva and its interface.',
-        chapters: [
-          {
-            id: 'canva-intro',
-            title: 'Welcome to Canva',
-            description: 'Overview of Canva features.',
-            duration: '5 minutes',
-            videoId: 'dQw4w9WgXcQ',
-          },
-          {
-            id: 'casnva-intro',
-            title: 'Welcome not to Canva',
-            description: 'Overview of Canva features.',
-            duration: '5 minutes',
-            videoId: 'dQw4w9WgXcQ',
-          },
-        ],
-      },
-      {
-        id: 'design',
-        title: 'Design Basics',
-        description: 'Learn to create your first design.',
-        chapters: [
-          {
-            id: 'canva-design1',
-            title: 'Your First Design',
-            description: 'Step-by-step design creation.',
-            duration: '10 minutes',
-            videoId: 'Ul45Ze-xgSU',
-            downloadableResources: [
-              { title: 'Sample Templates', url: 'https://drive.google.com/file/d/2example/view', type: 'ZIP' },
-            ],
-          },
-        ],
-      },
-    ],
-  },
   'after-effects': {
     id: 'after-effects',
     name: 'After Effects Mastery',
