@@ -379,7 +379,7 @@ const courses: Record<string, CourseData> = {
     id: 'video-editing-masterclass',
     name: 'Premiere Pro Masterclass',
     description: 'Learn professional video editing techniques to create engaging content for platforms like Instagram and YouTube.',
-    thumbnail: 'https://i.imghippo.com/files/Qy7338G.webp',
+    thumbnail: 'https://i.imghippo.com/files/KjjG9057o.webp',
     author: 'Prabhat Mahto',
     instructorBio: 'Prabhat Mahto is a seasoned video editor with over 10 years of experience creating content for social media, brands, and independent films.',
     instructorImage: 'https://i.imghippo.com/files/cJqp1782c.jpeg',
