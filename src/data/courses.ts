@@ -308,7 +308,7 @@ const courses: Record<string, CourseData> = {
     id: 'after-effects',
     name: 'After Effects Mastery',
     description: 'Create stunning motion graphics and visual effects.',
-    thumbnail: 'https://educate.io/images/666a0437eb956fcfea5f09f6_Pathway-To-Profits-min.webp',
+    thumbnail: 'https://i.imghippo.com/files/Qy7338G.webp',
     author: 'Prabhat Mahto',
     instructorBio: 'Prabhat Mahto is a motion graphics specialist with expertise in After Effects, Cinema 4D, and visual effects. He has worked on projects for major brands and film studios.',
     instructorImage: 'https://i.imghippo.com/files/cJqp1782c.jpeg',
