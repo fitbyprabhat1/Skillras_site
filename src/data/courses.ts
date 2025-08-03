@@ -329,6 +329,13 @@ const courses: Record<string, CourseData> = {
             duration: '4 minutes',
             videoId: 'i8OHxMvNRGk',
           },
+          {
+            id: 'ae-Basics',
+            title: 'After Effects Basics: Color, Workspaces, Timeline, Work Area & Essential Switches',
+            description: 'Course overview and setup.',
+            duration: '4 minutes',
+            videoId: 'xj4A8GsAkjM',
+          },
         ],
       },
       {
