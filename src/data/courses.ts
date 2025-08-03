@@ -336,6 +336,13 @@ const courses: Record<string, CourseData> = {
             duration: '4 minutes',
             videoId: 'xj4A8GsAkjM',
           },
+          {
+            id: 'ae-Keyboard',
+            title: 'After Essentials: Fix Missing Files & Must-Know Keyboard Shortcuts"',
+            description: 'Course overview and setup.',
+            duration: '4 minutes',
+            videoId: 'oCMLElxSWrY',
+          },
         ],
       },
       {
