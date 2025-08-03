@@ -350,6 +350,13 @@ const courses: Record<string, CourseData> = {
             duration: '4 minutes',
             videoId: 'bnbCYiRmBUI',
           },
+          {
+            id: 'ae-ease',
+            title: 'Keying-ease in and out',
+            description: 'Course overview and setup.',
+            duration: '4 minutes',
+            videoId: 'Xp1pb_SDSSw',
+          },
         ],
       },
       {
